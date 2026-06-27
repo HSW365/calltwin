@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CallTwin Dashboard</title>
+<style>
+:root{--bg:#050505;--s1:#121212;--s2:#1a1a1a;--b1:#2a2a2a;--acc:#06b6d4;--acc2:#a855f7;--txt:#f4f4f4;--mut:#9a9a9a;--ok:#4ade80;--warn:#f59e0b;--err:#f87171}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,'Segoe UI',Arial,sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh}
+.wrap{max-width:880px;margin:0 auto;padding:32px 18px 80px}
+h1{font-size:24px;font-weight:800;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.tag{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:10px}
+.pill{font-size:12px;padding:5px 12px;border-radius:20px;background:var(--s2);border:1px solid var(--b1)}
+.pill.active{color:var(--ok);border-color:var(--ok)}
+.pill.inactive{color:var(--mut)}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:22px;margin-bottom:18px}
+.card h2{font-size:15px;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:12px;color:var(--mut);margin:12px 0 4px}
+input,textarea,select{width:100%;background:#000;border:1px solid var(--b1);border-radius:6px;color:var(--txt);padding:10px;font-size:13px}
+textarea{min-height:90px;resize:vertical}
+button{background:var(--acc);color:#000;border:none;border-radius:6px;padding:11px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-top:14px}
+button.sec{background:var(--s2);color:var(--txt);border:1px solid var(--b1)}
+button.danger{background:var(--err);color:#000}
+button:hover{filter:brightness(1.1)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row > *{flex:1;min-width:140px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--b1)}
+th{color:var(--mut);font-weight:600}
+.status-badge{padding:2px 8px;border-radius:10px;font-size:11px;display:inline-block}
+.status-queued{background:#1e293b;color:#94a3b8}
+.status-calling{background:#3b2a0a;color:var(--warn)}
+.status-interested,.status-closed{background:#052e16;color:var(--ok)}
+.status-do_not_call,.status-failed{background:#2e0505;color:var(--err)}
+.status-callback_requested{background:#1e1b4b;color:#a5b4fc}
+.toggle{position:relative;width:46px;height:24px;border-radius:12px;background:var(--s2);border:1px solid var(--b1);cursor:pointer;flex:none}
+.toggle.on{background:var(--ok);border-color:var(--ok)}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.toggle.on::after{left:24px}
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh}
+#loginBox{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:32px;width:320px}
+#app{display:none}
+.msg{font-size:13px;padding:10px 12px;border-radius:6px;margin-top:10px;display:none}
+.msg.ok{background:#052e16;color:var(--ok);display:block}
+.msg.err{background:#2e0505;color:var(--err);display:block}
+.muted{color:var(--mut);font-size:12px;margin-top:6px}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stat{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:14px;text-align:center}
+.stat .num{font-size:22px;font-weight:800;color:var(--acc)}
+.stat .lbl{font-size:11px;color:var(--mut);margin-top:2px}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div id="loginBox">
+    <h1 style="display:block;margin-bottom:18px">CallTwin</h1>
+    <div id="authMode">
+      <label>API Base URL</label>
+      <input id="apiBase" placeholder="https://calltwin-backend-xxxx.onrender.com" value="">
+      <label>Email</label>
+      <input id="authEmail" type="email" placeholder="hsw365media@gmail.com">
+      <label>Password</label>
+      <input id="authPassword" type="password" placeholder="••••••••">
+      <div class="row" style="margin-top:14px">
+        <button onclick="login()">Log In</button>
+        <button class="sec" onclick="signup()">Sign Up</button>
+      </div>
+      <div id="authMsg" class="msg"></div>
+      <div class="muted">First time? Run grant_founder_access.js on the backend instead — it prints a password for hsw365media@gmail.com.</div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="wrap">
+    <div class="bar">
+      <div>
+        <h1>CallTwin</h1>
+        <div class="tag" id="userEmailTag"></div>
+      </div>
+      <div class="row" style="flex:none">
+        <span class="pill" id="subPill">—</span>
+        <button class="sec" style="margin-top:0" onclick="logout()">Log Out</button>
+      </div>
+    </div>
+
+    <div class="statgrid">
+      <div class="stat"><div class="num" id="statLeads">0</div><div class="lbl">Leads</div></div>
+      <div class="stat"><div class="num" id="statCalls">0</div><div class="lbl">Calls Logged</div></div>
+      <div class="stat"><div class="num" id="statMinutes">0</div><div class="lbl">Minutes Used</div></div>
+    </div>
+
+    <!-- VOICE + PITCH -->
+    <div class="card">
+      <h2>🎙 Voice & Pitch Script</h2>
+      <label>Upload voice sample(s) (mp3/wav, 1-5 files, clean audio of you talking)</label>
+      <input type="file" id="voiceFiles" multiple accept="audio/*">
+      <button onclick="uploadVoice()">Clone Voice</button>
+      <div id="voiceMsg" class="msg"></div>
+      <div class="muted" id="voiceIdShown"></div>
+
+      <label style="margin-top:20px">Pitch script / knowledge base (paste queenee_pitch_script.md content here)</label>
+      <textarea id="pitchScript" style="min-height:160px"></textarea>
+      <button onclick="savePitchScript()">Save Pitch Script</button>
+      <div id="pitchMsg" class="msg"></div>
+    </div>
+
+    <!-- LEADS -->
+    <div class="card">
+      <h2>📋 Leads</h2>
+      <label>Upload CSV (businessName,contactName,phone,city,state)</label>
+      <input type="file" id="leadsCsv" accept=".csv">
+      <label>Assign to campaign</label>
+      <select id="leadsCampaignSelect"><option value="">No campaign yet</option></select>
+      <button onclick="uploadLeads()">Upload CSV</button>
+      <div id="leadsMsg" class="msg"></div>
+
+      <table id="leadsTable" style="margin-top:18px">
+        <thead><tr><th>Business</th><th>Phone</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- CAMPAIGNS -->
+    <div class="card">
+      <h2>📞 Campaigns</h2>
+      <label>Campaign name</label>
+      <input id="newCampaignName" placeholder="South Jersey - Round 1">
+      <div class="row">
+        <div><label>Start hour (0-23)</label><input id="newCampaignStart" type="number" value="8" min="0" max="23"></div>
+        <div><label>End hour (0-23)</label><input id="newCampaignEnd" type="number" value="21" min="0" max="23"></div>
+        <div><label>Calls per 5-min tick</label><input id="newCampaignRate" type="number" value="2" min="1"></div>
+      </div>
+      <button onclick="createCampaign()">Create Campaign</button>
+      <div id="campaignMsg" class="msg"></div>
+
+      <div id="campaignsList" style="margin-top:18px"></div>
+    </div>
+
+    <!-- CALL LOGS -->
+    <div class="card">
+      <h2>📜 Recent Calls</h2>
+      <button class="sec" onclick="loadCallLogs()">Refresh</button>
+      <table id="callsTable">
+        <thead><tr><th>Business</th><th>Outcome</th><th>Duration</th><th>SMS Sent</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let API = localStorage.getItem('calltwin_api') || '';
+let TOKEN = localStorage.getItem('calltwin_token') || '';
+
+function showMsg(id, text, ok){
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'msg ' + (ok ? 'ok' : 'err');
+}
+
+async function api(path, opts = {}){
+  const headers = Object.assign({}, opts.headers || {});
+  if(TOKEN) headers['Authorization'] = 'Bearer ' + TOKEN;
+  if(opts.body && !(opts.body instanceof FormData)){
+    headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(opts.body);
+  }
+  const res = await fetch(API + path, Object.assign({}, opts, { headers }));
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok) throw new Error(data.error || ('Request failed: ' + res.status));
+  return data;
+}
+
+async function login(){
+  try{
+    API = document.getElementById('apiBase').value.trim().replace(/\/$/, '');
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const data = await api('/api/auth/login', { method: 'POST', body: { email, password } });
+    TOKEN = data.token;
+    localStorage.setItem('calltwin_api', API);
+    localStorage.setItem('calltwin_token', TOKEN);
+    enterApp(data.user);
+  }catch(e){ showMsg('authMsg', e.message, false); }
+}
+
+async function signup(){
+  try{
+    API = document.getElementById('apiBase').value.trim().replace(/\/$/, '');
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const data = await api('/api/auth/signup', { method: 'POST', body: { email, password } });
+    TOKEN = data.token;
+    localStorage.setItem('calltwin_api', API);
+    localStorage.setItem('calltwin_token', TOKEN);
+    enterApp(data.user);
+  }catch(e){ showMsg('authMsg', e.message, false); }
+}
+
+function logout(){
+  localStorage.removeItem('calltwin_token');
+  TOKEN = '';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function enterApp(user){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userEmailTag').textContent = user.email;
+  const pill = document.getElementById('subPill');
+  pill.textContent = user.subscriptionStatus === 'active' ? 'Active' : user.subscriptionStatus;
+  pill.className = 'pill ' + (user.subscriptionStatus === 'active' ? 'active' : 'inactive');
+  loadLeads();
+  loadCampaigns();
+  loadCallLogs();
+}
+
+// ---------- VOICE ----------
+async function uploadVoice(){
+  try{
+    const files = document.getElementById('voiceFiles').files;
+    if(!files.length){ showMsg('voiceMsg', 'Choose at least one audio file first.', false); return; }
+    const form = new FormData();
+    for(const f of files) form.append('samples', f);
+    const data = await api('/api/voice/clone', { method: 'POST', body: form });
+    showMsg('voiceMsg', 'Voice cloned successfully.', true);
+    document.getElementById('voiceIdShown').textContent = 'Voice ID: ' + data.voiceId;
+  }catch(e){ showMsg('voiceMsg', e.message, false); }
+}
+
+async function savePitchScript(){
+  try{
+    const pitchScript = document.getElementById('pitchScript').value;
+    await api('/api/voice/pitch-script', { method: 'POST', body: { pitchScript } });
+    showMsg('pitchMsg', 'Pitch script saved.', true);
+  }catch(e){ showMsg('pitchMsg', e.message, false); }
+}
+
+// ---------- LEADS ----------
+async function loadLeads(){
+  try{
+    const leads = await api('/api/leads');
+    document.getElementById('statLeads').textContent = leads.length;
+    const tbody = document.querySelector('#leadsTable tbody');
+    tbody.innerHTML = leads.slice(0, 50).map(l => `
+      <tr>
+        <td>${l.businessName}</td>
+        <td>${l.phone}</td>
+        <td><span class="status-badge status-${l.status}">${l.status}</span></td>
+      </tr>
+    `).join('');
+  }catch(e){ console.error(e); }
+}
+
+async function uploadLeads(){
+  try{
+    const fileInput = document.getElementById('leadsCsv');
+    if(!fileInput.files.length){ showMsg('leadsMsg', 'Choose a CSV file first.', false); return; }
+    const form = new FormData();
+    form.append('file', fileInput.files[0]);
+    const campaign = document.getElementById('leadsCampaignSelect').value;
+    if(campaign) form.append('campaign', campaign);
+    const data = await api('/api/leads/upload', { method: 'POST', body: form });
+    showMsg('leadsMsg', `Uploaded: ${data.created} added, ${data.skipped} skipped (duplicates/no phone).`, true);
+    loadLeads();
+  }catch(e){ showMsg('leadsMsg', e.message, false); }
+}
+
+// ---------- CAMPAIGNS ----------
+async function loadCampaigns(){
+  try{
+    const campaigns = await api('/api/campaigns');
+    const select = document.getElementById('leadsCampaignSelect');
+    select.innerHTML = '<option value="">No campaign yet</option>' +
+      campaigns.map(c => `<option value="${c._id}">${c.name}</option>`).join('');
+
+    const list = document.getElementById('campaignsList');
+    list.innerHTML = campaigns.map(c => `
+      <div class="card" style="background:var(--s2);margin-bottom:10px">
+        <div class="row" style="align-items:center">
+          <div>
+            <strong>${c.name}</strong>
+            <div class="muted">${c.startHour}:00–${c.endHour}:00 · ${c.callsPerTick} calls/tick · ${c.daysActive.join(', ')}</div>
+          </div>
+          <div class="toggle ${c.active ? 'on' : ''}" onclick="toggleCampaign('${c._id}', ${!c.active})"></div>
+        </div>
+      </div>
+    `).join('') || '<div class="muted">No campaigns yet — create one above.</div>';
+  }catch(e){ console.error(e); }
+}
+
+async function createCampaign(){
+  try{
+    const body = {
+      name: document.getElementById('newCampaignName').value || 'Unnamed Campaign',
+      startHour: parseInt(document.getElementById('newCampaignStart').value, 10),
+      endHour: parseInt(document.getElementById('newCampaignEnd').value, 10),
+      callsPerTick: parseInt(document.getElementById('newCampaignRate').value, 10),
+    };
+    await api('/api/campaigns', { method: 'POST', body });
+    showMsg('campaignMsg', 'Campaign created.', true);
+    loadCampaigns();
+  }catch(e){ showMsg('campaignMsg', e.message, false); }
+}
+
+async function toggleCampaign(id, active){
+  try{
+    await api(`/api/campaigns/${id}/toggle`, { method: 'PATCH', body: { active } });
+    loadCampaigns();
+  }catch(e){ alert(e.message); }
+}
+
+// ---------- CALL LOGS ----------
+async function loadCallLogs(){
+  try{
+    const logs = await api('/api/calls/logs');
+    document.getElementById('statCalls').textContent = logs.length;
+    const totalMin = logs.reduce((sum, l) => sum + Math.ceil((l.durationSeconds||0)/60), 0);
+    document.getElementById('statMinutes').textContent = totalMin;
+
+    const tbody = document.querySelector('#callsTable tbody');
+    tbody.innerHTML = logs.slice(0, 50).map(l => `
+      <tr>
+        <td>${l.lead ? l.lead.businessName : '—'}</td>
+        <td><span class="status-badge status-${l.outcome}">${l.outcome}</span></td>
+        <td>${l.durationSeconds || 0}s</td>
+        <td>${l.smsLinkSent ? '✓' : '—'}</td>
+      </tr>
+    `).join('');
+  }catch(e){ console.error(e); }
+}
+
+// Auto-login if we already have a saved session
+if(TOKEN && API){
+  document.getElementById('apiBase').value = API;
+  // We don't have the user object cached, so just try loading data —
+  // if the token's invalid the API calls below will fail silently
+  // and the login screen stays up. Good enough for now.
+  fetch(API + '/api/leads', { headers: { Authorization: 'Bearer ' + TOKEN } })
+    .then(r => { if(r.ok){ enterApp({ email: '(restored session)', subscriptionStatus: 'active' }); } });
+}
+</script>
+</body>
+</html>

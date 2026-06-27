@@ -1,0 +1,65 @@
+# render.yaml
+# ============================================================
+# One-click deploy for CallTwin's backend on Render.com — gives you
+# a real public HTTPS URL TODAY, which is the actual blocker on
+# everything else (Twilio can't hit localhost, period).
+#
+# HOW TO USE
+# ----------
+# 1. Push your calltwin/backend code to a GitHub repo (any repo,
+#    even a brand new private one — doesn't need to be public).
+# 2. Drop this file in the REPO ROOT (same level as backend/ folder).
+#    If backend/ IS your repo root already, move this file there
+#    instead and remove the leading "backend/" from rootDir below.
+# 3. Go to render.com -> New -> Blueprint -> connect that repo.
+# 4. Render reads this file automatically and provisions everything.
+# 5. Fill in the env vars marked "sync: false" in Render's dashboard
+#    (it'll prompt you — these are your actual secrets, never put
+#    real keys in this file).
+# 6. Done. Render gives you a URL like https://calltwin-xyz.onrender.com
+#    — THAT is your PUBLIC_BASE_URL. Set it as an env var too (step 5
+#    covers this, it's listed below).
+#
+# Free tier note: Render's free web services spin down after 15 min
+# of no traffic and take ~30s to wake back up on the next request —
+# fine for testing today, upgrade to a paid instance ($7/mo Starter)
+# before running real campaigns so calls don't hit a cold-start delay.
+# ============================================================
+
+services:
+  - type: web
+    name: calltwin-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: CALLTWIN_PRICE_ID
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
+        # Set this AFTER the first deploy, once Render gives you the
+        # actual URL — e.g. https://calltwin-backend-xxxx.onrender.com
+        # Then redeploy once so the server picks it up.

@@ -1,0 +1,25 @@
+{
+  "name": "calltwin-backend",
+  "version": "1.0.0",
+  "description": "CallTwin — autonomous AI sales calling backend. Twilio + ElevenLabs + Claude.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "axios": "^1.7.0",
+    "bcryptjs": "^2.4.3",
+    "csv-parse": "^5.5.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.19.0",
+    "form-data": "^4.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^8.4.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "stripe": "^16.0.0",
+    "twilio": "^5.2.0",
+    "uuid": "^9.0.1"
+  }
+}

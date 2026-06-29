@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QUEENEE Virtual Assistant — Status</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --panel: #12121a;
+    --border: #232333;
+    --cyan: #00e0ff;
+    --violet: #9b5cff;
+    --red: #ff4d6d;
+    --yellow: #ffd84d;
+    --text: #e8e8f0;
+    --muted: #8888a0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 32px 20px 80px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 28px; }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--muted);
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
+  }
+  .dot.live { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: pulse 2s infinite; }
+  .dot.down { background: var(--red); box-shadow: 0 0 10px var(--red); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .stat .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .stat.calls .num { color: var(--cyan); }
+  .stat.leads .num { color: var(--violet); }
+  .stat.emails .num { color: var(--yellow); }
+
+  .stat .label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  section { margin-bottom: 36px; }
+
+  section h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .card-from {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--cyan);
+  }
+
+  .card-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .card-summary { font-size: 0.92rem; color: var(--text); line-height: 1.4; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-left: 8px;
+  }
+  .badge.lead { background: rgba(155,92,255,0.18); color: var(--violet); }
+  .badge.escalated { background: rgba(255,77,109,0.18); color: var(--red); }
+  .badge.auto { background: rgba(0,224,255,0.18); color: var(--cyan); }
+
+  .empty { color: var(--muted); font-size: 0.9rem; padding: 20px 0; }
+
+  .refresh-note {
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>QUEENEE Virtual Assistant</h1>
+  <div class="subtitle">24/7 AI front desk — live status, calls, and emails</div>
+
+  <div class="status-row">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Checking status…</span>
+  </div>
+
+  <div class="grid">
+    <div class="stat calls">
+      <div class="num" id="callsCount">—</div>
+      <div class="label">Total Calls Logged</div>
+    </div>
+    <div class="stat leads">
+      <div class="num" id="leadsCount">—</div>
+      <div class="label">Qualified Leads</div>
+    </div>
+    <div class="stat emails">
+      <div class="num" id="emailsCount">—</div>
+      <div class="label">Emails Handled</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Recent Qualified Leads (Calls)</h2>
+    <div id="leadsList"><div class="empty">Loading…</div></div>
+  </section>
+
+  <section>
+    <h2>Recent Emails</h2>
+    <div id="emailsList"><div class="empty">Loading…</div></div>
+  </section>
+
+  <div class="refresh-note">Auto-refreshes every 30 seconds</div>
+</div>
+
+<script>
+  function fmtTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  async function loadStatus() {
+    const dot = document.getElementById('statusDot');
+    const text = document.getElementById('statusText');
+    try {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+      dot.className = 'dot live';
+      text.textContent = 'Live — last checked ' + fmtTime(data.time);
+    } catch (e) {
+      dot.className = 'dot down';
+      text.textContent = 'Unable to reach server';
+    }
+  }
+
+  async function loadLeads() {
+    const list = document.getElementById('leadsList');
+    try {
+      const res = await fetch('/leads');
+      const data = await res.json();
+      document.getElementById('callsCount').textContent = data.totalCalls ?? data.count ?? 0;
+      document.getElementById('leadsCount').textContent = data.count ?? 0;
+
+      if (!data.leads || data.leads.length === 0) {
+        list.innerHTML = '<div class="empty">No qualified leads yet.</div>';
+        return;
+      }
+      list.innerHTML = data.leads.map(l => `
+        <div class="card">
+          <div class="card-top">
+            <span class="card-from">${l.fromNumber || 'Unknown number'}</span>
+            <span class="card-time">${fmtTime(l.startedAt)}</span>
+          </div>
+          <div class="card-summary">${l.reasonForCall || 'No summary captured'}</div>
+        </div>
+      `).join('');
+    } catch (e) {
+      list.innerHTML = '<div class="empty">Could not load leads.</div>';
+    }
+  }
+
+  async function loadEmails() {
+    const list = document.getElementById('emailsList');
+    try {
+      const res = await fetch('/emails');
+      const data = await res.json();
+      document.getElementById('emailsCount').textContent = data.count ?? 0;
+
+      if (!data.emails || data.emails.length === 0) {
+        list.innerHTML = '<div class="empty">No emails handled yet.</div>';
+        return;
+      }
+      list.innerHTML = data.emails.map(e => `
+        <div class="card">
+          <div class="card-top">
+            <span class="card-from">${e.fromAddress || 'Unknown sender'}</span>
+            <span class="card-time">${fmtTime(e.receivedAt)}</span>
+          </div>
+          <div class="card-summary">
+            ${e.subject || '(no subject)'}
+            ${e.category === 'lead' ? '<span class="badge lead">lead</span>' : ''}
+            ${e.escalatedToOwner ? '<span class="badge escalated">needs review</span>' : ''}
+            ${e.autoReplied ? '<span class="badge auto">auto-replied</span>' : ''}
+          </div>
+        </div>
+      `).join('');
+    } catch (e) {
+      list.innerHTML = '<div class="empty">Could not load emails.</div>';
+    }
+  }
+
+  function loadAll() {
+    loadStatus();
+    loadLeads();
+    loadEmails();
+  }
+
+  loadAll();
+  setInterval(loadAll, 30000);
+</script>
+</body>
+</html>

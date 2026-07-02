@@ -40,3 +40,5 @@ app.get('/emails', async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`[server] QUEENEE virtual assistant listening on port ${PORT}`));
+const smsRoutes = require('./routes/sms');
+  app.use('/sms', smsRoutes);

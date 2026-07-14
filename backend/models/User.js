@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
       enum: ["none", "active", "past_due", "canceled"],
       default: "none",
     },
+    isLifetime: { type: Boolean, default: false }, // one-time $1,000 purchase — never expires, immune to subscription cancel/past_due webhooks
     isFounderAccount: { type: Boolean, default: false },
     stripeCustomerId: { type: String, default: null },
     stripeSubscriptionId: { type: String, default: null },

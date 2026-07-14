@@ -2,8 +2,21 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { requireAuth } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+
+// Returns the real current user + real subscription status.
+// Used by the dashboard on session restore instead of assuming "active".
+router.get("/me", requireAuth, async (req, res) => {
+  res.json({
+    user: {
+      email: req.user.email,
+      businessName: req.user.businessName,
+      subscriptionStatus: req.user.subscriptionStatus || "inactive",
+    },
+  });
+});
 
 function signToken(user) {
   return jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });

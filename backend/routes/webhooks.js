@@ -24,9 +24,16 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
         const session = event.data.object;
         const user = await User.findById(session.metadata.userId);
         if (user) {
-          user.subscriptionStatus = "active";
-          user.stripeCustomerId = session.customer;
-          user.stripeSubscriptionId = session.subscription;
+          if (session.metadata.plan === "lifetime" || session.mode === "payment") {
+            // One-time $1,000 purchase — active forever, no subscription record.
+            user.subscriptionStatus = "active";
+            user.isLifetime = true;
+            user.stripeCustomerId = session.customer;
+          } else {
+            user.subscriptionStatus = "active";
+            user.stripeCustomerId = session.customer;
+            user.stripeSubscriptionId = session.subscription;
+          }
           await user.save();
         }
         break;
@@ -34,7 +41,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       case "invoice.paid": {
         const invoice = event.data.object;
         const user = await User.findOne({ stripeCustomerId: invoice.customer });
-        if (user) {
+        if (user && !user.isLifetime) {
           user.subscriptionStatus = "active";
           user.minutesUsed = 0; // reset usage each billing cycle
           user.minutesResetAt = new Date();
@@ -45,7 +52,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       case "invoice.payment_failed": {
         const invoice = event.data.object;
         const user = await User.findOne({ stripeCustomerId: invoice.customer });
-        if (user) {
+        if (user && !user.isLifetime) {
           user.subscriptionStatus = "past_due";
           await user.save();
         }
@@ -54,7 +61,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       case "customer.subscription.deleted": {
         const sub = event.data.object;
         const user = await User.findOne({ stripeSubscriptionId: sub.id });
-        if (user) {
+        if (user && !user.isLifetime) {
           user.subscriptionStatus = "canceled";
           await user.save();
         }

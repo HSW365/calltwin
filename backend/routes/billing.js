@@ -7,6 +7,29 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post("/checkout", requireAuth, async (req, res) => {
   try {
+    const plan = req.body?.plan === "lifetime" ? "lifetime" : "monthly";
+
+    if (plan === "lifetime") {
+      if (!process.env.LIFETIME_PRICE_ID) {
+        return res.status(500).json({
+          error: "LIFETIME_PRICE_ID is not set on the backend. Create a one-time $1,000 price in Stripe and add its price ID to Render env vars.",
+        });
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment", // one-time charge, not a subscription
+        payment_method_types: ["card"],
+        line_items: [{ price: process.env.LIFETIME_PRICE_ID, quantity: 1 }],
+        customer_email: req.user.email,
+        success_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=success`,
+        cancel_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=canceled`,
+        metadata: { userId: req.user._id.toString(), plan: "lifetime" },
+        allow_promotion_codes: true,
+      });
+
+      return res.json({ url: session.url });
+    }
+
     if (!process.env.CALLTWIN_PRICE_ID) {
       return res.status(500).json({
         error: "CALLTWIN_PRICE_ID is not set on the backend. Create a $20/mo recurring price in Stripe and add its price ID to Render env vars.",
@@ -29,7 +52,7 @@ router.post("/checkout", requireAuth, async (req, res) => {
       customer_email: req.user.email,
       success_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=success`,
       cancel_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=canceled`,
-      metadata: { userId: req.user._id.toString() },
+      metadata: { userId: req.user._id.toString(), plan: "monthly" },
       allow_promotion_codes: true,
     });
 
@@ -42,7 +65,10 @@ router.post("/checkout", requireAuth, async (req, res) => {
 // Lets the dashboard confirm right after redirect back from Stripe whether
 // the webhook has landed yet, without needing to hit /api/auth/me repeatedly.
 router.get("/status", requireAuth, async (req, res) => {
-  res.json({ subscriptionStatus: req.user.subscriptionStatus || "inactive" });
+  res.json({
+    subscriptionStatus: req.user.subscriptionStatus || "inactive",
+    isLifetime: !!req.user.isLifetime,
+  });
 });
 
 module.exports = router;

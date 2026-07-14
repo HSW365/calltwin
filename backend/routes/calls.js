@@ -8,7 +8,7 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-const FUNNEL_LINK = "https://hsw365.co/pages/website-funnel";
+const FUNNEL_LINK = `${process.env.PUBLIC_BASE_URL}/dashboard`; // CallTwin signup — was mistakenly pointing to hsw365.co streetwear store
 
 // ------------------------------------------------------------------
 // Manual dial — for testing a single lead right now from the dashboard,

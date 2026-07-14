@@ -98,11 +98,13 @@ th{color:var(--mut);font-weight:600}
     <div class="card" id="billingCard">
       <h2>💳 Billing</h2>
       <div id="billingActive" style="display:none">
-        <div class="muted">Subscription is active. CallTwin is live and calling on your account.</div>
+        <div class="muted" id="billingActiveMsg">Subscription is active. CallTwin is live and calling on your account.</div>
       </div>
       <div id="billingInactive" style="display:none">
         <div class="muted">No active subscription yet — CallTwin won't place calls until billing is activated.</div>
-        <button onclick="startCheckout()" id="checkoutBtn">Activate CallTwin — Subscribe</button>
+        <button onclick="startCheckout('monthly')" id="checkoutBtn">Activate CallTwin — $20/mo</button>
+        <button class="sec" onclick="startCheckout('lifetime')" id="checkoutBtnLifetime">Lifetime Access — $1,000 one-time</button>
+        <div class="muted" style="margin-top:8px">Lifetime is a single $1,000 payment — no monthly charge, ever, no cancellation risk.</div>
       </div>
       <div id="billingMsg" class="msg"></div>
     </div>
@@ -228,31 +230,37 @@ function enterApp(user){
   document.getElementById('userEmailTag').textContent = user.email;
   const pill = document.getElementById('subPill');
   const isActive = user.subscriptionStatus === 'active';
-  pill.textContent = isActive ? 'Active' : (user.subscriptionStatus || 'inactive');
+  const isLifetime = !!user.isLifetime;
+  pill.textContent = isLifetime ? 'Lifetime' : (isActive ? 'Active' : (user.subscriptionStatus || 'inactive'));
   pill.className = 'pill ' + (isActive ? 'active' : 'inactive');
   document.getElementById('billingActive').style.display = isActive ? 'block' : 'none';
   document.getElementById('billingInactive').style.display = isActive ? 'none' : 'block';
+  document.getElementById('billingActiveMsg').textContent = isLifetime
+    ? 'Lifetime access active — no monthly charge, ever. CallTwin is live on your account.'
+    : 'Subscription is active. CallTwin is live and calling on your account.';
   loadLeads();
   loadCampaigns();
   loadCallLogs();
 }
 
 // ---------- BILLING ----------
-async function startCheckout(){
-  const btn = document.getElementById('checkoutBtn');
+async function startCheckout(plan){
+  const btnId = plan === 'lifetime' ? 'checkoutBtnLifetime' : 'checkoutBtn';
+  const btn = document.getElementById(btnId);
+  const originalText = btn.textContent;
   try{
     btn.disabled = true;
     btn.textContent = 'Redirecting to Stripe...';
-    const data = await api('/api/billing/checkout', { method: 'POST', body: {} });
+    const data = await api('/api/billing/checkout', { method: 'POST', body: { plan } });
     if(data.url){
       window.location.href = data.url;
     } else {
-      throw new Error('No checkout URL returned — check STRIPE_SECRET_KEY / CALLTWIN_PRICE_ID on the backend.');
+      throw new Error('No checkout URL returned — check Stripe price IDs on the backend.');
     }
   }catch(e){
     showMsg('billingMsg', e.message, false);
     btn.disabled = false;
-    btn.textContent = 'Activate CallTwin — Subscribe';
+    btn.textContent = originalText;
   }
 }
 

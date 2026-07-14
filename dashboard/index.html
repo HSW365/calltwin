@@ -94,6 +94,19 @@ th{color:var(--mut);font-weight:600}
       <div class="stat"><div class="num" id="statMinutes">0</div><div class="lbl">Minutes Used</div></div>
     </div>
 
+    <!-- BILLING -->
+    <div class="card" id="billingCard">
+      <h2>💳 Billing</h2>
+      <div id="billingActive" style="display:none">
+        <div class="muted">Subscription is active. CallTwin is live and calling on your account.</div>
+      </div>
+      <div id="billingInactive" style="display:none">
+        <div class="muted">No active subscription yet — CallTwin won't place calls until billing is activated.</div>
+        <button onclick="startCheckout()" id="checkoutBtn">Activate CallTwin — Subscribe</button>
+      </div>
+      <div id="billingMsg" class="msg"></div>
+    </div>
+
     <!-- VOICE + PITCH -->
     <div class="card">
       <h2>🎙 Voice & Pitch Script</h2>
@@ -214,11 +227,33 @@ function enterApp(user){
   document.getElementById('app').style.display = 'block';
   document.getElementById('userEmailTag').textContent = user.email;
   const pill = document.getElementById('subPill');
-  pill.textContent = user.subscriptionStatus === 'active' ? 'Active' : user.subscriptionStatus;
-  pill.className = 'pill ' + (user.subscriptionStatus === 'active' ? 'active' : 'inactive');
+  const isActive = user.subscriptionStatus === 'active';
+  pill.textContent = isActive ? 'Active' : (user.subscriptionStatus || 'inactive');
+  pill.className = 'pill ' + (isActive ? 'active' : 'inactive');
+  document.getElementById('billingActive').style.display = isActive ? 'block' : 'none';
+  document.getElementById('billingInactive').style.display = isActive ? 'none' : 'block';
   loadLeads();
   loadCampaigns();
   loadCallLogs();
+}
+
+// ---------- BILLING ----------
+async function startCheckout(){
+  const btn = document.getElementById('checkoutBtn');
+  try{
+    btn.disabled = true;
+    btn.textContent = 'Redirecting to Stripe...';
+    const data = await api('/api/billing/checkout', { method: 'POST', body: {} });
+    if(data.url){
+      window.location.href = data.url;
+    } else {
+      throw new Error('No checkout URL returned — check STRIPE_SECRET_KEY / CALLTWIN_PRICE_ID on the backend.');
+    }
+  }catch(e){
+    showMsg('billingMsg', e.message, false);
+    btn.disabled = false;
+    btn.textContent = 'Activate CallTwin — Subscribe';
+  }
 }
 
 // ---------- VOICE ----------
@@ -336,14 +371,20 @@ async function loadCallLogs(){
   }catch(e){ console.error(e); }
 }
 
-// Auto-login if we already have a saved session
+// Auto-login if we already have a saved session — fetch the REAL user +
+// subscription status via /api/auth/me rather than assuming active.
 if(TOKEN && API){
   document.getElementById('apiBase').value = API;
-  // We don't have the user object cached, so just try loading data —
-  // if the token's invalid the API calls below will fail silently
-  // and the login screen stays up. Good enough for now.
-  fetch(API + '/api/leads', { headers: { Authorization: 'Bearer ' + TOKEN } })
-    .then(r => { if(r.ok){ enterApp({ email: '(restored session)', subscriptionStatus: 'active' }); } });
+  api('/api/auth/me').then(data => enterApp(data.user)).catch(() => {});
+}
+
+// After returning from Stripe Checkout (?billing=success), re-fetch real
+// status so the billing card flips to "Active" once the webhook has landed.
+if(new URLSearchParams(window.location.search).get('billing') === 'success' && TOKEN){
+  showMsg('billingMsg', 'Payment received — activating your subscription...', true);
+  setTimeout(() => {
+    api('/api/auth/me').then(data => enterApp(data.user)).catch(() => {});
+  }, 2000);
 }
 </script>
 </body>

@@ -14,6 +14,7 @@ router.get("/me", requireAuth, async (req, res) => {
       email: req.user.email,
       businessName: req.user.businessName,
       subscriptionStatus: req.user.subscriptionStatus || "inactive",
+      isLifetime: !!req.user.isLifetime,
     },
   });
 });

@@ -1,0 +1,35 @@
+name: CallTwin Lead Hunter
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run lead hunter
+        env:
+          CALLTWIN_API_URL: ${{ secrets.CALLTWIN_API_URL }}
+          CALLTWIN_USER_TOKEN: ${{ secrets.CALLTWIN_USER_TOKEN }}
+          CALLTWIN_CAMPAIGN_ID: ${{ secrets.CALLTWIN_CAMPAIGN_ID }}
+        run: python calltwin_lead_hunter.py
+
+      - name: Commit debug log and CSV backup
+        run: |
+          git config user.name "calltwin-lead-hunter-bot"
+          git config user.email "hsw365media@gmail.com"
+          git add lead_hunter_debug.json leads_*.csv
+          git diff --quiet --cached || git commit -m "Lead hunter run: $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push

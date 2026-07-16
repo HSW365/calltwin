@@ -1,0 +1,9 @@
+[
+  {
+    "error": "fetch_leads_failed",
+    "detail": "401 Client Error: Unauthorized for url: https://calltwin.onrender.com/api/leads",
+    "status_code": 401,
+    "response_snippet": "{\"error\":\"Invalid or expired token.\"}",
+    "checked_at": "2026-07-16 14:00:02"
+  }
+]

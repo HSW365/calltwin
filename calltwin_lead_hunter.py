@@ -246,7 +246,7 @@ def run():
                 count += 1
 
             print(f"{count} no-website leads")
-            time.sleep(1)  # be polite to the free public Overpass instance
+            time.sleep(3)  # avoid rate-limiting on the free public Overpass instance
 
         except Exception as e:
             print(f"ERROR: {e}")
@@ -257,6 +257,7 @@ def run():
 
     # Push to CallTwin API
     print(f"\n  Pushing {len(all_leads)} leads to CallTwin...")
+    push_results = []
     for lead in all_leads:
         payload = {
             "businessName": lead["businessName"],
@@ -267,11 +268,21 @@ def run():
         }
         try:
             lead_id = push_lead_to_calltwin(payload)
-            if lead_id:
+            ok = bool(lead_id)
+            if ok:
                 total_pushed += 1
                 add_lead_to_campaign(lead_id if isinstance(lead_id, str) else None)
+            push_results.append({"businessName": lead["businessName"], "pushed": ok})
         except Exception as e:
+            push_results.append({"businessName": lead["businessName"], "pushed": False, "error": str(e)})
             print(f"    Push failed for {lead['businessName']}: {e}")
+
+    with open(os.path.join(os.path.dirname(__file__) or ".", "lead_hunter_push_results.json"), "w") as f:
+        json.dump({
+            "calltwin_token_configured": bool(CALLTWIN_TOKEN),
+            "calltwin_campaign_configured": bool(CALLTWIN_CAMPAIGN),
+            "results": push_results,
+        }, f, indent=2)
 
     # Also save CSV backup
     with open(csv_path, "w", newline="") as f:

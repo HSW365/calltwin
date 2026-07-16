@@ -13,19 +13,33 @@ jobs:
           EMAIL: ${{ secrets.CALLTWIN_LOGIN_EMAIL }}
           PASSWORD: ${{ secrets.CALLTWIN_LOGIN_PASSWORD }}
         run: |
-          RESPONSE=$(curl -s -X POST "https://calltwin.onrender.com/api/auth/login" \
-            -H "Content-Type: application/json" \
-            -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}")
-          TOKEN=$(echo "$RESPONSE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('token',''))")
-          if [ -z "$TOKEN" ]; then
-            echo "Login failed. Response:"
-            echo "$RESPONSE"
-            exit 1
+          HTTP_CODE=$(curl -s -o /tmp/login_resp.json -w "%{http_code}" -X POST "https://calltwin.onrender.com/api/auth/login" -H "Content-Type: application/json" -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}")
+          echo "http_code=$HTTP_CODE" >> "$GITHUB_OUTPUT"
+          TOKEN=$(python3 -c "import json; d=json.load(open('/tmp/login_resp.json')); print(d.get('token',''))" 2>/dev/null || echo "")
+          if [ -n "$TOKEN" ]; then
+            echo "::add-mask::$TOKEN"
           fi
-          echo "::add-mask::$TOKEN"
           echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+          HTTP_CODE="$HTTP_CODE" python3 .github/workflows/scripts/write_login_debug.py
+
+      - name: Commit debug info (always, even on failure)
+        if: always()
+        run: |
+          git config user.name "calltwin-token-refresh-bot"
+          git config user.email "hsw365media@gmail.com"
+          git add login_debug.json
+          git diff --quiet --cached || git commit -m "Token refresh debug: $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push
+
+      - name: Fail if no token was obtained
+        if: steps.login.outputs.token == ''
+        run: |
+          echo "Login did not return a token — see login_debug.json in the repo for details."
+          exit 1
 
       - name: Update CALLTWIN_USER_TOKEN secret
+        if: steps.login.outputs.token != ''
         env:
           GH_TOKEN: ${{ secrets.MGMT_PAT }}
         run: |

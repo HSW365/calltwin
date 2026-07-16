@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name "calltwin-lead-hunter-bot"
           git config user.email "hsw365media@gmail.com"
-          git add lead_hunter_debug.json leads_*.csv
+          git add -A
           git diff --quiet --cached || git commit -m "Lead hunter run: $(date -u +%Y-%m-%d)"
           git pull --rebase origin main
           git push

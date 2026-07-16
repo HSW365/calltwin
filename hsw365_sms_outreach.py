@@ -59,7 +59,18 @@ def run():
     try:
         leads = fetch_leads()
     except Exception as e:
+        error_detail = str(e)
+        status_code = getattr(getattr(e, "response", None), "status_code", None)
+        body_snippet = getattr(getattr(e, "response", None), "text", "")[:300]
         print(f"Failed to fetch leads: {e}")
+        with open(LOG_FILE, "w") as f:
+            json.dump([{
+                "error": "fetch_leads_failed",
+                "detail": error_detail,
+                "status_code": status_code,
+                "response_snippet": body_snippet,
+                "checked_at": timestamp,
+            }], f, indent=2)
         return
 
     eligible = [

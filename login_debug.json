@@ -1,6 +1,9 @@
 {
-  "http_code": "500",
+  "http_code": "200",
   "body_without_token": {
-    "error": "secretOrPrivateKey must have a value"
+    "user": {
+      "email": "hsw365media+automation@gmail.com",
+      "subscriptionStatus": "none"
+    }
   }
 }

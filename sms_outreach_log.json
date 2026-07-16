@@ -1,9 +1,9 @@
 [
   {
     "error": "fetch_leads_failed",
-    "detail": "401 Client Error: Unauthorized for url: https://calltwin.onrender.com/api/leads",
-    "status_code": 401,
-    "response_snippet": "{\"error\":\"Invalid or expired token.\"}",
-    "checked_at": "2026-07-16 14:00:02"
+    "detail": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=15)",
+    "status_code": null,
+    "response_snippet": "",
+    "checked_at": "2026-07-16 15:52:42"
   }
 ]

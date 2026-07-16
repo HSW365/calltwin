@@ -9,15 +9,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in and extract fresh token
+      - name: Log in (or sign up if no account exists) and extract fresh token
         id: login
         env:
           EMAIL: ${{ secrets.CALLTWIN_LOGIN_EMAIL }}
           PASSWORD: ${{ secrets.CALLTWIN_LOGIN_PASSWORD }}
         run: |
           HTTP_CODE=$(curl -s -o /tmp/login_resp.json -w "%{http_code}" -X POST "https://calltwin.onrender.com/api/auth/login" -H "Content-Type: application/json" -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}")
-          echo "http_code=$HTTP_CODE" >> "$GITHUB_OUTPUT"
           TOKEN=$(python3 -c "import json; d=json.load(open('/tmp/login_resp.json')); print(d.get('token',''))" 2>/dev/null || echo "")
+
+          if [ -z "$TOKEN" ]; then
+            echo "Login failed (http $HTTP_CODE), trying signup instead..."
+            HTTP_CODE=$(curl -s -o /tmp/login_resp.json -w "%{http_code}" -X POST "https://calltwin.onrender.com/api/auth/signup" -H "Content-Type: application/json" -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\",\"businessName\":\"HSW365Media\"}")
+            TOKEN=$(python3 -c "import json; d=json.load(open('/tmp/login_resp.json')); print(d.get('token',''))" 2>/dev/null || echo "")
+          fi
+
+          echo "http_code=$HTTP_CODE" >> "$GITHUB_OUTPUT"
           if [ -n "$TOKEN" ]; then
             echo "::add-mask::$TOKEN"
           fi

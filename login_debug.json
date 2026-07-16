@@ -1,6 +1,6 @@
 {
-  "http_code": "401",
+  "http_code": "500",
   "body_without_token": {
-    "error": "Invalid credentials."
+    "error": "secretOrPrivateKey must have a value"
   }
 }

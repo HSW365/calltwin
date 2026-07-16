@@ -16,6 +16,7 @@ const leadSchema = new mongoose.Schema(
     },
     callbackAt: { type: Date, default: null },
     notes: { type: String, default: "" },
+    smsSentAt: { type: Date, default: null }, // cold offer-text outreach (separate from post-call SMS)
 
     campaign: { type: mongoose.Schema.Types.ObjectId, ref: "Campaign", default: null },
   },

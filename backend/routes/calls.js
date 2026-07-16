@@ -15,6 +15,42 @@ const router = express.Router();
 const FUNNEL_LINK =
   process.env.FUNNEL_LINK || "https://hsw365.github.io/QUEENEE.github.io/signup.html";
 
+// Default cold-outreach text for the HSW365 Front Desk + Website offer.
+// Kept short (fits one SMS segment) and always includes an opt-out per
+// carrier/TCPA best practice for unsolicited marketing texts.
+const DEFAULT_OFFER_SMS =
+  `Hi, this is HSW365Media. We build modern websites + a 24/7 AI front desk ` +
+  `assistant that answers every call so your business never misses one. ` +
+  `Free demo, no cost to look: ${FUNNEL_LINK} Reply STOP to opt out.`;
+
+// ------------------------------------------------------------------
+// Cold SMS outreach — texts a lead directly with the offer, independent
+// of the calling pipeline (no call has to happen first). Used by the
+// automated outreach script (see calltwin repo: hsw365_sms_outreach.py),
+// but also callable one-off from the dashboard.
+// ------------------------------------------------------------------
+router.post("/sms/:leadId", requireAuth, async (req, res) => {
+  try {
+    const lead = await Lead.findOne({ _id: req.params.leadId, owner: req.user._id });
+    if (!lead) return res.status(404).json({ error: "Lead not found." });
+    if (!lead.phone) return res.status(400).json({ error: "Lead has no phone number." });
+    if (lead.status === "do_not_call") {
+      return res.status(400).json({ error: "Lead is marked do_not_call." });
+    }
+    if (lead.smsSentAt) {
+      return res.json({ skipped: true, reason: "already texted", smsSentAt: lead.smsSentAt });
+    }
+
+    const message = req.body.message || DEFAULT_OFFER_SMS;
+    await sendSMS({ to: lead.phone, message });
+    lead.smsSentAt = new Date();
+    await lead.save();
+    res.json({ success: true, leadId: lead._id, phone: lead.phone });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ------------------------------------------------------------------
 // Manual dial — for testing a single lead right now from the dashboard,
 // outside of a scheduled campaign.

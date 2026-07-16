@@ -1,0 +1,35 @@
+name: HSW365 SMS Outreach to Business Owners
+
+on:
+  schedule:
+    - cron: "30 14 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  text:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run SMS outreach
+        env:
+          CALLTWIN_API_URL: ${{ secrets.CALLTWIN_API_URL }}
+          CALLTWIN_USER_TOKEN: ${{ secrets.CALLTWIN_USER_TOKEN }}
+          SMS_MAX_PER_RUN: "15"
+        run: python hsw365_sms_outreach.py
+
+      - name: Commit outreach log
+        run: |
+          git config user.name "hsw365-sms-outreach-bot"
+          git config user.email "hsw365media@gmail.com"
+          git add -A
+          git diff --quiet --cached || git commit -m "SMS outreach run: $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push

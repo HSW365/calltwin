@@ -8,7 +8,12 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-const FUNNEL_LINK = `${process.env.PUBLIC_BASE_URL}/dashboard`; // CallTwin signup — was mistakenly pointing to hsw365.co streetwear store
+// Where the SMS close-link sends leads. Defaults to the QUEENEE.io free-demo
+// signup page (HSW365 Front Desk + Website offer). Override with FUNNEL_LINK
+// in the environment to point a specific campaign elsewhere (e.g. back to
+// the CallTwin dashboard signup at `${PUBLIC_BASE_URL}/dashboard`).
+const FUNNEL_LINK =
+  process.env.FUNNEL_LINK || "https://hsw365.github.io/QUEENEE.github.io/signup.html";
 
 // ------------------------------------------------------------------
 // Manual dial — for testing a single lead right now from the dashboard,

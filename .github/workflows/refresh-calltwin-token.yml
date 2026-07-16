@@ -1,0 +1,33 @@
+name: Refresh CallTwin API Token
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in and extract fresh token
+        id: login
+        env:
+          EMAIL: ${{ secrets.CALLTWIN_LOGIN_EMAIL }}
+          PASSWORD: ${{ secrets.CALLTWIN_LOGIN_PASSWORD }}
+        run: |
+          RESPONSE=$(curl -s -X POST "https://calltwin.onrender.com/api/auth/login" \
+            -H "Content-Type: application/json" \
+            -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}")
+          TOKEN=$(echo "$RESPONSE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('token',''))")
+          if [ -z "$TOKEN" ]; then
+            echo "Login failed. Response:"
+            echo "$RESPONSE"
+            exit 1
+          fi
+          echo "::add-mask::$TOKEN"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Update CALLTWIN_USER_TOKEN secret
+        env:
+          GH_TOKEN: ${{ secrets.MGMT_PAT }}
+        run: |
+          gh secret set CALLTWIN_USER_TOKEN --repo HSW365/calltwin --body "${{ steps.login.outputs.token }}"
+          echo "Token refreshed successfully."

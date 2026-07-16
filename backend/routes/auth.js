@@ -20,7 +20,7 @@ router.get("/me", requireAuth, async (req, res) => {
 });
 
 function signToken(user) {
-  return jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+  return jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "365d" });
 }
 
 // Free, instant signup — no card required.

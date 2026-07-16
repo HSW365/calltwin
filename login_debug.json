@@ -1,0 +1,6 @@
+{
+  "http_code": "401",
+  "body_without_token": {
+    "error": "Invalid credentials."
+  }
+}

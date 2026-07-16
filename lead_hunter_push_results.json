@@ -1,0 +1,54 @@
+{
+  "calltwin_token_configured": true,
+  "calltwin_campaign_configured": true,
+  "results": [
+    {
+      "businessName": "State Farm Insurance: Ann Lin",
+      "pushed": true
+    },
+    {
+      "businessName": "Allstate",
+      "pushed": true
+    },
+    {
+      "businessName": "Northpoint360",
+      "pushed": true
+    },
+    {
+      "businessName": "Volpe Real Estate",
+      "pushed": true
+    },
+    {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": true
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": true
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": true
+    },
+    {
+      "businessName": "Deptford Cuts and Color s",
+      "pushed": true
+    },
+    {
+      "businessName": "Surfs Up Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "Tri-Point Electric",
+      "pushed": true
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": true
+    },
+    {
+      "businessName": "Cohen Funeral Services",
+      "pushed": true
+    }
+  ]
+}

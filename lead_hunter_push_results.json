@@ -3,18 +3,19 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Pete's Auto Service",
+      "businessName": "State Farm Insurance: Ann Lin",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Exton Collision",
+      "businessName": "Allstate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "King Street Hair",
-      "pushed": true
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Deptford Cuts and Color s",
@@ -25,27 +26,11 @@
       "pushed": false
     },
     {
-      "businessName": "Ritetax FInancial",
-      "pushed": true
-    },
-    {
-      "businessName": "Liberty Tax",
-      "pushed": true
-    },
-    {
       "businessName": "Gamble's Newark Florist",
-      "pushed": true
+      "pushed": false
     },
     {
-      "businessName": "Italo's Tailor Shop",
-      "pushed": true
-    },
-    {
-      "businessName": "Sunsilk Tailor",
-      "pushed": true
-    },
-    {
-      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+      "businessName": "Garcia Family Roofing",
       "pushed": true
     }
   ]

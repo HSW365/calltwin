@@ -13,25 +13,36 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "King Street Hair",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Deptford Cuts and Color s",
+      "businessName": "Northpoint360",
       "pushed": false
     },
     {
-      "businessName": "Surfs Up Salon",
+      "businessName": "Volpe Real Estate",
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
+      "businessName": "Joseph Hart, Inc. Plumbing",
+      "pushed": true
+    },
+    {
+      "businessName": "Tri-Point Electric",
       "pushed": false
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
+      "pushed": false
+    },
+    {
+      "businessName": "The UPS Store",
+      "pushed": true
     },
     {
       "businessName": "Garcia Family Roofing",
-      "pushed": true
+      "pushed": false
     }
   ]
 }

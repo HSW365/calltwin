@@ -3,34 +3,14 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Northpoint360",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Volpe Real Estate",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Ufberg Dental P.C.",
-      "pushed": false
-    },
-    {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
-    },
-    {
       "businessName": "Pete's Auto Service",
-      "pushed": true
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Exton Collision",
-      "pushed": true
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Deptford Cuts and Color s",
@@ -42,6 +22,10 @@
     },
     {
       "businessName": "Tri-Point Electric",
+      "pushed": false
+    },
+    {
+      "businessName": "Gamble's Newark Florist",
       "pushed": false
     },
     {

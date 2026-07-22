@@ -3,21 +3,29 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Pete's Auto Service",
+      "businessName": "State Farm Insurance: Ann Lin",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Exton Collision",
+      "businessName": "Allstate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Deptford Cuts and Color s",
+      "businessName": "Ufberg Dental P.C.",
       "pushed": false
     },
     {
-      "businessName": "Surfs Up Salon",
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
+      "businessName": "King Street Hair",
       "pushed": false
     },
     {
@@ -25,8 +33,8 @@
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
-      "pushed": false
+      "businessName": "John's Tree Service",
+      "pushed": true
     },
     {
       "businessName": "Garcia Family Roofing",

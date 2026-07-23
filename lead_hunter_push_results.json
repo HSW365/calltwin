@@ -3,25 +3,21 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
+      "businessName": "Northpoint360",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Allstate",
+      "businessName": "Volpe Real Estate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Ufberg Dental P.C.",
+      "businessName": "Pete's Auto Service",
       "pushed": false
     },
     {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
+      "businessName": "Exton Collision",
       "pushed": false
     },
     {
@@ -29,15 +25,31 @@
       "pushed": false
     },
     {
-      "businessName": "Tri-Point Electric",
+      "businessName": "Deptford Cuts and Color s",
+      "pushed": false
+    },
+    {
+      "businessName": "Surfs Up Salon",
       "pushed": false
     },
     {
       "businessName": "John's Tree Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Bounce U",
       "pushed": true
     },
     {
-      "businessName": "Garcia Family Roofing",
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
+      "pushed": false
+    },
+    {
+      "businessName": "The UPS Store",
       "pushed": false
     }
   ]

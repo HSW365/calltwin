@@ -4,6 +4,6 @@
     "detail": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=15)",
     "status_code": null,
     "response_snippet": "",
-    "checked_at": "2026-07-23 16:05:54"
+    "checked_at": "2026-07-24 15:50:57"
   }
 ]

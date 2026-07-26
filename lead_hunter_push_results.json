@@ -21,6 +21,18 @@
       "pushed": false
     },
     {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
       "businessName": "Pete's Auto Service",
       "pushed": false
     },
@@ -29,15 +41,7 @@
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
-      "pushed": false
-    },
-    {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
-    },
-    {
-      "businessName": "Tri-Point Electric",
+      "businessName": "King Street Hair",
       "pushed": false
     },
     {
@@ -54,6 +58,14 @@
     },
     {
       "businessName": "Cohen Funeral Services",
+      "pushed": false
+    },
+    {
+      "businessName": "The UPS Store",
+      "pushed": false
+    },
+    {
+      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

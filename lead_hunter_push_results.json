@@ -3,69 +3,23 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Allstate",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Northpoint360",
+      "businessName": "Deptford Cuts and Color s",
       "pushed": false
     },
     {
-      "businessName": "Volpe Real Estate",
+      "businessName": "Surfs Up Salon",
       "pushed": false
     },
     {
-      "businessName": "Ufberg Dental P.C.",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "Bear-Glasgow Dental",
+      "businessName": "Bounce U",
       "pushed": false
     },
     {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
-    },
-    {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Exton Collision",
-      "pushed": false
-    },
-    {
-      "businessName": "King Street Hair",
-      "pushed": false
-    },
-    {
-      "businessName": "Ritetax FInancial",
-      "pushed": false
-    },
-    {
-      "businessName": "Liberty Tax",
-      "pushed": false
-    },
-    {
-      "businessName": "Alleva Funeral Home",
-      "pushed": false
-    },
-    {
-      "businessName": "Cohen Funeral Services",
-      "pushed": false
-    },
-    {
-      "businessName": "The UPS Store",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
+      "businessName": "Gamble's Newark Florist",
       "pushed": false
     }
   ]

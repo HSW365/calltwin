@@ -3,26 +3,33 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
+      "businessName": "State Farm Insurance: Ann Lin",
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
+      "businessName": "Allstate",
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
       "businessName": "Pete's Auto Service",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Exton Collision",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "King Street Hair",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
+      "businessName": "Exton Collision",
+      "pushed": false
+    },
+    {
+      "businessName": "King Street Hair",
+      "pushed": false
+    },
+    {
+      "businessName": "Deptford Cuts and Color s",
+      "pushed": false
+    },
+    {
+      "businessName": "Surfs Up Salon",
       "pushed": false
     },
     {
@@ -30,11 +37,15 @@
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
+      "businessName": "Ritetax FInancial",
       "pushed": false
     },
     {
-      "businessName": "The UPS Store",
+      "businessName": "Liberty Tax",
+      "pushed": false
+    },
+    {
+      "businessName": "Gamble's Newark Florist",
       "pushed": false
     },
     {

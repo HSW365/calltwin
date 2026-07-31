@@ -3,12 +3,12 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
+      "businessName": "Northpoint360",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Allstate",
+      "businessName": "Volpe Real Estate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
@@ -25,15 +25,11 @@
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
+      "businessName": "Joseph Hart, Inc. Plumbing",
       "pushed": false
     },
     {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
-    },
-    {
-      "businessName": "Bounce U",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
@@ -49,7 +45,7 @@
       "pushed": false
     },
     {
-      "businessName": "Garcia Family Roofing",
+      "businessName": "The UPS Store",
       "pushed": false
     }
   ]

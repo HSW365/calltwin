@@ -13,48 +13,27 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Northpoint360",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Volpe Real Estate",
-      "pushed": false
-    },
-    {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Exton Collision",
-      "pushed": false
-    },
-    {
       "businessName": "King Street Hair",
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
+      "businessName": "Joseph Hart, Inc. Plumbing",
       "pushed": false
     },
     {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
-    },
-    {
-      "businessName": "Bounce U",
-      "pushed": false
-    },
-    {
-      "businessName": "Ritetax FInancial",
-      "pushed": false
-    },
-    {
-      "businessName": "Liberty Tax",
+      "businessName": "John's Tree Service",
       "pushed": false
     },
     {
       "businessName": "Gamble's Newark Florist",
+      "pushed": false
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
       "pushed": false
     },
     {
@@ -67,10 +46,6 @@
     },
     {
       "businessName": "Tino's Custom Tailoring & Dry Cleaning",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

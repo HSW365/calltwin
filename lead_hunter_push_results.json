@@ -13,6 +13,20 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
       "businessName": "Pete's Auto Service",
       "pushed": false
     },
@@ -33,11 +47,31 @@
       "pushed": false
     },
     {
-      "businessName": "The UPS Store",
+      "businessName": "Bounce U",
       "pushed": false
     },
     {
-      "businessName": "Garcia Family Roofing",
+      "businessName": "Gamble's Newark Florist",
+      "pushed": false
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
+      "pushed": false
+    },
+    {
+      "businessName": "Italo's Tailor Shop",
+      "pushed": false
+    },
+    {
+      "businessName": "Sunsilk Tailor",
+      "pushed": false
+    },
+    {
+      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
       "pushed": false
     }
   ]

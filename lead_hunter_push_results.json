@@ -13,25 +13,7 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Ufberg Dental P.C.",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
-    },
-    {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Exton Collision",
+      "businessName": "King Street Hair",
       "pushed": false
     },
     {
@@ -43,23 +25,11 @@
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
-      "pushed": false
-    },
-    {
       "businessName": "Bounce U",
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
-      "pushed": false
-    },
-    {
-      "businessName": "Alleva Funeral Home",
-      "pushed": false
-    },
-    {
-      "businessName": "Cohen Funeral Services",
+      "businessName": "The UPS Store",
       "pushed": false
     },
     {

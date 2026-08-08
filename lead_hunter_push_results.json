@@ -13,7 +13,11 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "King Street Hair",
+      "businessName": "Pete's Auto Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Exton Collision",
       "pushed": false
     },
     {
@@ -25,23 +29,31 @@
       "pushed": false
     },
     {
+      "businessName": "Tri-Point Electric",
+      "pushed": false
+    },
+    {
+      "businessName": "John's Tree Service",
+      "pushed": false
+    },
+    {
       "businessName": "Bounce U",
       "pushed": false
     },
     {
+      "businessName": "Ritetax FInancial",
+      "pushed": false
+    },
+    {
+      "businessName": "Liberty Tax",
+      "pushed": false
+    },
+    {
+      "businessName": "Gamble's Newark Florist",
+      "pushed": false
+    },
+    {
       "businessName": "The UPS Store",
-      "pushed": false
-    },
-    {
-      "businessName": "Italo's Tailor Shop",
-      "pushed": false
-    },
-    {
-      "businessName": "Sunsilk Tailor",
-      "pushed": false
-    },
-    {
-      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
       "pushed": false
     }
   ]

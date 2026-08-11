@@ -3,33 +3,29 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
+      "businessName": "Northpoint360",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Allstate",
+      "businessName": "Volpe Real Estate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Exton Collision",
-      "pushed": false
     },
     {
       "businessName": "King Street Hair",
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
+      "businessName": "Deptford Cuts and Color s",
       "pushed": false
     },
     {
-      "businessName": "Bounce U",
+      "businessName": "Surfs Up Salon",
+      "pushed": false
+    },
+    {
+      "businessName": "John's Tree Service",
       "pushed": false
     },
     {
@@ -41,7 +37,7 @@
       "pushed": false
     },
     {
-      "businessName": "Garcia Family Roofing",
+      "businessName": "The UPS Store",
       "pushed": false
     }
   ]

@@ -3,14 +3,22 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Northpoint360",
+      "businessName": "State Farm Insurance: Ann Lin",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Volpe Real Estate",
+      "businessName": "Allstate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
+      "businessName": "Northpoint360",
+      "pushed": false
+    },
+    {
+      "businessName": "Volpe Real Estate",
+      "pushed": false
     },
     {
       "businessName": "Ufberg Dental P.C.",
@@ -29,43 +37,19 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "Deptford Cuts and Color s",
       "pushed": false
     },
     {
-      "businessName": "Ritetax FInancial",
+      "businessName": "Surfs Up Salon",
       "pushed": false
     },
     {
-      "businessName": "Liberty Tax",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
-      "pushed": false
-    },
-    {
-      "businessName": "Alleva Funeral Home",
-      "pushed": false
-    },
-    {
-      "businessName": "Cohen Funeral Services",
-      "pushed": false
-    },
-    {
-      "businessName": "The UPS Store",
-      "pushed": false
-    },
-    {
-      "businessName": "Italo's Tailor Shop",
-      "pushed": false
-    },
-    {
-      "businessName": "Sunsilk Tailor",
-      "pushed": false
-    },
-    {
-      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+      "businessName": "John's Tree Service",
       "pushed": false
     },
     {

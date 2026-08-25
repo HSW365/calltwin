@@ -3,19 +3,18 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Northpoint360",
+      "businessName": "State Farm Insurance: Ann Lin",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Volpe Real Estate",
+      "businessName": "Allstate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Ufberg Dental P.C.",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+      "pushed": false
     },
     {
       "businessName": "Bear-Glasgow Dental",
@@ -50,23 +49,15 @@
       "pushed": false
     },
     {
-      "businessName": "Tri-Point Electric",
+      "businessName": "Ritetax FInancial",
       "pushed": false
     },
     {
-      "businessName": "Bounce U",
+      "businessName": "Liberty Tax",
       "pushed": false
     },
     {
-      "businessName": "Italo's Tailor Shop",
-      "pushed": false
-    },
-    {
-      "businessName": "Sunsilk Tailor",
-      "pushed": false
-    },
-    {
-      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

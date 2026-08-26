@@ -13,18 +13,6 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Ufberg Dental P.C.",
-      "pushed": false
-    },
-    {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
-    },
-    {
       "businessName": "Pete's Auto Service",
       "pushed": false
     },
@@ -37,15 +25,11 @@
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
-    },
-    {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "Bounce U",
       "pushed": false
     },
     {
@@ -54,10 +38,6 @@
     },
     {
       "businessName": "Liberty Tax",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

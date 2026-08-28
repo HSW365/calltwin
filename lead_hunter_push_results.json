@@ -14,18 +14,15 @@
     },
     {
       "businessName": "Northpoint360",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+      "pushed": false
     },
     {
       "businessName": "Volpe Real Estate",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+      "pushed": false
     },
     {
       "businessName": "Ufberg Dental P.C.",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+      "pushed": false
     },
     {
       "businessName": "Bear-Glasgow Dental",

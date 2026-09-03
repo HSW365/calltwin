@@ -1,128 +1,128 @@
 [
   {
     "query": "auto repair shop",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:55:41Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:57:07"
+    "status_code": 504,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:52:02"
   },
   {
     "query": "hair salon",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:55:41Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:57:13"
+    "status_code": 504,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:52:16"
   },
   {
     "query": "nail salon",
-    "status_code": 504,
-    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
-    "checked_at": "2026-09-02 16:57:30"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:50:46Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:52:24"
   },
   {
     "query": "restaurant",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:55:41Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:57:48"
+    "status_code": 504,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:52:36"
   },
   {
     "query": "plumber",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:56:40Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:57:53"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:50:46Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:52:43"
   },
   {
     "query": "electrician",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:56:40Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:58:08"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:50:46Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:52:49"
   },
   {
     "query": "landscaping",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:56:40Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:58:20"
+    "status_code": 429,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:53:07"
   },
   {
     "query": "daycare center",
-    "status_code": 429,
-    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
-    "checked_at": "2026-09-02 16:58:34"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:51:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:53:13"
   },
   {
     "query": "tax preparer",
-    "status_code": 429,
-    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
-    "checked_at": "2026-09-02 16:58:49"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:51:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:53:32"
   },
   {
     "query": "insurance agency",
-    "status_code": 429,
-    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
-    "checked_at": "2026-09-02 16:59:03"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:51:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:53:47"
   },
   {
     "query": "real estate agent",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:57:41Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 16:59:26"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:52:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:53:53"
   },
   {
     "query": "law office",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:58:42Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:00:19"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:52:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:53:58"
   },
   {
     "query": "dentist",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T16:59:43Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:01:10"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:52:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:54:15"
   },
   {
     "query": "gym",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:00:46Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:02:02"
+    "status_code": 504,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:54:28"
   },
   {
     "query": "bakery",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:00:46Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:02:18"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:52:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:54:39"
   },
   {
     "query": "florist",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:01:46Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:03:09"
+    "status_code": 429,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:54:55"
   },
   {
     "query": "photographer",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:02:47Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:03:58"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:53:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:55:14"
   },
   {
     "query": "funeral home",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:02:47Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:04:06"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:53:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:55:20"
   },
   {
     "query": "printing shop",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:02:47Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:04:19"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:53:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:55:43"
   },
   {
     "query": "alterations tailor",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-02T17:02:47Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-09-02 17:04:41"
+    "status_code": 504,
+    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
+    "checked_at": "2026-09-03 16:55:57"
   },
   {
     "query": "roofing contractor",
-    "status_code": 429,
-    "response_snippet": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan",
-    "checked_at": "2026-09-02 17:04:56"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-09-03T16:54:51Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-09-03 16:56:03"
   }
 ]

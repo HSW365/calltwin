@@ -13,23 +13,15 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Northpoint360",
+      "businessName": "Pete's Auto Service",
       "pushed": false
     },
     {
-      "businessName": "Volpe Real Estate",
+      "businessName": "Exton Collision",
       "pushed": false
     },
     {
-      "businessName": "Ufberg Dental P.C.",
-      "pushed": false
-    },
-    {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
+      "businessName": "King Street Hair",
       "pushed": false
     },
     {
@@ -41,15 +33,7 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
-      "pushed": false
-    },
-    {
       "businessName": "Tri-Point Electric",
-      "pushed": false
-    },
-    {
-      "businessName": "Bounce U",
       "pushed": false
     },
     {
@@ -58,6 +42,10 @@
     },
     {
       "businessName": "Liberty Tax",
+      "pushed": false
+    },
+    {
+      "businessName": "Gamble's Newark Florist",
       "pushed": false
     },
     {
@@ -70,10 +58,6 @@
     },
     {
       "businessName": "The UPS Store",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

@@ -13,6 +13,14 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
+      "businessName": "Northpoint360",
+      "pushed": false
+    },
+    {
+      "businessName": "Volpe Real Estate",
+      "pushed": false
+    },
+    {
       "businessName": "Pete's Auto Service",
       "pushed": false
     },
@@ -25,11 +33,7 @@
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
-      "pushed": false
-    },
-    {
-      "businessName": "Surfs Up Salon",
+      "businessName": "Joseph Hart, Inc. Plumbing",
       "pushed": false
     },
     {
@@ -37,11 +41,11 @@
       "pushed": false
     },
     {
-      "businessName": "Ritetax FInancial",
+      "businessName": "John's Tree Service",
       "pushed": false
     },
     {
-      "businessName": "Liberty Tax",
+      "businessName": "Bill Johnston Landscape Co.",
       "pushed": false
     },
     {
@@ -58,6 +62,18 @@
     },
     {
       "businessName": "The UPS Store",
+      "pushed": false
+    },
+    {
+      "businessName": "Italo's Tailor Shop",
+      "pushed": false
+    },
+    {
+      "businessName": "Sunsilk Tailor",
+      "pushed": false
+    },
+    {
+      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
       "pushed": false
     }
   ]

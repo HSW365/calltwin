@@ -37,10 +37,6 @@
       "pushed": false
     },
     {
-      "businessName": "Tri-Point Electric",
-      "pushed": false
-    },
-    {
       "businessName": "John's Tree Service",
       "pushed": false
     },
@@ -49,15 +45,15 @@
       "pushed": false
     },
     {
+      "businessName": "Ritetax FInancial",
+      "pushed": false
+    },
+    {
+      "businessName": "Liberty Tax",
+      "pushed": false
+    },
+    {
       "businessName": "Gamble's Newark Florist",
-      "pushed": false
-    },
-    {
-      "businessName": "Alleva Funeral Home",
-      "pushed": false
-    },
-    {
-      "businessName": "Cohen Funeral Services",
       "pushed": false
     },
     {
@@ -74,6 +70,18 @@
     },
     {
       "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+      "pushed": false
+    },
+    {
+      "businessName": "Jefferson Roofing and Exterior",
+      "pushed": true
+    },
+    {
+      "businessName": "Murphy Roofing",
+      "pushed": true
+    },
+    {
+      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

@@ -14,10 +14,23 @@
     },
     {
       "businessName": "Northpoint360",
-      "pushed": false
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Volpe Real Estate",
+      "pushed": false
+    },
+    {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
       "pushed": false
     },
     {
@@ -33,7 +46,7 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
@@ -45,19 +58,11 @@
       "pushed": false
     },
     {
-      "businessName": "Ritetax FInancial",
+      "businessName": "Alleva Funeral Home",
       "pushed": false
     },
     {
-      "businessName": "Liberty Tax",
-      "pushed": false
-    },
-    {
-      "businessName": "Gamble's Newark Florist",
-      "pushed": false
-    },
-    {
-      "businessName": "The UPS Store",
+      "businessName": "Cohen Funeral Services",
       "pushed": false
     },
     {
@@ -74,11 +79,11 @@
     },
     {
       "businessName": "Jefferson Roofing and Exterior",
-      "pushed": true
+      "pushed": false
     },
     {
       "businessName": "Murphy Roofing",
-      "pushed": true
+      "pushed": false
     },
     {
       "businessName": "Garcia Family Roofing",

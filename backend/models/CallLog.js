@@ -4,7 +4,7 @@ const callLogSchema = new mongoose.Schema(
   {
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
     lead: { type: mongoose.Schema.Types.ObjectId, ref: "Lead", required: true },
-    twilioCallSid: { type: String, default: null },
+    providerCallId: { type: String, default: null, index: true },
 
     outcome: {
       type: String,

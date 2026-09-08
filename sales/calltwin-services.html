@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CallTwin + Business Website Services | HSW365 Media</title>
+<meta name="description" content="Buy CallTwin AI phone receptionist service, a new business website, or both from HSW365 Media.">
+<style>
+:root{--bg:#070912;--card:#10162a;--cyan:#22d3ee;--violet:#a855f7;--pink:#ec4899;--yellow:#fbbf24;--text:#f8fafc;--muted:#aab4c8;--line:#26304a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 10%,#172554 0,#070912 36%),radial-gradient(circle at 85% 20%,#4c1d95 0,#070912 35%);color:var(--text);font-family:Inter,Arial,sans-serif;line-height:1.55}.wrap{max-width:1120px;margin:auto;padding:28px 20px 80px}.brand{font-weight:900;letter-spacing:2px;color:var(--cyan)}h1{font-size:clamp(42px,7vw,78px);line-height:.98;margin:24px 0 18px;max-width:850px}h1 span{background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;color:transparent}.hero{padding:55px 0 35px}.hero p{font-size:20px;color:var(--muted);max-width:760px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:35px}.card{background:rgba(16,22,42,.9);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:0 18px 60px #0006}.card.featured{border-color:var(--cyan);transform:translateY(-8px)}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;color:var(--cyan);font-weight:800}.price{font-size:42px;font-weight:900;margin:12px 0}.price small{font-size:14px;color:var(--muted);font-weight:500}.card h2{font-size:25px;margin:8px 0}.card p,.card li{color:var(--muted)}ul{padding-left:20px;min-height:150px}button{display:block;width:100%;border:0;border-radius:12px;padding:15px 18px;font-size:16px;font-weight:900;cursor:pointer;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#050505}button.alt{background:linear-gradient(90deg,var(--yellow),var(--pink))}.note{margin-top:30px;padding:18px;border:1px solid var(--line);border-radius:14px;color:var(--muted);background:#0b1020}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px}.step{padding:18px;border-radius:14px;background:#0d1325;border:1px solid var(--line)}.step b{color:var(--cyan)}@media(max-width:850px){.grid,.steps{grid-template-columns:1fr}.card.featured{transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">HSW365 MEDIA</div>
+  <section class="hero">
+    <div class="eyebrow">Business Growth Systems</div>
+    <h1>Stop missing customers. <span>Build the system that answers.</span></h1>
+    <p>Choose CallTwin for an AI-powered business phone assistant, a brand-new professional website, or the complete package. One-time setup pricing. No Twilio dependency.</p>
+  </section>
+
+  <section class="grid">
+    <article class="card featured">
+      <div class="eyebrow">CallTwin</div><h2>AI Phone Receptionist</h2><div class="price">$500 <small>one time</small></div>
+      <p>Give your business a professional AI front desk that can answer calls, qualify leads, handle conversations, and trigger follow-up workflows.</p>
+      <ul><li>AI phone receptionist</li><li>Lead qualification</li><li>Call history and transcripts</li><li>Campaign and lead management</li><li>SMS follow-up workflow</li><li>Business-specific pitch/knowledge base</li></ul>
+      <button onclick="buy('calltwin')">Buy CallTwin — $500</button>
+    </article>
+    <article class="card">
+      <div class="eyebrow">Website</div><h2>New Business Website</h2><div class="price">$500 <small>one time</small></div>
+      <p>A modern customer-facing website built around your business, services, calls to action, contact flow, and brand.</p>
+      <ul><li>Professional responsive design</li><li>Services and offer sections</li><li>Lead/contact conversion flow</li><li>Mobile-friendly layout</li><li>Launch-ready deployment</li><li>Business-focused copy structure</li></ul>
+      <button class="alt" onclick="buy('website')">Buy Website — $500</button>
+    </article>
+    <article class="card">
+      <div class="eyebrow">Complete System</div><h2>Website + CallTwin</h2><div class="price">$900 <small>one time</small></div>
+      <p>Put the website and AI phone system together so customers can discover you online and immediately reach a professional AI front desk.</p>
+      <ul><li>Everything in CallTwin</li><li>Everything in Website</li><li>Connected conversion journey</li><li>One business onboarding flow</li><li>Website-to-call strategy</li><li>Priority implementation workflow</li></ul>
+      <button onclick="buy('bundle')">Buy Complete System — $900</button>
+    </article>
+  </section>
+
+  <div class="note"><strong>How purchase works:</strong> Create/sign into your CallTwin account, select the service, pay securely through Stripe, then complete business onboarding. Your account records the purchased service so the correct implementation workflow can be activated.</div>
+  <div class="steps"><div class="step"><b>01</b><br>Create account</div><div class="step"><b>02</b><br>Choose service</div><div class="step"><b>03</b><br>Pay securely</div><div class="step"><b>04</b><br>Complete onboarding</div></div>
+</div>
+<script>
+function buy(product){
+  const dashboard = '../dashboard/index.html?product=' + encodeURIComponent(product);
+  window.location.href = dashboard;
+}
+</script>
+</body>
+</html>

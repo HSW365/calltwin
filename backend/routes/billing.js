@@ -5,69 +5,73 @@ const { requireAuth } = require("../middleware/authMiddleware");
 const router = express.Router();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+const PRODUCTS = {
+  calltwin: {
+    env: "CALLTWIN_ONE_TIME_PRICE_ID",
+    plan: "calltwin",
+    label: "CallTwin AI Phone Receptionist",
+  },
+  website: {
+    env: "WEBSITE_ONE_TIME_PRICE_ID",
+    plan: "website",
+    label: "New Business Website",
+  },
+  bundle: {
+    env: "CALLTWIN_WEBSITE_BUNDLE_PRICE_ID",
+    plan: "bundle",
+    label: "CallTwin + New Business Website",
+  },
+};
+
+router.get("/products", (req, res) => {
+  res.json({
+    products: [
+      { id: "calltwin", label: PRODUCTS.calltwin.label, price: 500, currency: "usd", oneTime: true },
+      { id: "website", label: PRODUCTS.website.label, price: Number(process.env.WEBSITE_DISPLAY_PRICE || 500), currency: "usd", oneTime: true },
+      { id: "bundle", label: PRODUCTS.bundle.label, price: Number(process.env.BUNDLE_DISPLAY_PRICE || 900), currency: "usd", oneTime: true },
+    ],
+  });
+});
+
 router.post("/checkout", requireAuth, async (req, res) => {
   try {
-    const plan = req.body?.plan === "lifetime" ? "lifetime" : "monthly";
+    const product = PRODUCTS[req.body?.product || "calltwin"];
+    if (!product) return res.status(400).json({ error: "Invalid product." });
 
-    if (plan === "lifetime") {
-      if (!process.env.LIFETIME_PRICE_ID) {
-        return res.status(500).json({
-          error: "LIFETIME_PRICE_ID is not set on the backend. Create a one-time $1,000 price in Stripe and add its price ID to Render env vars.",
-        });
-      }
-
-      const session = await stripe.checkout.sessions.create({
-        mode: "payment", // one-time charge, not a subscription
-        payment_method_types: ["card"],
-        line_items: [{ price: process.env.LIFETIME_PRICE_ID, quantity: 1 }],
-        customer_email: req.user.email,
-        success_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=success`,
-        cancel_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=canceled`,
-        metadata: { userId: req.user._id.toString(), plan: "lifetime" },
-        allow_promotion_codes: true,
-      });
-
-      return res.json({ url: session.url });
-    }
-
-    if (!process.env.CALLTWIN_PRICE_ID) {
+    const priceId = process.env[product.env];
+    if (!priceId) {
       return res.status(500).json({
-        error: "CALLTWIN_PRICE_ID is not set on the backend. Create a $20/mo recurring price in Stripe and add its price ID to Render env vars.",
+        error: `${product.env} is not configured. Create the matching one-time Stripe Price and add its Price ID to Render.`,
       });
-    }
-
-    // Subscription line item (required). Optional one-time setup fee line
-    // item ($299 setup) is included automatically if SETUP_FEE_PRICE_ID is
-    // set — Stripe Checkout supports mixing a one-time price with a
-    // recurring price in a single "subscription" mode session.
-    const line_items = [{ price: process.env.CALLTWIN_PRICE_ID, quantity: 1 }];
-    if (process.env.SETUP_FEE_PRICE_ID) {
-      line_items.push({ price: process.env.SETUP_FEE_PRICE_ID, quantity: 1 });
     }
 
     const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
+      mode: "payment",
       payment_method_types: ["card"],
-      line_items,
+      line_items: [{ price: priceId, quantity: 1 }],
       customer_email: req.user.email,
-      success_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=success`,
-      cancel_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=canceled`,
-      metadata: { userId: req.user._id.toString(), plan: "monthly" },
+      success_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=success&product=${product.plan}`,
+      cancel_url: `${process.env.PUBLIC_BASE_URL}/dashboard?billing=canceled&product=${product.plan}`,
+      metadata: { userId: req.user._id.toString(), plan: product.plan },
       allow_promotion_codes: true,
     });
 
-    res.json({ url: session.url });
+    res.json({ url: session.url, product: product.plan, label: product.label });
   } catch (err) {
+    console.error("[billing/checkout]", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Lets the dashboard confirm right after redirect back from Stripe whether
-// the webhook has landed yet, without needing to hit /api/auth/me repeatedly.
 router.get("/status", requireAuth, async (req, res) => {
   res.json({
     subscriptionStatus: req.user.subscriptionStatus || "inactive",
     isLifetime: !!req.user.isLifetime,
+    products: {
+      calltwin: !!req.user.calltwinPurchased,
+      website: !!req.user.websitePurchased,
+      bundle: !!req.user.bundlePurchased,
+    },
   });
 });
 

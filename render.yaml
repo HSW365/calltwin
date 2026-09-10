@@ -38,7 +38,7 @@ services:
       - key: SIGNALWIRE_API_TOKEN
         sync: false
       - key: SIGNALWIRE_PHONE_NUMBER
-        sync: false
+        value: "+18565943303"
       - key: CALLTWIN_OWNER_EMAIL
         sync: false
       - key: ELEVENLABS_API_KEY

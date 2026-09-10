@@ -4,24 +4,18 @@ const userSchema = new mongoose.Schema(
   {
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     passwordHash: { type: String, default: null },
-
-    subscriptionStatus: {
-      type: String,
-      enum: ["none", "active", "past_due", "canceled"],
-      default: "none",
-    },
-    isLifetime: { type: Boolean, default: false }, // one-time $1,000 purchase — never expires, immune to subscription cancel/past_due webhooks
+    subscriptionStatus: { type: String, enum: ["none", "active", "past_due", "canceled"], default: "none" },
+    isLifetime: { type: Boolean, default: false },
     isFounderAccount: { type: Boolean, default: false },
     stripeCustomerId: { type: String, default: null },
     stripeSubscriptionId: { type: String, default: null },
-
     minutesIncluded: { type: Number, default: 150 },
     minutesUsed: { type: Number, default: 0 },
     minutesResetAt: { type: Date, default: Date.now },
-
-    voiceId: { type: String, default: null }, // ElevenLabs voice_id once cloned
-    pitchScript: { type: String, default: "" }, // free-text knowledge base used by conversationEngine.js
+    voiceId: { type: String, default: null },
+    pitchScript: { type: String, default: "" },
     businessName: { type: String, default: "" },
+    twilioPhoneNumber: { type: String, default: null, index: true }
   },
   { timestamps: true }
 );

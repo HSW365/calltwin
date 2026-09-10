@@ -31,11 +31,13 @@ services:
         sync: false
       - key: LIFETIME_PRICE_ID
         sync: false
-      - key: TWILIO_ACCOUNT_SID
+      - key: SIGNALWIRE_SPACE
         sync: false
-      - key: TWILIO_AUTH_TOKEN
+      - key: SIGNALWIRE_PROJECT_ID
         sync: false
-      - key: TWILIO_PHONE_NUMBER
+      - key: SIGNALWIRE_API_TOKEN
+        sync: false
+      - key: SIGNALWIRE_PHONE_NUMBER
         sync: false
       - key: CALLTWIN_OWNER_EMAIL
         sync: false

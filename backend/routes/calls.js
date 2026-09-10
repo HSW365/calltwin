@@ -39,6 +39,63 @@ router.post("/dial/:leadId", requireAuth, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// SignalWire sends inbound calls here when the CallTwin number is configured
+// with this URL as its Voice/cXML webhook.
+router.post("/inbound", express.urlencoded({ extended: false }), async (req, res) => {
+  try {
+    const from = (req.body.From || req.body.from || "").trim();
+    const to = (req.body.To || req.body.to || process.env.SIGNALWIRE_PHONE_NUMBER || "").trim();
+    if (!from) return res.status(400).type("text/xml").send("<Response><Say>Sorry, we could not identify your number.</Say><Hangup/></Response>");
+
+    let owner = await User.findOne({ signalwirePhoneNumber: to });
+    if (!owner) owner = await User.findOne({ twilioPhoneNumber: to });
+    if (!owner && process.env.CALLTWIN_OWNER_EMAIL) {
+      owner = await User.findOne({ email: process.env.CALLTWIN_OWNER_EMAIL.toLowerCase() });
+    }
+    if (!owner) {
+      return res.type("text/xml").send("<Response><Say>Sorry, this CallTwin number is not configured yet.</Say><Hangup/></Response>");
+    }
+
+    let lead = await Lead.findOne({ owner: owner._id, phone: from });
+    if (!lead) {
+      lead = await Lead.create({
+        owner: owner._id,
+        businessName: "Inbound Caller",
+        contactName: from,
+        phone: from,
+        status: "new",
+        campaign: "calltwin-inbound"
+      });
+    }
+
+    const callLog = await CallLog.create({
+      owner: owner._id,
+      lead: lead._id,
+      outcome: "in_progress"
+    });
+
+    // Keep the provider SID in the existing provider-call field for compatibility.
+    if (req.body.CallSid) {
+      callLog.twilioCallSid = req.body.CallSid;
+      await callLog.save();
+    }
+
+    const opening = buildOpeningLine(owner.businessName || "your business");
+    callLog.transcript.push({ speaker: "ai", text: opening });
+    await callLog.save();
+
+    const cxml = await buildSpeechTurn({
+      text: opening,
+      callSid: callLog._id.toString(),
+      voiceId: owner.voiceId
+    });
+    res.type("text/xml").send(cxml);
+  } catch (err) {
+    console.error("[calls/inbound] error:", err);
+    res.type("text/xml").send("<Response><Say>Sorry, our automated receptionist is temporarily unavailable.</Say><Hangup/></Response>");
+  }
+});
+
 router.post("/twiml", express.urlencoded({ extended: false }), async (req, res) => {
   try {
     const callLogId = req.query.callSid;
@@ -48,7 +105,7 @@ router.post("/twiml", express.urlencoded({ extended: false }), async (req, res) 
     const opening = buildOpeningLine(owner.businessName || "our company");
     callLog.transcript.push({ speaker: "ai", text: opening });
     await callLog.save();
-    const cxml = await buildSpeechTurn({ text: opening, callSid: callLogId });
+    const cxml = await buildSpeechTurn({ text: opening, callSid: callLogId, voiceId: owner.voiceId });
     res.type("text/xml").send(cxml);
   } catch (err) {
     console.error("[calls/twiml] error:", err);
@@ -64,7 +121,7 @@ router.post("/event", express.urlencoded({ extended: false }), async (req, res) 
     if (!callLog) return res.status(404).send("Call not found.");
     const owner = await User.findById(callLog.owner);
     if (!speechResult.trim()) {
-      const cxml = await buildSpeechTurn({ text: "Alright, take care.", callSid: callLogId, endCall: true });
+      const cxml = await buildSpeechTurn({ text: "Alright, take care.", callSid: callLogId, endCall: true, voiceId: owner.voiceId });
       callLog.outcome = "no_answer";
       await callLog.save();
       return res.type("text/xml").send(cxml);
@@ -90,7 +147,7 @@ router.post("/event", express.urlencoded({ extended: false }), async (req, res) 
       callLog.lead.status = "called";
       await callLog.lead.save();
     }
-    const cxml = await buildSpeechTurn({ text: reply, callSid: callLogId, endCall });
+    const cxml = await buildSpeechTurn({ text: reply, callSid: callLogId, endCall, voiceId: owner.voiceId });
     res.type("text/xml").send(cxml);
   } catch (err) {
     console.error("[calls/event] error:", err);

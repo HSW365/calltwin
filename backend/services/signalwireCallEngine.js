@@ -18,8 +18,7 @@ async function placeCall({ to, callSid }) {
     from: FROM_NUMBER,
     url: `${BASE_URL}/api/calls/twiml?callSid=${encodeURIComponent(callSid)}`,
     statusCallback: `${BASE_URL}/api/calls/status?callSid=${encodeURIComponent(callSid)}`,
-    statusCallbackEvent: ["initiated", "ringing", "answered", "completed"],
-    machineDetection: "DetectMessageEnd"
+    statusCallbackEvent: ["initiated", "ringing", "answered", "completed"]
   });
   return call.sid;
 }
@@ -29,10 +28,10 @@ async function sendSMS({ to, message }) {
   return client.messages.create({ to, from: FROM_NUMBER, body: message });
 }
 
-async function buildSpeechTurn({ text, callSid, endCall = false }) {
+async function buildSpeechTurn({ text, callSid, endCall = false, voiceId = null }) {
   const VoiceResponse = RestClient.LaML.VoiceResponse;
   const response = new VoiceResponse();
-  const audioUrl = await synthesizeSpeech(text);
+  const audioUrl = await synthesizeSpeech(text, voiceId || undefined);
   response.play(audioUrl);
   if (endCall) {
     response.hangup();

@@ -12,7 +12,9 @@ router.get("/me", requireAuth, async (req, res) => {
     businessName: req.user.businessName,
     twilioPhoneNumber: req.user.twilioPhoneNumber,
     subscriptionStatus: req.user.subscriptionStatus || "inactive",
-    isLifetime: !!req.user.isLifetime
+    isLifetime: !!req.user.isLifetime,
+    voiceId: req.user.voiceId || "",
+    pitchScript: req.user.pitchScript || ""
   }});
 });
 

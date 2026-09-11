@@ -6,7 +6,6 @@ const authRoutes = require("./routes/auth");
 const leadsRoutes = require("./routes/leads");
 const campaignsRoutes = require("./routes/campaigns");
 const callsRoutes = require("./routes/calls");
-const inboundRoutes = require("./routes/inbound");
 const voiceRoutes = require("./routes/voice");
 const billingRoutes = require("./routes/billing");
 const webhooksRoutes = require("./routes/webhooks");
@@ -24,7 +23,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/leads", leadsRoutes);
 app.use("/api/campaigns", campaignsRoutes);
 app.use("/api/calls", callsRoutes);
-app.use("/api/inbound", inboundRoutes);
 app.use("/api/voice", voiceRoutes);
 app.use("/api/billing", billingRoutes);
 

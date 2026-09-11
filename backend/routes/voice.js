@@ -26,7 +26,7 @@ router.post("/clone", requireAuth, upload.array("samples", 5), async (req, res) 
 });
 
 // Save/update the pitch script (knowledge base) the AI uses on calls.
-router.post("/pitch-script", requireAuth, async (req, res) => {
+async function savePitchScript(req, res) {
   try {
     req.user.pitchScript = req.body.pitchScript || "";
     await req.user.save();
@@ -34,6 +34,9 @@ router.post("/pitch-script", requireAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}
+
+router.post("/pitch-script", requireAuth, savePitchScript);
+router.put("/pitch", requireAuth, savePitchScript);
 
 module.exports = router;

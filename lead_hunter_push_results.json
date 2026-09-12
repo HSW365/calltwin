@@ -13,6 +13,26 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
+      "businessName": "Northpoint360",
+      "pushed": false
+    },
+    {
+      "businessName": "Volpe Real Estate",
+      "pushed": false
+    },
+    {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
       "businessName": "Pete's Auto Service",
       "pushed": false
     },
@@ -33,7 +53,11 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "John's Tree Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Bill Johnston Landscape Co.",
       "pushed": false
     },
     {
@@ -53,6 +77,14 @@
       "pushed": false
     },
     {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
+      "pushed": false
+    },
+    {
       "businessName": "The UPS Store",
       "pushed": false
     },
@@ -66,18 +98,6 @@
     },
     {
       "businessName": "Tino's Custom Tailoring & Dry Cleaning",
-      "pushed": false
-    },
-    {
-      "businessName": "Jefferson Roofing and Exterior",
-      "pushed": false
-    },
-    {
-      "businessName": "Murphy Roofing",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

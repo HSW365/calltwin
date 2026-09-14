@@ -13,18 +13,6 @@
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Ufberg Dental P.C.",
-      "pushed": false
-    },
-    {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
-    },
-    {
       "businessName": "Pete's Auto Service",
       "pushed": false
     },
@@ -33,7 +21,11 @@
       "pushed": false
     },
     {
-      "businessName": "King Street Hair",
+      "businessName": "Deptford Cuts and Color s",
+      "pushed": false
+    },
+    {
+      "businessName": "Surfs Up Salon",
       "pushed": false
     },
     {
@@ -41,23 +33,47 @@
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "Bill Johnston Landscape Co.",
+      "businessName": "Ritetax FInancial",
       "pushed": false
     },
     {
-      "businessName": "Alleva Funeral Home",
+      "businessName": "Liberty Tax",
       "pushed": false
     },
     {
-      "businessName": "Cohen Funeral Services",
+      "businessName": "Gamble's Newark Florist",
       "pushed": false
     },
     {
       "businessName": "The UPS Store",
+      "pushed": false
+    },
+    {
+      "businessName": "Italo's Tailor Shop",
+      "pushed": false
+    },
+    {
+      "businessName": "Sunsilk Tailor",
+      "pushed": false
+    },
+    {
+      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+      "pushed": false
+    },
+    {
+      "businessName": "Jefferson Roofing and Exterior",
+      "pushed": false
+    },
+    {
+      "businessName": "Murphy Roofing",
+      "pushed": false
+    },
+    {
+      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

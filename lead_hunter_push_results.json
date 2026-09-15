@@ -3,21 +3,17 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Northpoint360",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Volpe Real Estate",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
       "businessName": "Pete's Auto Service",
-      "pushed": false
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Exton Collision",
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
+      "businessName": "King Street Hair",
       "pushed": false
     },
     {
@@ -29,11 +25,11 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "Tri-Point Electric",
+      "businessName": "Bounce U",
       "pushed": false
     },
     {
@@ -42,38 +38,6 @@
     },
     {
       "businessName": "Liberty Tax",
-      "pushed": false
-    },
-    {
-      "businessName": "Gamble's Newark Florist",
-      "pushed": false
-    },
-    {
-      "businessName": "The UPS Store",
-      "pushed": false
-    },
-    {
-      "businessName": "Italo's Tailor Shop",
-      "pushed": false
-    },
-    {
-      "businessName": "Sunsilk Tailor",
-      "pushed": false
-    },
-    {
-      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
-      "pushed": false
-    },
-    {
-      "businessName": "Jefferson Roofing and Exterior",
-      "pushed": false
-    },
-    {
-      "businessName": "Murphy Roofing",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

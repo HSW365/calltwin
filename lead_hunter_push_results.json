@@ -3,14 +3,22 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Ufberg Dental P.C.",
+      "businessName": "Northpoint360",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
-      "businessName": "Bear-Glasgow Dental",
+      "businessName": "Volpe Real Estate",
       "pushed": false,
       "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
+    },
+    {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
     },
     {
       "businessName": "Franklinville Family Dentistry",
@@ -25,10 +33,6 @@
       "pushed": false
     },
     {
-      "businessName": "King Street Hair",
-      "pushed": false
-    },
-    {
       "businessName": "Deptford Cuts and Color s",
       "pushed": false
     },
@@ -37,7 +41,11 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "John's Tree Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Bill Johnston Landscape Co.",
       "pushed": false
     },
     {
@@ -45,11 +53,7 @@
       "pushed": false
     },
     {
-      "businessName": "Ritetax FInancial",
-      "pushed": false
-    },
-    {
-      "businessName": "Liberty Tax",
+      "businessName": "The UPS Store",
       "pushed": false
     },
     {
@@ -62,18 +66,6 @@
     },
     {
       "businessName": "Tino's Custom Tailoring & Dry Cleaning",
-      "pushed": false
-    },
-    {
-      "businessName": "Jefferson Roofing and Exterior",
-      "pushed": false
-    },
-    {
-      "businessName": "Murphy Roofing",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

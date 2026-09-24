@@ -117,3 +117,11 @@ Blueprint, fill in the env vars it prompts for, deploy.
   across the nationwide town list)
 - Anything that requires your actual API keys, your GitHub account, or
   your Render account — those steps are yours, no way around it
+
+## Partner API (QUEENEE integration)
+
+QUEENEE (HSW365/queenee) sells CallTwin as a website add-on and provisions accounts here.
+
+- Set `PARTNER_API_KEY` on this service and the same value as `CALLTWIN_PARTNER_KEY` on QUEENEE.
+- `POST /api/partner/accounts` (header `x-partner-key`) upserts by email: `{ email, password?, businessName?, status?: none|active|past_due|canceled, source?, ref?, stripeCustomerId? }`. Password is only applied on create; founder/lifetime accounts are never downgraded.
+- `GET /api/partner/accounts/:email` returns status.

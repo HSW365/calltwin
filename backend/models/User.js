@@ -16,7 +16,9 @@ const userSchema = new mongoose.Schema(
     pitchScript: { type: String, default: "" },
     businessName: { type: String, default: "" },
     twilioPhoneNumber: { type: String, default: null, index: true },
-    signalwirePhoneNumber: { type: String, default: null, index: true }
+    signalwirePhoneNumber: { type: String, default: null, index: true },
+    partnerSource: { type: String, default: null },
+    partnerRef: { type: String, default: null }
   },
   { timestamps: true }
 );

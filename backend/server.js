@@ -10,6 +10,7 @@ const voiceRoutes = require("./routes/voice");
 const billingRoutes = require("./routes/billing");
 const webhooksRoutes = require("./routes/webhooks");
 const legalRoutes = require("./routes/legal");
+const partnerRoutes = require("./routes/partner");
 const { startScheduler } = require("./services/scheduler");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,7 @@ app.use("/api/campaigns", campaignsRoutes);
 app.use("/api/calls", callsRoutes);
 app.use("/api/voice", voiceRoutes);
 app.use("/api/billing", billingRoutes);
+app.use("/api/partner", partnerRoutes);
 
 app.get("/health", (req, res) => res.json({ status: "ok", service: "CallTwin", time: new Date().toISOString() }));
 app.get("/", (req, res) => res.redirect(302, "/health"));

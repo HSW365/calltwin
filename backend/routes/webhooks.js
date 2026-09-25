@@ -1,6 +1,7 @@
 const express = require("express");
 const Stripe = require("stripe");
 const User = require("../models/User");
+const { handleStripeEvent: handleQueeneeEvent } = require("./queenee");
 
 const router = express.Router();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -19,6 +20,8 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
   }
 
   try {
+    // QUEENEE website orders + CallTwin add-on installments are handled separately.
+    if (await handleQueeneeEvent(event)) return res.json({ received: true, handler: "queenee" });
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;

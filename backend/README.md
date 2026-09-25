@@ -118,10 +118,11 @@ Blueprint, fill in the env vars it prompts for, deploy.
 - Anything that requires your actual API keys, your GitHub account, or
   your Render account — those steps are yours, no way around it
 
-## Partner API (QUEENEE integration)
+## QUEENEE integration
 
-QUEENEE (HSW365/queenee) sells CallTwin as a website add-on and provisions accounts here.
+QUEENEE (HSW365/queenee) is a static landing page on GitHub Pages. This backend runs its server side:
 
-- Set `PARTNER_API_KEY` on this service and the same value as `CALLTWIN_PARTNER_KEY` on QUEENEE.
-- `POST /api/partner/accounts` (header `x-partner-key`) upserts by email: `{ email, password?, businessName?, status?: none|active|past_due|canceled, source?, ref?, stripeCustomerId? }`. Password is only applied on create; founder/lifetime accounts are never downgraded.
-- `GET /api/partner/accounts/:email` returns status.
+- `POST /api/queenee/orders`: order form from the signup popup (CORS: `QUEENEE_ORIGINS`). Creates the customer's CallTwin login right away (inactive).
+- `GET /api/queenee/orders/:id?t=TOKEN` and `GET /api/queenee/session/:checkoutSessionId`: status for the success page.
+- `GET|PATCH /api/queenee/admin/orders`: header `x-admin-token: QUEENEE_ADMIN_TOKEN`.
+- Stripe webhook (`/api/webhooks/stripe`): QUEENEE checkouts are recognized by `client_reference_id` starting `Q-` (or a Payment Link id in `QUEENEE_PAYMENT_LINK_IDS`). A paid checkout turns CallTwin on. Paid invoices are counted, and after payment 6 (`CALLTWIN_ADDON_MONTHS=5` + day one) the subscription is set to cancel at period end. A failed payment sets `past_due`. When the plan ends, CallTwin stays active (`CALLTWIN_AFTER_PLAN=keep`) or turns off (`end`).

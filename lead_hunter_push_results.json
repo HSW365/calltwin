@@ -3,26 +3,19 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Northpoint360",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
-      "businessName": "Volpe Real Estate",
-      "pushed": false,
-      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
-    },
-    {
       "businessName": "Ufberg Dental P.C.",
-      "pushed": false
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Bear-Glasgow Dental",
-      "pushed": false
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Franklinville Family Dentistry",
-      "pushed": false
+      "pushed": false,
+      "error": "HTTPSConnectionPool(host='calltwin.onrender.com', port=443): Read timed out. (read timeout=10)"
     },
     {
       "businessName": "Pete's Auto Service",
@@ -33,23 +26,27 @@
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
+      "businessName": "King Street Hair",
       "pushed": false
     },
     {
-      "businessName": "Surfs Up Salon",
+      "businessName": "Joseph Hart, Inc. Plumbing",
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Bill Johnston Landscape Co.",
-      "pushed": false
+      "businessName": "John C. Ciervo & Son",
+      "pushed": true
     },
     {
       "businessName": "Bounce U",
+      "pushed": false
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
       "pushed": false
     },
     {
@@ -66,6 +63,18 @@
     },
     {
       "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+      "pushed": false
+    },
+    {
+      "businessName": "Jefferson Roofing and Exterior",
+      "pushed": false
+    },
+    {
+      "businessName": "Murphy Roofing",
+      "pushed": false
+    },
+    {
+      "businessName": "Garcia Family Roofing",
       "pushed": false
     }
   ]

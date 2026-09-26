@@ -10,12 +10,15 @@ const voiceRoutes = require("./routes/voice");
 const billingRoutes = require("./routes/billing");
 const webhooksRoutes = require("./routes/webhooks");
 const legalRoutes = require("./routes/legal");
+const { router: inboundRoutes, ensureInboundRouting } = require("./routes/inbound");
 const { startScheduler } = require("./services/scheduler");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Stripe requires the raw request body for webhook signature verification.
 app.use("/api/webhooks", webhooksRoutes);
+// Inbound calls (SignalWire posts form-encoded) -> ElevenLabs AI receptionist.
+app.use("/api/inbound", inboundRoutes);
 app.use(express.json());
 app.use("/audio", express.static(path.join(__dirname, "public/audio")));
 app.use("/", legalRoutes);
@@ -45,6 +48,9 @@ async function start() {
   await mongoose.connect(mongoUri);
   console.log("[server] Connected to MongoDB.");
   startScheduler();
-  app.listen(PORT, () => console.log(`[server] CallTwin listening on ${PORT}`));
+  app.listen(PORT, () => {
+    console.log(`[server] CallTwin listening on ${PORT}`);
+    ensureInboundRouting().catch((e) => console.error("[inbound] routing error:", e.message));
+  });
 }
 start().catch((err) => { console.error("[server] Failed to start:", err); process.exit(1); });

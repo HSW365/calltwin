@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New Ark — Plumbing, HVAC, Geothermal & Fire Protection | 24/7 NJ</title>
+<meta name="description" content="New Ark: licensed New Jersey plumbing, HVAC, geothermal and fire-protection contractor. Every call answered 24/7. Book online, get an instant estimate, pay your invoice by Zelle, Cash App or card.">
+<meta name="theme-color" content="#0d1316">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":["Plumber","HVACBusiness"],"name":"New Ark","telephone":"+1-908-454-4043","address":{"@type":"PostalAddress","streetAddress":"412 Firth St","addressLocality":"Phillipsburg","addressRegion":"NJ","postalCode":"08865","addressCountry":"US"},"areaServed":"Northern and Western New Jersey","openingHours":"Mo-Su 00:00-23:59","priceRange":"$$"}
+</script>
+<style>
+:root{
+  --ground:#0d1316; --ground-2:#121a1e; --panel:#161f24; --panel-2:#1b262c;
+  --line:#26343b; --line-2:#33444c;
+  --bone:#ece6da; --text:#c9cdca; --muted:#8b9aa1;
+  --copper:#c8793b; --copper-hi:#e39456; --copper-lo:#8f5125;
+  --fire:#d9452f; --ok:#4fae7c; --warn:#d9a53a;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;
+  --body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:6px; --wrap:1180px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--ground);color:var(--text);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+a{color:var(--copper-hi)}
+[hidden]{display:none!important}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--display);color:var(--bone);text-wrap:balance;margin:0;letter-spacing:.01em;line-height:.95}
+h2{font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;text-transform:uppercase}
+h3{font-size:1.6rem;font-weight:800;text-transform:uppercase}
+p{margin:0}
+.eyebrow{font:600 .74rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--copper)}
+.lede{font-size:1.08rem;color:var(--text);max-width:60ch}
+.mono{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--copper-hi);outline-offset:3px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;font:700 .95rem/1 var(--body);letter-spacing:.02em;padding:15px 22px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s,background .15s,border-color .15s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-copper{background:var(--copper);color:#140c05}
+.btn-copper:hover{background:var(--copper-hi)}
+.btn-ghost{background:transparent;color:var(--bone);border-color:var(--line-2)}
+.btn-ghost:hover{border-color:var(--copper)}
+.btn-fire{background:var(--fire);color:#fff}
+.btn[disabled]{opacity:.55;cursor:wait}
+
+/* emergency strip */
+.strip{background:var(--fire);color:#fff;font:600 .82rem/1.3 var(--mono);letter-spacing:.04em}
+.strip .wrap{display:flex;gap:14px;align-items:center;justify-content:center;padding-block:8px;flex-wrap:wrap;text-align:center}
+.strip a{color:#fff;font-weight:700}
+.pulse{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+
+/* nav */
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(13,19,22,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--bone)}
+.brand svg{flex:none}
+.brand b{font:900 1.7rem/1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.brand small{display:block;font:500 .62rem/1.2 var(--mono);letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.nav ul{display:flex;gap:22px;list-style:none;margin:0 0 0 auto;padding:0}
+.nav ul a{color:var(--text);text-decoration:none;font-weight:600;font-size:.92rem}
+.nav ul a:hover{color:var(--copper-hi)}
+.nav .call{margin-left:8px}
+@media (max-width:920px){.nav ul{display:none}.nav .call{margin-left:auto}}
+@media (max-width:420px){.nav .call span.long{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55;pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;padding-block:72px 80px;align-items:center}
+@media (max-width:980px){.hero .wrap{grid-template-columns:1fr;padding-block:48px 56px}}
+.hero h1{font-size:clamp(3.4rem,9vw,7.2rem);font-weight:900;text-transform:uppercase;line-height:.86}
+.hero h1 .el{display:block}
+.hero h1 .el:nth-child(1){color:#9fc6d6}
+.hero h1 .el:nth-child(2){color:var(--bone)}
+.hero h1 .el:nth-child(3){color:#b8a07c}
+.hero h1 .el:nth-child(4){color:var(--copper)}
+.hero .lede{margin-top:22px;font-size:1.15rem}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:36px;padding-top:24px;border-top:1px solid var(--line)}
+.facts div{font:600 .78rem/1.35 var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.facts b{display:block;font:800 2rem/1 var(--display);color:var(--bone);letter-spacing:.02em}
+
+/* console */
+.console{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-2);border-radius:10px;box-shadow:0 30px 80px -30px rgba(0,0,0,.8);overflow:hidden}
+.console-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font:600 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.console-head .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.console-head .clock{margin-left:auto;color:var(--bone)}
+.console-body{padding:22px 20px 20px;display:grid;gap:18px}
+.agent{display:flex;gap:16px;align-items:center}
+.orb{width:64px;height:64px;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,var(--copper-hi),var(--copper-lo) 60%,#3a200e);position:relative}
+.orb::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--copper);opacity:.5;animation:ring 2.4s infinite}
+@keyframes ring{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.25);opacity:0}}
+.agent h3{font-size:1.45rem}
+.agent p{font-size:.9rem;color:var(--muted)}
+.wave{display:flex;gap:3px;align-items:center;height:34px}
+.wave i{flex:1;background:var(--copper);border-radius:2px;height:20%;animation:wv 1.2s ease-in-out infinite}
+@keyframes wv{50%{height:100%}}
+.ticket-feed{border-top:1px dashed var(--line-2);padding-top:14px;display:grid;gap:8px}
+.ticket-feed .row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font:500 .78rem/1.3 var(--mono);color:var(--text)}
+.tag{font:700 .64rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;border-radius:3px;border:1px solid currentColor;white-space:nowrap}
+.tag.w{color:#9fc6d6}.tag.a{color:var(--bone)}.tag.e{color:#b8a07c}.tag.f{color:var(--fire)}
+.ticket-feed .t{color:var(--muted)}
+.console .btn{width:100%}
+.note{font-size:.78rem;color:var(--muted);text-align:center}
+
+/* sections */
+section.block{padding-block:96px;border-bottom:1px solid var(--line)}
+@media (max-width:700px){section.block{padding-block:64px}}
+.head{display:grid;gap:14px;margin-bottom:44px;max-width:780px}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+@media (max-width:1000px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.svc-grid{grid-template-columns:1fr}}
+.svc{background:var(--ground-2);padding:30px 26px 28px;display:flex;flex-direction:column;gap:14px;position:relative;transition:background .2s}
+.svc:hover{background:var(--panel)}
+.svc .spec{font:600 .7rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+.svc .glyph{height:54px}
+.svc h3{font-size:1.9rem}
+.svc p{font-size:.95rem}
+.svc ul{list-style:none;margin:auto 0 0;padding:14px 0 0;border-top:1px solid var(--line);display:grid;gap:7px;font-size:.88rem}
+.svc li::before{content:"— ";color:var(--copper)}
+.svc .readout{font:600 .78rem/1 var(--mono);color:var(--copper-hi)}
+
+/* receptionist flow */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:s}
+@media (max-width:900px){.flow{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.flow{grid-template-columns:1fr}}
+.step{border-top:2px solid var(--copper);padding-top:18px;display:grid;gap:8px;align-content:start;counter-increment:s}
+.step::before{content:"0" counter(s);font:600 .78rem/1 var(--mono);color:var(--copper)}
+.step h3{font-size:1.35rem}
+.step p{font-size:.93rem;color:var(--text)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:1fr;gap:32px}}
+.callout{background:var(--panel);border:1px solid var(--line-2);border-radius:10px;padding:26px;display:grid;gap:14px}
+.callout .big{font:800 3rem/1 var(--display);color:var(--bone)}
+.transcript{font:500 .85rem/1.55 var(--mono);display:grid;gap:10px}
+.transcript .ai{color:var(--copper-hi)}
+.transcript .you{color:var(--bone)}
+.transcript .sys{color:var(--ok);font-size:.76rem}
+
+/* estimate */
+.est{display:grid;grid-template-columns:1fr 360px;gap:0;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+@media (max-width:900px){.est{grid-template-columns:1fr}}
+.est-left{padding:28px;display:grid;gap:22px;background:var(--ground-2)}
+.est-right{padding:28px;background:var(--panel);display:grid;gap:14px;align-content:start;border-left:1px solid var(--line)}
+@media (max-width:900px){.est-right{border-left:0;border-top:1px solid var(--line)}}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:10px}
+legend{font:600 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:inline-block;padding:10px 14px;border:1px solid var(--line-2);border-radius:var(--r);font-weight:600;font-size:.9rem;cursor:pointer;color:var(--text);transition:.15s}
+.chip input:checked+span{border-color:var(--copper);background:rgba(200,121,59,.14);color:var(--bone)}
+.chip input:focus-visible+span{outline:2px solid var(--copper-hi);outline-offset:2px}
+.range{font:800 3rem/1 var(--display);color:var(--bone);font-variant-numeric:tabular-nums}
+.range small{font:500 .8rem/1 var(--mono);color:var(--muted);display:block;margin-top:8px;letter-spacing:.04em}
+.gauge{height:8px;background:var(--line);border-radius:4px;position:relative;overflow:hidden}
+.gauge i{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,var(--copper-lo),var(--copper-hi));border-radius:4px;transition:left .4s,width .4s}
+
+/* forms */
+.form{display:grid;gap:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+label.f{display:grid;gap:6px;font:600 .74rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+input.i,select.i,textarea.i{width:100%;font:500 1rem/1.4 var(--body);color:var(--bone);background:var(--ground);border:1px solid var(--line-2);border-radius:var(--r);padding:13px 14px;letter-spacing:0;text-transform:none}
+input.i:focus,select.i:focus,textarea.i:focus{outline:none;border-color:var(--copper)}
+textarea.i{min-height:110px;resize:vertical}
+.hp{position:absolute;left:-9999px}
+.msg{font-size:.92rem;padding:12px 14px;border-radius:var(--r);border:1px solid}
+.msg.ok{border-color:var(--ok);color:#bfe8d1;background:rgba(79,174,124,.1)}
+.msg.err{border-color:var(--fire);color:#f5c2b9;background:rgba(217,69,47,.1)}
+.book-side{display:grid;gap:22px;align-content:start}
+.contact-line{display:grid;gap:4px;padding:18px 0;border-bottom:1px solid var(--line)}
+.contact-line b{font:800 1.9rem/1 var(--display);color:var(--bone);letter-spacing:.02em}
+.contact-line span{font:600 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.copy{background:none;border:1px solid var(--line-2);color:var(--muted);font:600 .7rem/1 var(--mono);padding:6px 8px;border-radius:4px;cursor:pointer;justify-self:start}
+.copy:hover{color:var(--bone);border-color:var(--copper)}
+
+/* pay */
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:900px){.pay-grid{grid-template-columns:1fr}}
+.pay{background:var(--panel);border:1px solid var(--line-2);border-radius:10px;padding:24px;display:grid;gap:14px;align-content:start}
+.pay .logo{height:30px;display:flex;align-items:center;gap:10px;font:800 1.45rem/1 var(--display);color:var(--bone);text-transform:uppercase;letter-spacing:.03em}
+.pay .logo i{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font:800 .95rem/1 var(--body);font-style:normal;color:#fff}
+.handle{font:600 1.05rem/1.3 var(--mono);color:var(--bone);word-break:break-all;background:var(--ground);border:1px dashed var(--line-2);border-radius:var(--r);padding:12px}
+.pay p{font-size:.9rem;color:var(--muted)}
+.pay-confirm{margin-top:24px;background:var(--ground-2);border:1px solid var(--line);border-radius:10px;padding:26px}
+
+/* faq */
+.faq{display:grid;gap:0;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:22px 40px 22px 0;font:700 1.08rem/1.35 var(--body);color:var(--bone);position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:18px;font:500 1.6rem/1 var(--mono);color:var(--copper)}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding:0 0 22px;max-width:70ch}
+
+/* footer */
+footer{padding-block:56px 40px;background:var(--ground-2)}
+footer .wrap{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px}
+@media (max-width:800px){footer .wrap{grid-template-columns:1fr}}
+footer h4{font:600 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+footer a{color:var(--text);text-decoration:none;display:block;padding:3px 0}
+footer a:hover{color:var(--copper-hi)}
+.legal{grid-column:1/-1;border-top:1px solid var(--line);padding-top:22px;font-size:.8rem;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* owner portal */
+.portal{position:fixed;inset:0;z-index:100;background:rgba(6,9,11,.92);backdrop-filter:blur(6px);overflow-y:auto;padding:max(24px,env(safe-area-inset-top,0px)) 16px 40px}
+.portal-card{max-width:1100px;margin:0 auto;background:var(--ground-2);border:1px solid var(--line-2);border-radius:12px;overflow:hidden}
+.portal-top{display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+.portal-top h3{font-size:1.5rem}
+.portal-top .x{margin-left:auto;background:none;border:1px solid var(--line-2);color:var(--bone);border-radius:6px;padding:8px 12px;cursor:pointer;font:600 .8rem/1 var(--mono)}
+.portal-body{padding:26px 22px;display:grid;gap:24px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{background:var(--ground);border:1px solid var(--line-2);color:var(--text);padding:10px 14px;border-radius:6px;font:600 .8rem/1 var(--mono);letter-spacing:.06em;cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--copper);color:var(--bone);background:rgba(200,121,59,.14)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px}
+.kpi b{display:block;font:800 2.2rem/1 var(--display);color:var(--bone);font-variant-numeric:tabular-nums}
+.kpi span{font:600 .68rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:760px}
+th{font:600 .68rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px;border-bottom:1px solid var(--line);background:var(--panel)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--text)}
+td b{color:var(--bone)}
+td .sub{font-size:.8rem;color:var(--muted);margin-top:3px}
+tr:last-child td{border-bottom:0}
+select.st{background:var(--ground);color:var(--bone);border:1px solid var(--line-2);border-radius:4px;padding:6px;font:600 .78rem var(--mono)}
+.src{font:700 .64rem/1 var(--mono);padding:4px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.08em}
+.src.phone{background:rgba(200,121,59,.18);color:var(--copper-hi)}
+.src.web{background:rgba(159,198,214,.14);color:#9fc6d6}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.switch{display:flex;align-items:center;gap:12px;font-weight:600;color:var(--bone)}
+.switch input{width:44px;height:24px;accent-color:var(--copper)}
+.steps-list{display:grid;gap:10px;font-size:.93rem}
+.steps-list li{padding-left:4px}
+.onb{display:grid;grid-template-columns:1.1fr .9fr;gap:28px}
+@media (max-width:860px){.onb{grid-template-columns:1fr}}
+.aside{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;display:grid;gap:14px;align-content:start}
+.aside h3{font-size:1.4rem}
+</style>
+</head>
+<body>
+
+<div class="strip" role="region" aria-label="Emergency service">
+  <div class="wrap"><span class="pulse" aria-hidden="true"></span><span>24/7 EMERGENCY SERVICE — EVERY CALL ANSWERED, DAY OR NIGHT</span><a href="tel:+19084544043">908-454-4043</a></div>
+</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="New Ark home">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="6" fill="none" stroke="#c8793b" stroke-width="2"/><path d="M8 28 L20 10 L32 28" fill="none" stroke="#ece6da" stroke-width="3" stroke-linejoin="round"/><path d="M13 28h14" stroke="#c8793b" stroke-width="3"/><circle cx="20" cy="22" r="2.4" fill="#c8793b"/></svg>
+      <span><b>New Ark</b><small>Mechanical · Phillipsburg NJ</small></span>
+    </a>
+    <ul>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#answering">24/7 Line</a></li>
+      <li><a href="#estimate">Estimate</a></li>
+      <li><a href="#book">Book</a></li>
+      <li><a href="#pay">Pay Invoice</a></li>
+    </ul>
+    <a class="btn btn-copper call" href="tel:+19084544043"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg><span class="long">Call&nbsp;</span>908-454-4043</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero">
+  <canvas id="flowfield" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Licensed &amp; insured · Northern &amp; Western New Jersey</p>
+      <h1 style="margin-top:18px"><span class="el">Water.</span><span class="el">Air.</span><span class="el">Earth.</span><span class="el">Fire.</span></h1>
+      <p class="lede">New Ark runs plumbing, HVAC, geothermal and fire protection under one roof. One contractor, one crew, one number that is answered on the first ring, at 3&nbsp;a.m. on a holiday or 3&nbsp;p.m. on a Tuesday.</p>
+      <div class="ctas">
+        <a class="btn btn-copper" href="#book">Book service</a>
+        <a class="btn btn-ghost" href="#estimate">Instant estimate</a>
+        <a class="btn btn-ghost" href="#pay">Pay an invoice</a>
+      </div>
+      <div class="facts">
+        <div><b>4</b>Trades, one contractor</div>
+        <div><b>24/7</b>Live answering</div>
+        <div><b>1 ring</b>Average pickup</div>
+        <div><b>$0</b>On-site assessment</div>
+      </div>
+    </div>
+
+    <aside class="console" aria-label="24/7 AI receptionist">
+      <div class="console-head"><span class="dot" aria-hidden="true"></span>Dispatch line · online<span class="clock mono" id="clock">--:--</span></div>
+      <div class="console-body">
+        <div class="agent">
+          <div class="orb" aria-hidden="true"></div>
+          <div><h3>Marcus, front desk</h3><p>New Ark's AI receptionist. Answers every call, takes the job details and puts it on dispatch's board.</p></div>
+        </div>
+        <div class="wave" aria-hidden="true" id="wave"></div>
+        <a class="btn btn-copper" id="talkBtn" href="https://elevenlabs.io/app/talk-to?agent_id=agent_0801m3dq8s8hekkamghz1nx6s4tm" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-2.1A7 7 0 0 0 19 12z"/></svg>
+          Talk to the front desk now
+        </a>
+        <p class="note">Speak or type. Your request goes straight to dispatch.</p>
+        <div class="ticket-feed" aria-label="How requests are tagged">
+          <div class="row"><span class="tag w">Water</span><span>Burst supply line · shutoff walked through</span><span class="t">Emergency</span></div>
+          <div class="row"><span class="tag a">Air</span><span>No heat, 2-story colonial · furnace</span><span class="t">48 hrs</span></div>
+          <div class="row"><span class="tag f">Fire</span><span>Annual sprinkler inspection · NFPA 25</span><span class="t">This week</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="block" id="services">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">What we run</p>
+      <h2>Four trades. One crew that talks to each other.</h2>
+      <p class="lede">Most homes and buildings need all four systems working together. We design, install, service and inspect every one, so nothing falls between two vendors.</p>
+    </div>
+    <div class="svc-grid">
+      <article class="svc">
+        <div class="spec"><span>01 · Water</span><span class="readout">40–80 PSI</span></div>
+        <svg class="glyph" viewBox="0 0 80 54" aria-hidden="true"><path d="M4 40h28a8 8 0 0 0 8-8V8" fill="none" stroke="#9fc6d6" stroke-width="5"/><path d="M40 8h30" stroke="#c8793b" stroke-width="5"/><circle cx="40" cy="8" r="6" fill="#c8793b"/><path d="M58 30c0 6 4 9 4 13a4 4 0 0 1-8 0c0-4 4-7 4-13z" fill="#9fc6d6"/></svg>
+        <h3>Plumbing</h3>
+        <p>Leaks, clogs and full repipes, done to code and pressure-tested before we leave.</p>
+        <ul><li>Water heaters, tank &amp; tankless</li><li>Sewer &amp; drain lines, camera inspection</li><li>Sump pumps &amp; backflow</li><li>Emergency burst-pipe response</li></ul>
+      </article>
+      <article class="svc">
+        <div class="spec"><span>02 · Air</span><span class="readout">SEER2 15+</span></div>
+        <svg class="glyph" viewBox="0 0 80 54" aria-hidden="true"><circle cx="27" cy="27" r="20" fill="none" stroke="#ece6da" stroke-width="3"/><path d="M27 27c0-10 8-14 12-10M27 27c10 0 14 8 10 12M27 27c0 10-8 14-12 10M27 27c-10 0-14-8-10-12" fill="none" stroke="#c8793b" stroke-width="3"/><path d="M55 16h20M55 27h16M55 38h20" stroke="#ece6da" stroke-width="3"/></svg>
+        <h3>HVAC</h3>
+        <p>Heating and cooling sized with a real load calculation, not a guess from the old unit.</p>
+        <ul><li>Furnaces, boilers, heat pumps</li><li>Central AC &amp; ductless mini-splits</li><li>Maintenance plans</li><li>No-heat / no-cool emergencies</li></ul>
+      </article>
+      <article class="svc">
+        <div class="spec"><span>03 · Earth</span><span class="readout">55°F ground</span></div>
+        <svg class="glyph" viewBox="0 0 80 54" aria-hidden="true"><path d="M2 14h76" stroke="#b8a07c" stroke-width="3"/><path d="M22 14v34a6 6 0 0 0 12 0V14M46 14v34a6 6 0 0 0 12 0V14" fill="none" stroke="#c8793b" stroke-width="3"/><path d="M2 24h76M2 34h76M2 44h76" stroke="#26343b" stroke-width="1.5"/></svg>
+        <h3>Geothermal</h3>
+        <p>Ground-source heat pumps that pull steady heat from the earth. Lower bills, federal tax-credit eligible.</p>
+        <ul><li>Vertical &amp; horizontal loop design</li><li>New construction &amp; retrofits</li><li>Loop flushing &amp; service</li><li>Rebate paperwork handled</li></ul>
+      </article>
+      <article class="svc">
+        <div class="spec"><span>04 · Fire</span><span class="readout">NFPA 13 / 25</span></div>
+        <svg class="glyph" viewBox="0 0 80 54" aria-hidden="true"><path d="M4 8h72" stroke="#ece6da" stroke-width="4"/><path d="M40 8v12" stroke="#ece6da" stroke-width="4"/><path d="M32 22h16l-3 6H35z" fill="#d9452f"/><path d="M30 36l-6 12M40 34v14M50 36l6 12M35 35l-3 10M45 35l3 10" stroke="#d9452f" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <h3>Fire Protection</h3>
+        <p>Sprinkler systems designed, installed and inspected so you pass the fire marshal the first time.</p>
+        <ul><li>Wet, dry &amp; residential systems</li><li>Annual inspections &amp; reports</li><li>Backflow testing</li><li>Commercial &amp; multi-family</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 24/7 ANSWERING (CallTwin) -->
+<section class="block" id="answering">
+  <div class="wrap">
+    <div class="split">
+      <div class="head" style="margin-bottom:0">
+        <p class="eyebrow">24/7 front desk · powered by CallTwin</p>
+        <h2>You call. We pick up. Every time.</h2>
+        <p class="lede">Contractors miss calls because they're on a job. New Ark doesn't. Every call is answered in a natural voice, your details are taken down, and the job ticket lands on dispatch's board before you hang up.</p>
+        <div class="flow" style="margin-top:36px">
+          <div class="step"><h3>Ring</h3><p>Call 908-454-4043 at any hour.</p></div>
+          <div class="step"><h3>Answered</h3><p>Marcus picks up on the first ring, no phone tree.</p></div>
+          <div class="step"><h3>Ticketed</h3><p>Name, address, problem and urgency go on a job ticket.</p></div>
+          <div class="step"><h3>Dispatched</h3><p>The office calls you back to lock in your window.</p></div>
+        </div>
+      </div>
+      <div class="callout" aria-label="Sample call">
+        <p class="eyebrow">Sample call · 2:14 a.m.</p>
+        <div class="transcript">
+          <p class="ai">MARCUS › Thanks for calling New Ark. This is Marcus. How can I help?</p>
+          <p class="you">CALLER › Water's coming through my basement ceiling.</p>
+          <p class="ai">MARCUS › Okay. First, find your main shutoff, usually by the meter, and turn it clockwise. Tell me when it's off.</p>
+          <p class="you">CALLER › Got it, it's off.</p>
+          <p class="ai">MARCUS › Good. What's the address, and the best number to reach you?</p>
+          <p class="sys">✓ JOB TICKET SAVED · WATER · EMERGENCY · PHILLIPSBURG 08865</p>
+        </div>
+        <a class="btn btn-ghost" href="https://elevenlabs.io/app/talk-to?agent_id=agent_0801m3dq8s8hekkamghz1nx6s4tm" target="_blank" rel="noopener">Try it yourself</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESTIMATE -->
+<section class="block" id="estimate">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Instant estimate</p>
+      <h2>Ballpark it in ten seconds.</h2>
+      <p class="lede">Typical New Jersey ranges for the job you pick. Your firm price is set after a free on-site assessment, with no obligation.</p>
+    </div>
+    <form class="est" id="estForm" onsubmit="return false">
+      <div class="est-left">
+        <fieldset><legend>Service</legend><div class="chips" id="eSvc">
+          <label class="chip"><input type="radio" name="svc" value="plumbing" checked><span>Plumbing</span></label>
+          <label class="chip"><input type="radio" name="svc" value="hvac"><span>HVAC</span></label>
+          <label class="chip"><input type="radio" name="svc" value="geothermal"><span>Geothermal</span></label>
+          <label class="chip"><input type="radio" name="svc" value="fire"><span>Fire Protection</span></label>
+        </div></fieldset>
+        <fieldset><legend>Job type</legend><div class="chips">
+          <label class="chip"><input type="radio" name="job" value="repair" checked><span>Repair / service</span></label>
+          <label class="chip"><input type="radio" name="job" value="install"><span>New install / replace</span></label>
+        </div></fieldset>
+        <fieldset><legend>Property</legend><div class="chips">
+          <label class="chip"><input type="radio" name="prop" value="1" checked><span>Home</span></label>
+          <label class="chip"><input type="radio" name="prop" value="1.4"><span>Multi-family</span></label>
+          <label class="chip"><input type="radio" name="prop" value="1.6"><span>Commercial</span></label>
+        </div></fieldset>
+        <fieldset><legend>Urgency</legend><div class="chips">
+          <label class="chip"><input type="radio" name="urg" value="1.25"><span>Emergency</span></label>
+          <label class="chip"><input type="radio" name="urg" value="1" checked><span>This week</span></label>
+          <label class="chip"><input type="radio" name="urg" value="0.95"><span>Flexible</span></label>
+        </div></fieldset>
+      </div>
+      <div class="est-right" aria-live="polite">
+        <p class="eyebrow">Typical range</p>
+        <div class="range" id="eRange">$150 – $650<small id="eNote">Plumbing repair · home · this week</small></div>
+        <div class="gauge" aria-hidden="true"><i id="eGauge"></i></div>
+        <p style="font-size:.9rem;color:var(--muted)">Installs over $2,500 qualify for financing. Emergency pricing applies after hours.</p>
+        <a class="btn btn-copper" href="#book" id="eBook">Book this job</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section class="block" id="book">
+  <div class="wrap split">
+    <div class="book-side">
+      <div class="head" style="margin-bottom:0">
+        <p class="eyebrow">Book service</p>
+        <h2>Put your job on the board.</h2>
+        <p class="lede">Send the details and dispatch will call to confirm a window. For anything flooding, sparking or freezing, call instead.</p>
+      </div>
+      <div>
+        <div class="contact-line"><span>24/7 dispatch line</span><b>908-454-4043</b><button class="copy" type="button" data-copy="908-454-4043">Copy number</button></div>
+        <div class="contact-line"><span>Shop</span><b style="font-size:1.4rem">412 Firth St, Phillipsburg NJ 08865</b></div>
+        <div class="contact-line" style="border-bottom:0"><span>Service area</span><b style="font-size:1.4rem">Northern &amp; Western New Jersey</b></div>
+      </div>
+    </div>
+    <form class="form callout" id="bookForm" novalidate>
+      <input class="hp" type="text" name="website" id="bWebsite" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="row2">
+        <label class="f" for="bName">Full name<input class="i" id="bName" name="name" required autocomplete="name"></label>
+        <label class="f" for="bPhone">Phone<input class="i" id="bPhone" name="phone" type="tel" required autocomplete="tel"></label>
+      </div>
+      <div class="row2">
+        <label class="f" for="bEmail">Email<input class="i" id="bEmail" name="email" type="email" autocomplete="email"></label>
+        <label class="f" for="bService">Service<select class="i" id="bService" name="service"><option>Plumbing</option><option>HVAC</option><option>Geothermal</option><option>Fire Protection</option><option>Other</option></select></label>
+      </div>
+      <div class="row2">
+        <label class="f" for="bUrg">Urgency<select class="i" id="bUrg" name="urgency"><option>Emergency</option><option>Within 48 hours</option><option selected>This week</option><option>Flexible</option></select></label>
+        <label class="f" for="bDate">Preferred date<input class="i" id="bDate" name="preferred_date" type="date"></label>
+      </div>
+      <label class="f" for="bAddr">Service address<input class="i" id="bAddr" name="address" autocomplete="street-address" placeholder="Street, town, ZIP"></label>
+      <label class="f" for="bDetails">What's going on?<textarea class="i" id="bDetails" name="details" placeholder="e.g. Water heater is 14 years old and leaking at the base"></textarea></label>
+      <button class="btn btn-copper" type="submit" id="bSubmit">Send to dispatch</button>
+      <div id="bMsg" hidden></div>
+    </form>
+  </div>
+</section>
+
+<!-- PAY -->
+<section class="block" id="pay">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Pay your invoice</p>
+      <h2>Pay the way you already pay.</h2>
+      <p class="lede">Zelle, Cash App or any card. Send the payment, then drop your invoice number below so the office can match it and mark you paid.</p>
+    </div>
+    <div class="pay-grid">
+      <div class="pay">
+        <div class="logo"><i style="background:#6d1ed4">Z</i>Zelle</div>
+        <p>Send from your bank's app. No fees.</p>
+        <div class="handle" id="payZelle">Loading…</div>
+        <p id="payZelleName"></p>
+        <button class="copy" type="button" data-copy-from="payZelle">Copy Zelle</button>
+      </div>
+      <div class="pay">
+        <div class="logo"><i style="background:#00c244">$</i>Cash App</div>
+        <p>Pay from the Cash App.</p>
+        <div class="handle" id="payCash">Loading…</div>
+        <a class="btn btn-ghost" id="payCashLink" href="#" target="_blank" rel="noopener" hidden>Open Cash App</a>
+      </div>
+      <div class="pay">
+        <div class="logo"><i style="background:#635bff">S</i>Card · Stripe</div>
+        <p>Visa, Mastercard, Amex, Apple Pay and Google Pay on Stripe's secure checkout.</p>
+        <div class="handle" id="payStripeNote">Loading…</div>
+        <a class="btn btn-copper" id="payStripe" href="#" target="_blank" rel="noopener" hidden>Pay by card</a>
+      </div>
+    </div>
+    <form class="pay-confirm form" id="payForm" novalidate>
+      <p class="eyebrow">Tell us you paid</p>
+      <div class="row2">
+        <label class="f" for="pName">Your name<input class="i" id="pName" required autocomplete="name"></label>
+        <label class="f" for="pPhone">Phone<input class="i" id="pPhone" type="tel" autocomplete="tel"></label>
+      </div>
+      <div class="row2">
+        <label class="f" for="pInv">Invoice #<input class="i" id="pInv" placeholder="Optional"></label>
+        <label class="f" for="pAmt">Amount (USD)<input class="i" id="pAmt" type="number" min="1" step="0.01" inputmode="decimal" required></label>
+      </div>
+      <div class="row2">
+        <label class="f" for="pMethod">Paid with<select class="i" id="pMethod"><option value="zelle">Zelle</option><option value="cashapp">Cash App</option><option value="stripe">Card (Stripe)</option></select></label>
+        <label class="f" for="pEmail">Email for receipt<input class="i" id="pEmail" type="email" autocomplete="email"></label>
+      </div>
+      <button class="btn btn-copper" type="submit" id="pSubmit">Send payment notice</button>
+      <div id="pMsg" hidden></div>
+    </form>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="block" id="faq">
+  <div class="wrap split">
+    <div class="head"><p class="eyebrow">Questions</p><h2>Straight answers.</h2></div>
+    <div class="faq">
+      <details><summary>Is someone really answering at 2 a.m.?</summary><p>Yes. Every call is answered by New Ark's AI receptionist, which takes your details, walks you through emergency steps like shutting off your water, and puts the job on dispatch's board right away. The office calls you back to confirm.</p></details>
+      <details><summary>Do you charge for estimates?</summary><p>On-site assessments for new installs are free. The online estimate gives a typical range; your firm price is set after we see the job.</p></details>
+      <details><summary>Can one company handle plumbing, HVAC, geothermal and sprinklers?</summary><p>That's the point of New Ark. One contractor coordinates all four, so a boiler swap, a new water line and a sprinkler tie-in happen on one schedule.</p></details>
+      <details><summary>How do I pay?</summary><p>Zelle, Cash App or card through Stripe. Use the Pay Invoice section, then send the payment notice so we can match it to your invoice.</p></details>
+      <details><summary>Do you offer financing?</summary><p>Yes, on new systems such as furnaces, AC, water heaters and geothermal loops. Ask during your assessment.</p></details>
+      <details><summary>What area do you cover?</summary><p>Northern and Western New Jersey, based out of Phillipsburg. If you're close to the line, call and we'll confirm.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#top" style="display:flex"><span><b>New Ark</b><small>Plumbing · HVAC · Geothermal · Fire Protection</small></span></a>
+      <p style="margin-top:14px;max-width:44ch;color:var(--muted)">412 Firth St, Phillipsburg, NJ 08865 · 908-454-4043 · Open 24 hours, 7 days.</p>
+    </div>
+    <div><h4>Site</h4><a href="#services">Services</a><a href="#estimate">Estimate</a><a href="#book">Book service</a><a href="#pay">Pay invoice</a></div>
+    <div><h4>Business</h4><a href="#portal" id="portalLink">Owner portal</a><a href="https://calltwin.onrender.com" target="_blank" rel="noopener">CallTwin</a></div>
+    <div class="legal"><span>© <span id="yr"></span> New Ark. Licensed &amp; insured in New Jersey.</span><span>Site &amp; 24/7 answering by HSW365 Media · CallTwin</span></div>
+  </div>
+</footer>
+
+<!-- OWNER PORTAL -->
+<div class="portal" id="portal" hidden role="dialog" aria-modal="true" aria-labelledby="portalTitle">
+  <div class="portal-card">
+    <div class="portal-top"><h3 id="portalTitle">Owner portal</h3><span class="eyebrow" id="portalSub">CallTwin</span><button class="x" type="button" id="portalClose">Close ✕</button></div>
+    <div class="portal-body">
+
+      <!-- sign in / sign up switch -->
+      <div id="authView">
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" aria-selected="true" data-auth="login">Sign in</button>
+          <button type="button" role="tab" aria-selected="false" data-auth="claim">First-time setup</button>
+        </div>
+
+        <form class="form" id="loginForm" style="max-width:420px;margin-top:22px" novalidate>
+          <label class="f" for="lPin">Owner PIN<input class="i" id="lPin" type="password" inputmode="numeric" autocomplete="current-password" required></label>
+          <button class="btn btn-copper" type="submit">Open dashboard</button>
+          <div id="lMsg" hidden></div>
+        </form>
+
+        <div class="onb" id="claimView" hidden style="margin-top:22px">
+          <form class="form" id="claimForm" novalidate>
+            <label class="f" for="cCode">Setup code (from HSW365 Media)<input class="i" id="cCode" required autocomplete="off" style="text-transform:uppercase"></label>
+            <div class="row2">
+              <label class="f" for="cName">Your name<input class="i" id="cName" required autocomplete="name"></label>
+              <label class="f" for="cCell">Cell number<input class="i" id="cCell" type="tel" required autocomplete="tel"></label>
+            </div>
+            <label class="f" for="cEmail">Email<input class="i" id="cEmail" type="email" required autocomplete="email"></label>
+            <p class="eyebrow" style="margin-top:8px">How customers pay you</p>
+            <div class="row2">
+              <label class="f" for="cZelle">Zelle email or phone<input class="i" id="cZelle" placeholder="Where your payouts land"></label>
+              <label class="f" for="cCash">Cash App $cashtag<input class="i" id="cCash" placeholder="$yourtag"></label>
+            </div>
+            <label class="f" for="cStripe">Stripe payment link (optional)<input class="i" id="cStripe" type="url" placeholder="https://buy.stripe.com/…"></label>
+            <div class="row2">
+              <label class="f" for="cPin">Create a PIN (6–10 digits)<input class="i" id="cPin" type="password" inputmode="numeric" autocomplete="new-password" required></label>
+              <label class="f" for="cPin2">Repeat PIN<input class="i" id="cPin2" type="password" inputmode="numeric" autocomplete="new-password" required></label>
+            </div>
+            <button class="btn btn-copper" type="submit">Activate my 24/7 line</button>
+            <div id="cMsg" hidden></div>
+          </form>
+          <div class="aside">
+            <h3>What you get</h3>
+            <ol class="steps-list">
+              <li>An AI receptionist that answers every New Ark call in a natural voice, 24/7.</li>
+              <li>Every caller's name, number, address, problem and urgency saved as a job ticket.</li>
+              <li>Web bookings and payment notices in the same dashboard.</li>
+              <li>Customers pay you directly by Zelle, Cash App or card. Money goes to your accounts, not ours.</li>
+            </ol>
+            <p style="font-size:.88rem;color:var(--muted)">You can change any of this later from the Settings tab.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- dashboard -->
+      <div id="dashView" hidden>
+        <div class="kpis">
+          <div class="kpi"><b id="kNew">0</b><span>New tickets</span></div>
+          <div class="kpi"><b id="kPhone">0</b><span>Phone tickets (7 days)</span></div>
+          <div class="kpi"><b id="kWeb">0</b><span>Web bookings (7 days)</span></div>
+          <div class="kpi"><b id="kPaid">$0</b><span>Payments reported</span></div>
+        </div>
+        <div class="tabs" role="tablist" style="margin-top:22px">
+          <button type="button" role="tab" aria-selected="true" data-tab="leads">Job tickets</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="payments">Payments</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="settings">Settings</button>
+          <button type="button" id="refreshBtn" style="margin-left:auto">↻ Refresh</button>
+          <button type="button" id="logoutBtn">Sign out</button>
+        </div>
+        <div data-pane="leads" style="margin-top:16px"><div class="tbl"><table><thead><tr><th>When</th><th>From</th><th>Customer</th><th>Job</th><th>Details</th><th>Status</th></tr></thead><tbody id="leadRows"></tbody></table></div></div>
+        <div data-pane="payments" hidden style="margin-top:16px"><div class="tbl"><table><thead><tr><th>When</th><th>Customer</th><th>Invoice</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody id="payRows"></tbody></table></div></div>
+        <div data-pane="settings" hidden style="margin-top:16px">
+          <form class="form onb" id="setForm" novalidate>
+            <div class="form">
+              <div class="row2">
+                <label class="f" for="sName">Owner name<input class="i" id="sName"></label>
+                <label class="f" for="sCell">Cell number<input class="i" id="sCell" type="tel"></label>
+              </div>
+              <div class="row2">
+                <label class="f" for="sEmail">Email<input class="i" id="sEmail" type="email"></label>
+                <label class="f" for="sBiz">Business line<input class="i" id="sBiz" type="tel"></label>
+              </div>
+              <div class="row2">
+                <label class="f" for="sZelle">Zelle<input class="i" id="sZelle"></label>
+                <label class="f" for="sCash">Cash App<input class="i" id="sCash"></label>
+              </div>
+              <label class="f" for="sStripe">Stripe payment link<input class="i" id="sStripe" type="url"></label>
+              <label class="switch" for="sAi"><input type="checkbox" id="sAi"> AI receptionist answering calls</label>
+              <button class="btn btn-copper" type="submit">Save settings</button>
+              <div id="sMsg" hidden></div>
+            </div>
+            <div class="aside">
+              <h3>Your 24/7 line</h3>
+              <p style="font-size:.92rem">Forward your business line to your CallTwin number so the receptionist picks up every call. On most carriers: dial <span class="mono">*72</span> then the CallTwin number. To stop forwarding, dial <span class="mono">*73</span>.</p>
+              <p style="font-size:.92rem">Test it any time from the website's "Talk to the front desk" button.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<elevenlabs-convai agent-id="agent_0801m3dq8s8hekkamghz1nx6s4tm"></elevenlabs-convai>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
+<script>
+(function(){
+"use strict";
+const API="https://lsxdlmrjrcivxwgfkpop.supabase.co/functions/v1/newark";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function api(body){
+  const r=await fetch(API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({ok:false,error:"Server returned an unreadable response."}));
+  if(!r.ok||j.ok===false) throw new Error(j.error||"Request failed ("+r.status+").");
+  return j;
+}
+function show(el,cls,text){el.className="msg "+cls;el.textContent=text;el.hidden=false}
+$("#yr").textContent=new Date().getFullYear();
+
+/* clock */
+const clock=$("#clock");
+function tick(){clock.textContent=new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",timeZone:"America/New_York"})+" ET"}
+tick();setInterval(tick,15000);
+
+/* wave */
+const wave=$("#wave");for(let i=0;i<34;i++){const b=document.createElement("i");b.style.animationDelay=(i*0.07%1.2)+"s";b.style.opacity=.35+((i*37)%60)/100;wave.appendChild(b)}
+
+/* hero pipes flow field */
+const cv=$("#flowfield"),cx=cv.getContext("2d");let W,H,pts=[];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function size(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);
+  pts=[];const cols=["#9fc6d6","#c8793b","#b8a07c","#ece6da"];for(let i=0;i<9;i++){const y=H*(.1+i*.1);pts.push({y,c:cols[i%4],s:.4+(i%3)*.25,o:Math.random()*W})}}
+function draw(t){cx.clearRect(0,0,W,H);pts.forEach((p,i)=>{cx.strokeStyle="rgba(38,52,59,.9)";cx.lineWidth=1;cx.beginPath();cx.moveTo(0,p.y);
+  const bend=W*(.55+((i*13)%30)/100);cx.lineTo(bend,p.y);cx.lineTo(bend+30,p.y+30*(i%2?1:-1));cx.lineTo(W,p.y+30*(i%2?1:-1));cx.stroke();
+  const x=((p.o+t*p.s*0.06)%(W+80))-40;const y=x<bend?p.y:x<bend+30?p.y+(x-bend)*(i%2?1:-1):p.y+30*(i%2?1:-1);
+  const g=cx.createRadialGradient(x,y,0,x,y,40);g.addColorStop(0,p.c);g.addColorStop(1,"transparent");cx.globalAlpha=.35;cx.fillStyle=g;cx.fillRect(x-40,y-40,80,80);cx.globalAlpha=1;
+  cx.fillStyle=p.c;cx.beginPath();cx.arc(x,y,2,0,7);cx.fill()});if(!reduce)requestAnimationFrame(draw)}
+size();addEventListener("resize",size);requestAnimationFrame(draw);
+
+/* estimate */
+const PRICE={plumbing:{repair:[150,650],install:[900,4800]},hvac:{repair:[200,950],install:[4800,13500]},geothermal:{repair:[450,2500],install:[18000,38000]},fire:{repair:[300,1400],install:[2800,16000]}};
+const NAME={plumbing:"Plumbing",hvac:"HVAC",geothermal:"Geothermal",fire:"Fire protection"};
+function est(){const f=$("#estForm");const s=f.svc.value,j=f.job.value,p=+f.prop.value,u=+f.urg.value;
+  const [lo,hi]=PRICE[s][j];const a=lo*p*u,b=hi*p*u;
+  $("#eRange").firstChild.nodeValue="$"+(Math.round(a/10)*10).toLocaleString()+" – $"+(Math.round(b/10)*10).toLocaleString();
+const propTxt={"1":"home","1.4":"multi-family","1.6":"commercial"}[f.prop.value];const urgTxt={"1.25":"emergency","1":"this week","0.95":"flexible"}[f.urg.value];
+  $("#eNote").textContent=NAME[s]+" "+(j==="repair"?"repair":"install")+" · "+propTxt+" · "+urgTxt;
+  const lg=v=>Math.log10(v),mn=lg(100),mx=lg(80000);const L=(lg(a)-mn)/(mx-mn)*100,R=(lg(b)-mn)/(mx-mn)*100;const g=$("#eGauge");g.style.left=L+"%";g.style.width=Math.max(3,R-L)+"%";
+  $("#bService").value={plumbing:"Plumbing",hvac:"HVAC",geothermal:"Geothermal",fire:"Fire Protection"}[s];
+  $("#bUrg").value={"1.25":"Emergency","1":"This week","0.95":"Flexible"}[f.urg.value];}
+$("#estForm").addEventListener("change",est);est();
+
+/* copy buttons */
+$$(".copy").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.copy||($("#"+b.dataset.copyFrom)||{}).textContent||"";
+  const done=()=>{const o=b.textContent;b.textContent="Copied";setTimeout(()=>b.textContent=o,1400)};
+  if(navigator.clipboard)navigator.clipboard.writeText(t.trim()).then(done,()=>{});}));
+
+/* public pay info */
+function paint(pub){const p=pub.pay||{};
+  $("#payZelle").textContent=p.zelle||"Call the office for Zelle details";
+  $("#payZelleName").textContent=p.zelle&&p.zelle_name?"Recipient name: "+p.zelle_name:"";
+  if(p.cashapp){const tag=p.cashapp.startsWith("$")?p.cashapp:"$"+p.cashapp;$("#payCash").textContent=tag;const a=$("#payCashLink");a.href="https://cash.app/"+encodeURIComponent(tag);a.hidden=false}
+  else $("#payCash").textContent="Call the office for Cash App details";
+  if(p.stripe){$("#payStripe").href=p.stripe;$("#payStripe").hidden=false;$("#payStripeNote").textContent="Secure checkout by Stripe"}
+  else $("#payStripeNote").textContent="Card payments by phone: 908-454-4043";}
+fetch(API).then(r=>r.json()).then(paint).catch(()=>paint({pay:{}}));
+
+/* booking */
+$("#bookForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("#bMsg"),btn=$("#bSubmit");
+  const d={a:"lead",website:$("#bWebsite").value,name:$("#bName").value,phone:$("#bPhone").value,email:$("#bEmail").value,service:$("#bService").value,urgency:$("#bUrg").value,preferred_date:$("#bDate").value,address:$("#bAddr").value,details:$("#bDetails").value};
+  if(!d.name.trim()||d.phone.replace(/\D/g,"").length<10){show(m,"err","Add your name and a 10-digit phone number so dispatch can reach you.");return}
+  btn.disabled=true;btn.textContent="Sending…";
+  try{const r=await api(d);show(m,"ok","You're on the board. Ticket "+r.ticket+". Dispatch will call "+d.phone+" to confirm your window."+(d.urgency==="Emergency"?" For active water or no heat, also call 908-454-4043 now.":""));e.target.reset();est()}
+  catch(err){show(m,"err",err.message+" You can also call 908-454-4043.")}
+  finally{btn.disabled=false;btn.textContent="Send to dispatch"}});
+
+/* payment notice */
+$("#payForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("#pMsg"),btn=$("#pSubmit");
+  const d={a:"pay",customer_name:$("#pName").value,customer_phone:$("#pPhone").value,customer_email:$("#pEmail").value,invoice_ref:$("#pInv").value,amount:$("#pAmt").value,method:$("#pMethod").value};
+  if(!d.customer_name.trim()||!(+d.amount>0)){show(m,"err","Add your name and the amount you sent.");return}
+  btn.disabled=true;btn.textContent="Sending…";
+  try{const r=await api(d);show(m,"ok","Got it. Reference "+r.receipt+". The office will confirm once the payment clears.");e.target.reset()}
+  catch(err){show(m,"err",err.message)}finally{btn.disabled=false;btn.textContent="Send payment notice"}});
+
+/* ===== owner portal ===== */
+let PIN=null,DATA=null;
+const portal=$("#portal");
+function openPortal(){portal.hidden=false;document.body.style.overflow="hidden";fetch(API).then(r=>r.json()).then(p=>{if(!p.claimed)authTab("claim")}).catch(()=>{})}
+function closePortal(){portal.hidden=true;document.body.style.overflow="";if(location.hash==="#portal")history.replaceState(null,"",location.pathname)}
+$("#portalLink").addEventListener("click",e=>{e.preventDefault();openPortal()});
+$("#portalClose").addEventListener("click",closePortal);
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!portal.hidden)closePortal()});
+if(location.hash==="#portal"||location.hash==="#owner")openPortal();
+
+function authTab(which){$$("[data-auth]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.auth===which)));$("#loginForm").hidden=which!=="login";$("#claimView").hidden=which!=="claim"}
+$$("[data-auth]").forEach(b=>b.addEventListener("click",()=>authTab(b.dataset.auth)));
+
+$("#claimForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("#cMsg");
+  const pin=$("#cPin").value;if(pin!==$("#cPin2").value){show(m,"err","The two PINs don't match.");return}
+  if(!/^\d{6,10}$/.test(pin)){show(m,"err","Your PIN must be 6 to 10 digits.");return}
+  const d={a:"claim",claim_code:$("#cCode").value,owner_name:$("#cName").value,owner_cell:$("#cCell").value,owner_email:$("#cEmail").value,zelle_handle:$("#cZelle").value,cashapp_tag:$("#cCash").value,stripe_link:$("#cStripe").value,pin};
+  if(!d.owner_name.trim()||!d.owner_email.includes("@")||d.owner_cell.replace(/\D/g,"").length<10){show(m,"err","Name, email and a 10-digit cell are required.");return}
+  try{await api(d);show(m,"ok","Activated. Opening your dashboard…");PIN=pin;await load();fetch(API).then(r=>r.json()).then(paint)}catch(err){show(m,"err",err.message)}});
+
+$("#loginForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("#lMsg");PIN=$("#lPin").value;
+  try{await load()}catch(err){PIN=null;show(m,"err",err.message)}});
+
+async function load(){DATA=await api({a:"login",pin:PIN});$("#authView").hidden=true;$("#dashView").hidden=false;$("#portalSub").textContent=(DATA.settings.owner_name||"Owner")+" · New Ark";render()}
+const fmt=d=>new Date(d).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+function sel(table,id,val,opts){return '<select class="st" data-table="'+table+'" data-id="'+esc(id)+'" aria-label="Status">'+opts.map(o=>'<option'+(o===val?" selected":"")+'>'+o+'</option>').join("")+'</select>'}
+function render(){const L=DATA.leads,P=DATA.payments,wk=Date.now()-7*864e5;
+  $("#kNew").textContent=L.filter(x=>x.status==="new").length;
+  $("#kPhone").textContent=L.filter(x=>x.source==="phone"&&+new Date(x.created_at)>wk).length;
+  $("#kWeb").textContent=L.filter(x=>x.source==="web"&&+new Date(x.created_at)>wk).length;
+  $("#kPaid").textContent="$"+P.filter(x=>x.status!=="refunded").reduce((s,x)=>s+ +x.amount,0).toLocaleString(undefined,{maximumFractionDigits:0});
+  $("#leadRows").innerHTML=L.length?L.map(x=>'<tr><td class="mono">'+fmt(x.created_at)+'</td><td><span class="src '+esc(x.source)+'">'+esc(x.source)+'</span></td><td><b>'+esc(x.name||"—")+'</b><div class="sub mono">'+esc(x.phone||"")+'</div><div class="sub">'+esc(x.email||"")+'</div></td><td><b>'+esc(x.service||"—")+'</b><div class="sub">'+esc(x.urgency||"")+'</div><div class="sub">'+esc(x.address||"")+'</div></td><td>'+esc(x.summary||x.details||"")+(x.preferred_date?'<div class="sub">Wants: '+esc(x.preferred_date)+'</div>':"")+'</td><td>'+sel("leads",x.id,x.status,["new","contacted","booked","done","lost"])+'</td></tr>').join(""):'<tr><td colspan="6" class="empty">No tickets yet. Calls and web bookings land here.</td></tr>';
+  $("#payRows").innerHTML=P.length?P.map(x=>'<tr><td class="mono">'+fmt(x.created_at)+'</td><td><b>'+esc(x.customer_name)+'</b><div class="sub mono">'+esc(x.customer_phone||"")+'</div></td><td class="mono">'+esc(x.invoice_ref||"—")+'</td><td class="mono"><b>$'+(+x.amount).toFixed(2)+'</b></td><td>'+esc(x.method)+'</td><td>'+sel("payments",x.id,x.status,["pending","received","refunded"])+'</td></tr>').join(""):'<tr><td colspan="6" class="empty">No payment notices yet.</td></tr>';
+  const s=DATA.settings;$("#sName").value=s.owner_name||"";$("#sCell").value=s.owner_cell||"";$("#sEmail").value=s.owner_email||"";$("#sBiz").value=s.business_phone||"";$("#sZelle").value=s.zelle_handle||"";$("#sCash").value=s.cashapp_tag||"";$("#sStripe").value=s.stripe_link||"";$("#sAi").checked=!!s.ai_enabled;
+  $$("select.st").forEach(el=>el.addEventListener("change",async()=>{try{await api({a:"status",pin:PIN,table:el.dataset.table,id:el.dataset.id,status:el.value});const row=(el.dataset.table==="leads"?L:P).find(r=>r.id===el.dataset.id);if(row)row.status=el.value;render()}catch(err){el.style.borderColor="var(--fire)";el.title=err.message}}))}
+$$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{$$("[data-tab]").forEach(x=>x.setAttribute("aria-selected",String(x===b)));$$("[data-pane]").forEach(p=>p.hidden=p.dataset.pane!==b.dataset.tab)}));
+$("#refreshBtn").addEventListener("click",()=>load().catch(()=>{}));
+$("#logoutBtn").addEventListener("click",()=>{PIN=null;DATA=null;$("#dashView").hidden=true;$("#authView").hidden=false;$("#lPin").value="";authTab("login")});
+$("#setForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("#sMsg");
+  const settings={owner_name:$("#sName").value,owner_cell:$("#sCell").value,owner_email:$("#sEmail").value,business_phone:$("#sBiz").value,zelle_handle:$("#sZelle").value,cashapp_tag:$("#sCash").value,stripe_link:$("#sStripe").value,ai_enabled:$("#sAi").checked};
+  try{await api({a:"update",pin:PIN,settings});show(m,"ok","Saved. The website's pay section is updated.");fetch(API).then(r=>r.json()).then(paint);await load()}catch(err){show(m,"err",err.message)}});
+setInterval(()=>{if(PIN&&!portal.hidden)load().catch(()=>{})},60000);
+})();
+</script>
+</body>
+</html>

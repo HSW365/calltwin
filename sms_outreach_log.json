@@ -5,5 +5,275 @@
     "status_code": null,
     "response_snippet": "",
     "checked_at": "2026-09-25 18:44:58"
+  },
+  {
+    "businessName": "John C. Ciervo & Son",
+    "phone": "+12154834283",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:11"
+  },
+  {
+    "businessName": "Murphy Roofing",
+    "phone": "+12154877000",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:13"
+  },
+  {
+    "businessName": "Jefferson Roofing and Exterior",
+    "phone": "+14844972141",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:14"
+  },
+  {
+    "businessName": "Bill Johnston Landscape Co.",
+    "phone": "+12157840488",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:15"
+  },
+  {
+    "businessName": "Bounce U",
+    "phone": "+12157529728",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:16"
+  },
+  {
+    "businessName": "John's Tree Service",
+    "phone": "+12154991344",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:18"
+  },
+  {
+    "businessName": "Exton Collision",
+    "phone": "+16103633555",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:19"
+  },
+  {
+    "businessName": "Pete's Auto Service",
+    "phone": "+16102963655",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:20"
+  },
+  {
+    "businessName": "The UPS Store",
+    "phone": "+12152222840",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:21"
+  },
+  {
+    "businessName": "Joseph Hart, Inc. Plumbing",
+    "phone": "+18566244173",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:22"
+  },
+  {
+    "businessName": "Garcia Family Roofing",
+    "phone": "+18626401440",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:23"
+  },
+  {
+    "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+    "phone": "+16104495585",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:24"
+  },
+  {
+    "businessName": "Sunsilk Tailor",
+    "phone": "+12152516925",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:25"
+  },
+  {
+    "businessName": "Italo's Tailor Shop",
+    "phone": "+13023668031",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:27"
+  },
+  {
+    "businessName": "Gamble's Newark Florist",
+    "phone": "+13023661211",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:28"
+  },
+  {
+    "businessName": "Liberty Tax",
+    "phone": "+12672824690",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:29"
+  },
+  {
+    "businessName": "Ritetax FInancial",
+    "phone": "+12679696871",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:30"
+  },
+  {
+    "businessName": "King Street Hair",
+    "phone": "+14843288962",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:31"
+  },
+  {
+    "businessName": "Cohen Funeral Services",
+    "phone": "+12152711610",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:32"
+  },
+  {
+    "businessName": "Alleva Funeral Home",
+    "phone": "+16106443540",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:33"
+  },
+  {
+    "businessName": "Tri-Point Electric",
+    "phone": "+12158175030",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:34"
+  },
+  {
+    "businessName": "Surfs Up Salon",
+    "phone": "+18562457094",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:36"
+  },
+  {
+    "businessName": "Deptford Cuts and Color s",
+    "phone": "+18562272331",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:37"
+  },
+  {
+    "businessName": "Franklinville Family Dentistry",
+    "phone": "+18566945555",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:38"
+  },
+  {
+    "businessName": "Bear-Glasgow Dental",
+    "phone": "+13028863750",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:39"
+  },
+  {
+    "businessName": "Ufberg Dental P.C.",
+    "phone": "+16102512227",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:40"
+  },
+  {
+    "businessName": "Volpe Real Estate",
+    "phone": "+12155455414",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:41"
+  },
+  {
+    "businessName": "Northpoint360",
+    "phone": "+18884188107",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:42"
+  },
+  {
+    "businessName": "Allstate",
+    "phone": "+12153603700",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:43"
+  },
+  {
+    "businessName": "State Farm Insurance: Ann Lin",
+    "phone": "+16107225577",
+    "status_code": 500,
+    "result": {
+      "error": "SignalWire is not configured. Set SIGNALWIRE_PROJECT_ID, SIGNALWIRE_API_TOKEN, and SIGNALWIRE_SPACE in Render Environment."
+    },
+    "sent_at": "2026-09-26 17:49:45"
   }
 ]

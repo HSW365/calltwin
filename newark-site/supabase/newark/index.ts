@@ -121,6 +121,19 @@ Deno.serve(async (req) => {
     if (hk) {
       const s = await settings();
       if (hk !== s?.hook_key) return json({ ok: false, error: "Bad key." }, 401);
+      if (a === "billing_update") {
+        const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+        if (["pending", "active", "past_due", "canceled"].includes(b.status)) patch.status = b.status;
+        if (b.stripe_customer_id) patch.stripe_customer_id = clip(b.stripe_customer_id, 80);
+        if (b.stripe_subscription_id) patch.stripe_subscription_id = clip(b.stripe_subscription_id, 80);
+        if (b.id && b.stripe_session_id) patch.stripe_session_id = clip(b.stripe_session_id, 120);
+        let q = db.from("newark_billing").update(patch);
+        if (b.id) q = q.eq("id", b.id); else if (b.stripe_session_id) q = q.eq("stripe_session_id", b.stripe_session_id);
+        else if (b.stripe_subscription_id) q = q.eq("stripe_subscription_id", b.stripe_subscription_id);
+        else return json({ ok: false, error: "No billing reference." }, 400);
+        const { error } = await q;
+        return json({ ok: !error, error: error?.message });
+      }
       if (a === "owner_contact") {
         return json({ ok: true, owner_cell: e164(s.owner_cell), ai_enabled: s.ai_enabled !== false, business_name: s.business_name });
       }
@@ -169,6 +182,20 @@ Deno.serve(async (req) => {
         const s = await settings();
         await textOwner(s, `New Ark payment notice: ${clip(b.customer_name, 60)} says they sent $${amt.toFixed(2)} by ${method}${b.invoice_ref ? " for " + clip(b.invoice_ref, 40) : ""}. Confirm it in your owner portal.`);
         return json({ ok: true, receipt: "PAY-" + data.id.slice(0, 6).toUpperCase() });
+      }
+
+      // CallTwin subscription signup ($99/mo). Card rows get their Stripe session attached by the CallTwin backend.
+      case "billing_signup": {
+        const method = ["card", "cashapp", "zelle"].includes(b.method) ? b.method : null;
+        const row = {
+          name: clip(b.name, 120), business: clip(b.business, 160), email: clip(b.email, 160)?.toLowerCase(),
+          cell: clip(b.cell, 40), method, cashapp_note: clip(b.cashapp_note, 120),
+        };
+        if (!row.name || !row.email?.includes("@") || !e164(row.cell) || !method)
+          return json({ ok: false, error: "Name, email, a 10-digit cell and a payment method are required." }, 400);
+        const { data, error } = await db.from("newark_billing").insert(row).select("id").single();
+        if (error) return json({ ok: false, error: error.message }, 500);
+        return json({ ok: true, id: data.id });
       }
 
       // Open signup: owner enters name, email, cell and payout. Emails on the allow list need no code.

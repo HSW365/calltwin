@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Activate CallTwin | New Ark</title>
+<meta name="description" content="Activate CallTwin Pro for New Ark: every business call answered 24/7 for $99 a month.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#07090d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307090d'/%3E%3Cpath d='M12 40h40l-6 10H18z' fill='%23e39a5c'/%3E%3Cpath d='M32 10l14 26H18z' fill='none' stroke='%23e39a5c' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090d;--s1:#0f131b;--s2:#141925;--s3:#1a2030;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.13);--tx:#eef1f6;--tx2:#b7bfcc;--mut:#7d8798;--cu:#e39a5c;--cu2:#f5bb85;--cu3:#b8702f;--ok:#34d399;--red:#ef4444;--disp:"Barlow Condensed",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"Space Mono",ui-monospace,monospace;--ease:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{color:var(--tx);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;position:relative}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(700px circle at 10% -10%,rgba(227,154,92,.28),transparent 60%),radial-gradient(600px circle at 100% 20%,rgba(34,211,238,.1),transparent 60%)}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;padding:36px 0 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:46px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.lm{width:40px;height:40px;border-radius:12px;background:linear-gradient(145deg,#1c2331,#0c0f15);border:1px solid var(--line2);display:grid;place-items:center}
+.logo b{font-family:var(--disp);font-size:24px;letter-spacing:.06em;font-weight:800}
+.logo small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--mut);margin-top:-4px}
+.mono{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
+.secure{display:flex;align-items:center;gap:8px;color:var(--mut)}
+.secure svg{width:14px;height:14px}
+.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:start}
+.grid>*{min-width:0}
+h1{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:clamp(48px,7vw,84px);line-height:.92;letter-spacing:-.01em;margin:16px 0 18px}
+.grad{background:linear-gradient(100deg,var(--cu2),var(--cu) 45%,#f7d2ae);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{color:var(--cu2);display:inline-flex;gap:10px;align-items:center}.eyebrow::before{content:"";width:26px;height:1px;background:currentColor}
+.lede{color:var(--tx2);font-size:17px;max-width:460px}
+.plan{margin-top:30px;border-radius:24px;padding:28px;background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid rgba(227,154,92,.35);position:relative;overflow:hidden}
+.plan::after{content:"";position:absolute;right:-80px;top:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(227,154,92,.25),transparent 70%)}
+.plan .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.plan h2{font-family:var(--disp);text-transform:uppercase;font-size:28px;font-weight:700}
+.price{font-family:var(--disp);font-size:64px;font-weight:800;line-height:1}
+.price span{font-family:var(--body);font-size:15px;color:var(--mut);font-weight:500;margin-left:4px}
+.plan ul{list-style:none;display:grid;gap:10px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.plan li{display:flex;gap:12px;font-size:14.5px;color:var(--tx2)}
+.plan li svg{width:18px;height:18px;flex:none;margin-top:2px;stroke:var(--cu2)}
+.note{margin-top:14px;font-size:13px;color:var(--mut)}
+.card{border-radius:26px;padding:34px;background:linear-gradient(180deg,rgba(26,32,48,.9),rgba(12,15,21,.95));border:1px solid var(--line2);box-shadow:0 40px 100px -30px #000}
+.card h3{font-family:var(--disp);text-transform:uppercase;font-size:30px;font-weight:700;margin-bottom:6px}
+.card>p{color:var(--mut);font-size:14px;margin-bottom:24px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form>*{min-width:0}
+.full{grid-column:1/-1}
+label.l{display:block;font-size:13px;color:var(--tx2);margin-bottom:7px;font-weight:500}
+input.i{width:100%;height:52px;border-radius:14px;background:rgba(0,0,0,.32);border:1px solid var(--line2);padding:0 16px;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+input.i:focus{border-color:var(--cu);box-shadow:0 0 0 4px rgba(227,154,92,.14)}
+input.i::placeholder{color:#566072}
+.pm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.opt label{flex-direction:column;align-items:flex-start;gap:10px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0}
+.opt label{display:flex;gap:14px;align-items:center;padding:16px;border-radius:16px;border:1px solid var(--line2);background:rgba(0,0,0,.25);cursor:pointer;transition:.2s;height:100%}
+.opt .b{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-family:var(--disp);font-weight:800;font-size:19px;flex:none}
+.opt strong{display:block;font-size:15px}
+.opt small{display:block;font-size:12.5px;color:var(--mut);line-height:1.35}
+.opt input:checked+label{border-color:var(--cu);background:rgba(227,154,92,.1);box-shadow:0 0 0 4px rgba(227,154,92,.1)}
+.opt input:focus-visible+label{box-shadow:0 0 0 4px rgba(227,154,92,.3)}
+.cash{border-radius:16px;padding:18px;background:rgba(0,214,79,.06);border:1px solid rgba(0,214,79,.3);font-size:14px;color:var(--tx2)}
+.cash b{color:var(--tx)}
+.cash a{color:#6ee7a0;font-weight:600}
+.agree{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:var(--tx2);cursor:pointer}
+.agree input{width:20px;height:20px;accent-color:var(--cu);flex:none;margin-top:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;height:58px;border-radius:999px;border:0;cursor:pointer;font-weight:700;font-size:16px;background:linear-gradient(180deg,var(--cu2),var(--cu) 60%,var(--cu3));color:#170c02;box-shadow:0 12px 40px -10px rgba(227,154,92,.7),inset 0 1px 0 rgba(255,255,255,.4);transition:transform .25s var(--ease),box-shadow .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.btn.gh{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid var(--line2);box-shadow:none}
+.msg{display:none;font-size:14px;padding:14px 16px;border-radius:14px}
+.msg.show{display:block}
+.msg.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#fecaca}
+.msg.ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.3);color:#a7f3d0}
+.done{text-align:center;padding:10px 0}
+.done .ring{width:84px;height:84px;border-radius:50%;margin:0 auto 20px;display:grid;place-items:center;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.4)}
+.done .ring svg{width:38px;height:38px;stroke:var(--ok)}
+.done h3{font-size:40px}
+.done p{color:var(--tx2);margin:10px auto 24px;max-width:420px}
+.steps{text-align:left;display:grid;gap:10px;margin:0 0 24px}
+.steps div{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--line);font-size:14px;color:var(--tx2)}
+.steps i{font-style:normal;font-family:var(--mono);font-size:11px;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:rgba(227,154,92,.14);color:var(--cu2);flex:none}
+.steps b{color:var(--tx)}
+.foot{margin-top:40px;font-size:12.5px;color:var(--mut);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:880px){.grid{grid-template-columns:1fr}.card{padding:24px}}
+@media(max-width:560px){.form,.pm{grid-template-columns:1fr}.opt label{flex-direction:row;align-items:center}.top .secure span{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="logo" href="/"><span class="lm"><svg width="24" height="24" viewBox="0 0 64 64"><path d="M8 40h48l-8 12H16z" fill="#e39a5c"/><path d="M32 8l15 28H17z" fill="none" stroke="#e39a5c" stroke-width="5" stroke-linejoin="round"/></svg></span><span><b>NEW ARK</b><small>POWERED BY CALLTWIN</small></span></a>
+    <span class="secure mono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Secure checkout</span></span>
+  </div>
+
+  <div class="grid">
+    <div>
+      <span class="eyebrow mono">Activate your line</span>
+      <h1>Never miss<br>a call <span class="grad">again.</span></h1>
+      <p class="lede">CallTwin answers every New Ark call around the clock, books the job, and texts it to your phone. Fill in your info and pick how you want to pay.</p>
+      <div class="plan">
+        <div class="row"><h2>CallTwin Pro</h2><div class="price">$99<span>/month</span></div></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>AI receptionist answers every business call, 24/7/365</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Every job texted to your cell the second the call ends</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Owner dashboard: jobs, callbacks, customer payments</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Your New Ark website with Zelle, Cash App and card payments</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Hosting, monitoring, call-flow updates and priority support</li>
+        </ul>
+        <p class="note">Month to month. Cancel anytime by text or email to HSW365 Media.</p>
+      </div>
+    </div>
+
+    <div class="card" id="card">
+      <div id="formView">
+        <h3>Your info</h3>
+        <p>Takes about a minute.</p>
+        <form class="form" id="f" novalidate>
+          <div><label class="l" for="name">Full name</label><input class="i" id="name" name="name" autocomplete="name" required></div>
+          <div><label class="l" for="business">Business</label><input class="i" id="business" name="business" value="New Ark" autocomplete="organization"></div>
+          <div><label class="l" for="email">Email</label><input class="i" id="email" name="email" type="email" autocomplete="email" required></div>
+          <div><label class="l" for="cell">Cell number</label><input class="i" id="cell" name="cell" type="tel" autocomplete="tel" required placeholder="(908) 555-0100"></div>
+          <div class="full"><label class="l">Pay monthly with</label>
+            <div class="pm">
+              <div class="opt"><input type="radio" name="method" id="mCard" value="card" checked><label for="mCard"><span class="b" style="background:#635bff;color:#fff">S</span><span><strong>Card</strong><small>Auto-billed monthly through Stripe</small></span></label></div>
+              <div class="opt"><input type="radio" name="method" id="mZelle" value="zelle"><label for="mZelle"><span class="b" style="background:#6d1ed4;color:#fff">Z</span><span><strong>Zelle</strong><small>Send $99 each month from your bank</small></span></label></div>
+              <div class="opt"><input type="radio" name="method" id="mCash" value="cashapp"><label for="mCash"><span class="b" style="background:#00d64f;color:#032b12">$</span><span><strong>Cash App</strong><small>Send $99 each month to $hsw365</small></span></label></div>
+            </div>
+          </div>
+          <div class="full cash" id="zelleBox" hidden style="background:rgba(109,30,212,.08);border-color:rgba(139,92,246,.4)">
+            <p>Send <b>$99</b> with Zelle to <b>Elvin Torres Sr.</b> at <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b>. Put <b>CallTwin New Ark</b> in the memo. You'll get a reminder each month.</p>
+          </div>
+          <div class="full cash" id="cashBox" hidden>
+            <p>Send <b>$99</b> to <b>$hsw365</b> now: <a href="https://cash.app/$hsw365/99" target="_blank" rel="noopener">Open Cash App</a>. Put <b>CallTwin New Ark</b> in the note. You'll get a reminder each month.</p>
+            <div style="margin-top:12px"><label class="l" for="cashNote">Your $cashtag (so we can match it)</label><input class="i" id="cashNote" name="cashapp_note" placeholder="$yourtag"></div>
+          </div>
+          <label class="full agree"><input type="checkbox" id="agree"><span>I agree to $99 per month for CallTwin Pro, starting today, until I cancel.</span></label>
+          <div class="full msg" id="msg" role="status"></div>
+          <div class="full"><button class="btn" type="submit" id="go">Continue to secure payment</button></div>
+        </form>
+      </div>
+
+      <div id="doneView" class="done" hidden>
+        <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+        <h3 id="doneTitle" style="font-family:var(--disp);text-transform:uppercase">You're active</h3>
+        <p id="doneText">Your subscription is set. Last step: set up your owner portal so jobs and payouts go to you.</p>
+        <div class="steps">
+          <div><i>1</i><span><b>Set up your portal.</b> Name, email, cell, and how customers pay you (Zelle, Cash App or Stripe).</span></div>
+          <div><i>2</i><span><b>Forward your line.</b> From 908-454-4043 dial <b>*72 856 594 3303</b>. Every call is answered from then on.</span></div>
+          <div><i>3</i><span><b>Test it.</b> Call your business line from another phone and listen to Marcus.</span></div>
+        </div>
+        <a class="btn" href="/#owner">Set up my owner portal</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><span>Billed by HSW365 Media LLC. Questions: hsw365media@gmail.com</span><span>Card payments processed by Stripe. We never see your card number.</span></div>
+</div>
+
+<script>
+const API = "https://lsxdlmrjrcivxwgfkpop.supabase.co/functions/v1/newark";
+const CT = "https://calltwin.onrender.com/api/newark";
+const $ = (s) => document.querySelector(s);
+const digits = (s) => String(s || "").replace(/\D/g, "");
+const say = (t, ok) => { const m = $("#msg"); m.textContent = t; m.className = "full msg show " + (ok ? "ok" : "err"); };
+const ss = { get(k){try{return sessionStorage.getItem(k)}catch{return null}}, set(k,v){try{sessionStorage.setItem(k,v)}catch{}} };
+
+function method() { return document.querySelector("input[name=method]:checked").value; }
+function syncMethod() {
+  const m = method();
+  $("#cashBox").hidden = m !== "cashapp";
+  $("#zelleBox").hidden = m !== "zelle";
+  $("#go").textContent = m === "cashapp" ? "I sent $99 on Cash App" : m === "zelle" ? "I sent $99 on Zelle" : "Continue to secure payment";
+}
+document.querySelectorAll("input[name=method]").forEach((r) => r.addEventListener("change", syncMethod));
+
+function done(title, text) {
+  $("#formView").hidden = true; $("#doneView").hidden = false;
+  if (title) $("#doneTitle").textContent = title;
+  if (text) $("#doneText").textContent = text;
+}
+
+$("#f").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target));
+  d.method = method();
+  if (!d.name.trim() || !d.email.includes("@") || digits(d.cell).length < 10) return say("Add your name, email and a 10-digit cell number.");
+  if (!$("#agree").checked) return say("Check the box to agree to the monthly plan.");
+  const btn = $("#go"); btn.disabled = true; btn.textContent = "Working...";
+  try {
+    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ a: "billing_signup", ...d }) })).json();
+    if (!r.ok) throw new Error(r.error || "Couldn't save your info.");
+    if (d.method !== "card") {
+      return done("Got it", `Once your $99 ${d.method === "zelle" ? "Zelle" : "Cash App"} payment lands, CallTwin Pro is active. Set up your owner portal now so nothing waits on us.`);
+    }
+    const c = await fetch(CT + "/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ billing_id: r.id, email: d.email, name: d.name, business: d.business }) });
+    const cj = await c.json().catch(() => ({}));
+    if (!cj.ok || !cj.url) throw new Error(cj.error || "Card checkout is waking up. Try again in 30 seconds.");
+    location.href = cj.url;
+  } catch (err) {
+    say(err.message || "Something went wrong. Try again.");
+    btn.disabled = false; syncMethod();
+  }
+});
+
+// back from Stripe
+const q = new URLSearchParams(location.search);
+if (q.get("paid") && q.get("session_id")) {
+  done("Confirming...", "Checking your payment with Stripe.");
+  fetch(CT + "/confirm?session_id=" + encodeURIComponent(q.get("session_id"))).then((r) => r.json()).then((j) => {
+    if (j.paid) done("You're active", "Payment received. CallTwin Pro is on. Last step: set up your owner portal so jobs and payouts go to you.");
+    else done("Almost there", "Stripe hasn't confirmed the payment yet. If you were charged, you're all set; set up your portal below.");
+  }).catch(() => done("You're active", "Payment submitted. Set up your owner portal below."));
+} else if (q.get("canceled")) {
+  say("Checkout was canceled. Nothing was charged. You can try again or pick Cash App.");
+}
+syncMethod();
+</script>
+</body>
+</html>

@@ -11,6 +11,7 @@ const billingRoutes = require("./routes/billing");
 const webhooksRoutes = require("./routes/webhooks");
 const legalRoutes = require("./routes/legal");
 const { router: inboundRoutes, ensureInboundRouting } = require("./routes/inbound");
+const { router: newarkRoutes } = require("./routes/newark");
 const { startScheduler } = require("./services/scheduler");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,8 @@ const PORT = process.env.PORT || 3000;
 app.use("/api/webhooks", webhooksRoutes);
 // Inbound calls (SignalWire posts form-encoded) -> ElevenLabs AI receptionist.
 app.use("/api/inbound", inboundRoutes);
+// New Ark client: owner SMS alerts + voicemail capture.
+app.use("/api/newark", newarkRoutes);
 app.use(express.json());
 app.use("/audio", express.static(path.join(__dirname, "public/audio")));
 app.use("/", legalRoutes);

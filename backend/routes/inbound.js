@@ -30,15 +30,12 @@ function agentFor(toNumber) {
   return process.env.INBOUND_DEFAULT_AGENT_ID || NEW_ARK_AGENT;
 }
 
+const { ownerContact, fallbackXml } = require("./newark");
 const xml = (s) => String(s).replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c]));
-function fallback(res, why) {
+async function fallback(res, why, to) {
   console.error("[inbound] falling back:", why);
-  res.type("text/xml").send(
-    `<?xml version="1.0" encoding="UTF-8"?><Response>` +
-    `<Say voice="Polly.Joanna">Thanks for calling. We're connecting you to our team. Please leave your name, number, and what you need after the tone, and we'll call you right back.</Say>` +
-    `<Record maxLength="120" playBeep="true" />` +
-    `<Say voice="Polly.Joanna">Thank you. Goodbye.</Say><Hangup/></Response>`
-  );
+  const oc = await ownerContact().catch(() => null);
+  res.type("text/xml").send(fallbackXml(oc && oc.owner_cell, to));
 }
 
 async function handleInbound(req, res) {
@@ -48,7 +45,11 @@ async function handleInbound(req, res) {
   const agentId = agentFor(to);
   const apiKey = process.env.ELEVENLABS_API_KEY;
   console.log(`[inbound] call ${p.CallSid || "?"} from ${from} to ${to} -> ${agentId}`);
-  if (!apiKey) return fallback(res, "ELEVENLABS_API_KEY not set");
+  if (!apiKey) return fallback(res, "ELEVENLABS_API_KEY not set", to);
+  if (agentId === NEW_ARK_AGENT) {
+    const oc = await ownerContact().catch(() => null);
+    if (oc && oc.ai_enabled === false) return fallback(res, "owner switched AI off", to);
+  }
 
   try {
     const r = await axios.post(
@@ -57,11 +58,11 @@ async function handleInbound(req, res) {
       { headers: { "xi-api-key": apiKey, "Content-Type": "application/json" }, timeout: 8000, responseType: "text" }
     );
     const twiml = typeof r.data === "string" ? r.data : String(r.data);
-    if (!twiml.includes("<Response")) return fallback(res, "unexpected register-call body: " + twiml.slice(0, 200));
+    if (!twiml.includes("<Response")) return fallback(res, "unexpected register-call body: " + twiml.slice(0, 200), to);
     res.type("text/xml").send(twiml);
   } catch (e) {
     const detail = e.response ? `${e.response.status} ${String(e.response.data).slice(0, 300)}` : e.message;
-    fallback(res, "register-call failed: " + detail);
+    fallback(res, "register-call failed: " + detail, to);
   }
 }
 

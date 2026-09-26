@@ -81,7 +81,7 @@ const PLAN_CENTS = Number(process.env.NEWARK_PLAN_CENTS || 9900);
 const SITE = (process.env.NEWARK_SITE || "https://newark-ark.onrender.com").replace(/\/$/, "");
 let stripe = null;
 function getStripe() {
-  if (!process.env.STRIPE_SECRET_KEY) throw new Error("Card billing isn't connected yet. Choose Cash App or contact HSW365 Media.");
+  if (!process.env.STRIPE_SECRET_KEY) throw new Error("Card payments are being set up. Pick Zelle or Cash App for now.");
   if (!stripe) stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
   return stripe;
 }

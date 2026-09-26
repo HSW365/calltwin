@@ -22,6 +22,10 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;
+        if (session.metadata && session.metadata.client === "newark") {
+          await require("./newark").billingUpdate({ stripe_session_id: session.id, status: "active", stripe_customer_id: session.customer, stripe_subscription_id: session.subscription });
+          break;
+        }
         const user = await User.findById(session.metadata.userId);
         if (user) {
           if (session.metadata.plan === "lifetime" || session.mode === "payment") {
@@ -40,6 +44,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       }
       case "invoice.paid": {
         const invoice = event.data.object;
+        if (invoice.subscription) require("./newark").billingUpdate({ stripe_subscription_id: invoice.subscription, status: "active" });
         const user = await User.findOne({ stripeCustomerId: invoice.customer });
         if (user && !user.isLifetime) {
           user.subscriptionStatus = "active";
@@ -51,6 +56,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       }
       case "invoice.payment_failed": {
         const invoice = event.data.object;
+        if (invoice.subscription) require("./newark").billingUpdate({ stripe_subscription_id: invoice.subscription, status: "past_due" });
         const user = await User.findOne({ stripeCustomerId: invoice.customer });
         if (user && !user.isLifetime) {
           user.subscriptionStatus = "past_due";
@@ -60,6 +66,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       }
       case "customer.subscription.deleted": {
         const sub = event.data.object;
+        if (sub.metadata && sub.metadata.client === "newark") require("./newark").billingUpdate({ stripe_subscription_id: sub.id, status: "canceled" });
         const user = await User.findOne({ stripeSubscriptionId: sub.id });
         if (user && !user.isLifetime) {
           user.subscriptionStatus = "canceled";

@@ -76,6 +76,69 @@ function fallbackXml(ownerCell, callerId) {
   return `<?xml version="1.0" encoding="UTF-8"?><Response>${dial}${vm}</Response>`;
 }
 
+// ---------- CallTwin subscription for New Ark ($99/mo) ----------
+const PLAN_CENTS = Number(process.env.NEWARK_PLAN_CENTS || 9900);
+const SITE = (process.env.NEWARK_SITE || "https://newark-ark.onrender.com").replace(/\/$/, "");
+let stripe = null;
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) throw new Error("Card billing isn't connected yet. Choose Cash App or contact HSW365 Media.");
+  if (!stripe) stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+  return stripe;
+}
+async function billingUpdate(body) {
+  if (!hookKey()) return;
+  try { await axios.post(NEWARK_API, { a: "billing_update", ...body }, { headers: { "x-newark-key": hookKey() }, timeout: 8000 }); }
+  catch (e) { console.error("[newark] billing_update failed:", e.message); }
+}
+router.use(["/subscribe", "/confirm"], (req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Headers", "content-type");
+  res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+router.post("/subscribe", async (req, res) => {
+  try {
+    const { billing_id, email, name, business } = req.body || {};
+    if (!billing_id || !email) return res.status(400).json({ ok: false, error: "Missing signup details." });
+    const session = await getStripe().checkout.sessions.create({
+      mode: "subscription",
+      customer_email: String(email).slice(0, 160),
+      line_items: [{
+        quantity: 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: PLAN_CENTS,
+          recurring: { interval: "month" },
+          product_data: { name: "CallTwin Pro - 24/7 AI receptionist", description: "Every business call answered, job tickets texted to you, owner dashboard, hosting and support." },
+        },
+      }],
+      metadata: { client: "newark", billing_id: String(billing_id), name: String(name || "").slice(0, 100), business: String(business || "").slice(0, 100) },
+      subscription_data: { metadata: { client: "newark", billing_id: String(billing_id) } },
+      success_url: `${SITE}/activate.html?paid=1&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${SITE}/activate.html?canceled=1`,
+      allow_promotion_codes: true,
+    });
+    await billingUpdate({ id: billing_id, stripe_session_id: session.id });
+    res.json({ ok: true, url: session.url });
+  } catch (e) {
+    console.error("[newark] subscribe failed:", e.message);
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+router.get("/confirm", async (req, res) => {
+  try {
+    const id = String(req.query.session_id || "");
+    if (!id.startsWith("cs_")) return res.status(400).json({ ok: false, error: "Bad session." });
+    const s = await getStripe().checkout.sessions.retrieve(id);
+    const paid = s.status === "complete" && (s.payment_status === "paid" || s.payment_status === "no_payment_required");
+    if (paid) await billingUpdate({ stripe_session_id: id, status: "active", stripe_customer_id: s.customer, stripe_subscription_id: s.subscription });
+    res.json({ ok: true, paid, email: s.customer_details && s.customer_details.email });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 router.post("/notify", async (req, res) => {
   if (!hookKey() || req.get("x-newark-key") !== hookKey()) return res.status(401).json({ ok: false, error: "unauthorized" });
   const to = e164(req.body && req.body.to);
@@ -118,7 +181,8 @@ router.get("/status", async (req, res) => {
     elevenlabs_key: !!process.env.ELEVENLABS_API_KEY,
     owner_on_file: !!(oc && oc.owner_cell),
     ai_enabled: oc ? oc.ai_enabled : null,
+    stripe_key: !!process.env.STRIPE_SECRET_KEY,
   });
 });
 
-module.exports = { router, ownerContact, fallbackXml };
+module.exports = { router, ownerContact, fallbackXml, billingUpdate };

@@ -59,8 +59,9 @@ async function handleInbound(req, res) {
     const oc = await ownerContact().catch(() => null);
     const after = fallbackXml(oc && oc.owner_cell, to).replace(/^<\?xml[^>]*>\s*<Response>/, "").replace(/<\/Response>\s*$/, "");
     console.log(`[inbound] SIP -> ${sip}`);
+    const base = (process.env.PUBLIC_BASE_URL || "https://calltwin.onrender.com").replace(/\/$/, "");
     return res.type("text/xml").send(
-      `<?xml version="1.0" encoding="UTF-8"?><Response><Dial answerOnBridge="true" timeout="30" callerId="${xml(from || to)}"><Sip>${xml(sip)}</Sip></Dial>${after}</Response>`
+      `<?xml version="1.0" encoding="UTF-8"?><Response><Dial answerOnBridge="true" timeout="30" callerId="${xml(from || to)}" action="${xml(base + "/api/inbound/after-dial")}" method="POST"><Sip>${xml(sip)}</Sip></Dial>${after}</Response>`
     );
   }
 
@@ -80,6 +81,14 @@ async function handleInbound(req, res) {
 }
 
 router.post("/voice", handleInbound);
+// After the SIP leg ends: hang up if Marcus handled it, otherwise fall back to owner cell + voicemail.
+router.post("/after-dial", async (req, res) => {
+  const p = { ...req.query, ...req.body };
+  const st = String(p.DialCallStatus || "").toLowerCase();
+  console.log(`[inbound] after-dial ${p.CallSid || "?"}: ${st}`);
+  if (st === "completed" || st === "answered") return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>`);
+  await fallback(res, "SIP leg " + (st || "failed"), p.To || "");
+});
 router.get("/voice", handleInbound);
 
 // Quick check in a browser: which agent a number routes to, and whether keys are present.

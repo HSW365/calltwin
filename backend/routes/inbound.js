@@ -38,10 +38,35 @@ async function fallback(res, why, to) {
   res.type("text/xml").send(fallbackXml(oc && oc.owner_cell, to));
 }
 
+const BASE = () => (process.env.PUBLIC_BASE_URL || "https://calltwin.onrender.com").replace(/\/$/, "");
+// Ring the client's owner, then take a voicemail that lands in their dashboard.
+function clientFallbackXml(c, callerId) {
+  const vm = `<Say voice="Polly.Matthew">Thanks for calling ${xml(c.businessName)}. Please leave your name, number, and what you need after the tone, and we will call you right back.</Say>` +
+    `<Record maxLength="180" playBeep="true" action="${xml(BASE() + "/api/clients/voicemail?c=" + c._id)}" method="POST" /><Hangup/>`;
+  const dial = c.ownerCell ? `<Dial timeout="20" answerOnBridge="true" callerId="${xml(callerId)}">${xml(c.ownerCell)}</Dial>` : "";
+  return `<?xml version="1.0" encoding="UTF-8"?><Response>${dial}${vm}</Response>`;
+}
+
+async function handleClientCall(c, from, to, res) {
+  if (!c.inService() || !c.aiEnabled || !c.elPhoneId) {
+    console.log(`[inbound] client ${c.businessName}: ring owner (inService=${c.inService()} ai=${c.aiEnabled} sip=${!!c.elPhoneId})`);
+    return res.type("text/xml").send(clientFallbackXml(c, to));
+  }
+  const d10 = String(to).replace(/\D/g, "").slice(-10);
+  const sip = `sip:+1${d10}@sip.rtc.elevenlabs.io:5060;transport=tcp`;
+  console.log(`[inbound] client ${c.businessName}: SIP -> ${sip}`);
+  const after = clientFallbackXml(c, to).replace(/^<\?xml[^>]*>\s*<Response>/, "").replace(/<\/Response>\s*$/, "");
+  return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial answerOnBridge="true" timeout="30" callerId="${xml(from || to)}" action="${xml(BASE() + "/api/inbound/after-dial?c=" + c._id)}" method="POST"><Sip>${xml(sip)}</Sip></Dial>${after}</Response>`);
+}
+
 async function handleInbound(req, res) {
   const p = { ...req.query, ...req.body };
   const from = p.From || "";
   const to = p.To || process.env.SIGNALWIRE_PHONE_NUMBER || "";
+  try {
+    const c = await require("./clients").clientForNumber(to);
+    if (c) return handleClientCall(c, from, to, res);
+  } catch (e) { console.error("[inbound] client lookup:", e.message); }
   const agentId = agentFor(to);
   const apiKey = process.env.ELEVENLABS_API_KEY;
   console.log(`[inbound] call ${p.CallSid || "?"} from ${from} to ${to} -> ${agentId}`);
@@ -87,6 +112,10 @@ router.post("/after-dial", async (req, res) => {
   const st = String(p.DialCallStatus || "").toLowerCase();
   console.log(`[inbound] after-dial ${p.CallSid || "?"}: ${st}`);
   if (st === "completed" || st === "answered") return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>`);
+  if (p.c) {
+    const c = await require("../models/Client").findById(p.c).catch(() => null);
+    if (c) return res.type("text/xml").send(clientFallbackXml(c, p.To || ""));
+  }
   await fallback(res, "SIP leg " + (st || "failed"), p.To || "");
 });
 router.get("/voice", handleInbound);

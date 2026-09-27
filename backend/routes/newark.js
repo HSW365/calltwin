@@ -187,4 +187,4 @@ router.get("/status", async (req, res) => {
   });
 });
 
-module.exports = { router, ownerContact, fallbackXml, billingUpdate };
+module.exports = { router, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady };

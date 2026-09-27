@@ -19,6 +19,12 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
   }
 
   try {
+    // Self-serve CallTwin clients
+    try {
+      const o = event.data.object || {};
+      if (["invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"].includes(event.type)) await require("./clients").stripeEvent(event.type, o);
+      if (event.type === "checkout.session.completed" && o.metadata && o.metadata.client === "calltwin") return res.json({ received: true });
+    } catch (e) { console.error("[webhooks] clients:", e.message); }
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;

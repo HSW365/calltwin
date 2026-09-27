@@ -25,6 +25,7 @@ const webhooksRoutes = require("./routes/webhooks");
 const legalRoutes = require("./routes/legal");
 const { router: inboundRoutes, ensureInboundRouting } = require("./routes/inbound");
 const { router: newarkRoutes } = require("./routes/newark");
+const { router: clientRoutes } = require("./routes/clients");
 const { startScheduler } = require("./services/scheduler");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +36,8 @@ app.use("/api/webhooks", webhooksRoutes);
 app.use("/api/inbound", inboundRoutes);
 // New Ark client: owner SMS alerts + voicemail capture.
 app.use("/api/newark", newarkRoutes);
+// Self-serve CallTwin clients (signup, AI lead tool, owner portal, admin).
+app.use("/api/clients", clientRoutes);
 app.use(express.json());
 app.use("/audio", express.static(path.join(__dirname, "public/audio")));
 app.use("/", legalRoutes);

@@ -34,7 +34,8 @@ h1{font-size:34px;line-height:1.05;letter-spacing:-.04em;margin:26px 0 8px}
     <div class="num" id="num"></div>
 
     <a class="big" id="onBtn" href="#">TURN ON</a>
-    <p class="small muted" id="afterTap">Your phone opens the dialer with the code filled in. Press call and wait for the beep or confirmation. That's it.</p>
+    <a class="btn2" id="missBtn" href="#" style="width:100%;margin-top:12px;height:54px">Only answer calls I miss</a>
+    <p class="small muted" id="afterTap">TURN ON sends every call to your AI. "Only answer calls I miss" lets your phone ring first and the AI picks up if you don't. Your dialer opens with the code filled in: press call and wait for the confirmation.</p>
 
     <div class="card" id="ios" hidden>
       <b>On iPhone:</b> tap below to copy the code, open your Phone app, paste it in the keypad and press call.
@@ -75,6 +76,7 @@ async function load() {
   $("#alt").textContent = "**21*1" + d + "#";
   $("#onBtn").href = "tel:" + encodeURIComponent(code).replace("%2A", "*");
   $("#dash").href = j.portal;
+  $("#missBtn").href = "tel:" + "**61*1" + d + "%23";
   if (iOS) { $("#ios").hidden = false; $("#afterTap").textContent = "If nothing happens, use the copy button below."; }
   $("#copy").onclick = async () => { try { await navigator.clipboard.writeText(code); $("#copy").textContent = "Copied. Now paste it in your Phone app."; } catch { $("#copy").textContent = code; } };
   $("#onBtn").onclick = () => { if (iOS) { navigator.clipboard?.writeText(code).catch(() => {}); } };

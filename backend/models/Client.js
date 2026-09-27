@@ -6,7 +6,7 @@ const clientSchema = new mongoose.Schema(
     businessName: { type: String, required: true },
     industry: { type: String, default: "" },
     ownerName: { type: String, required: true },
-    ownerEmail: { type: String, required: true, lowercase: true, index: true },
+    ownerEmail: { type: String, default: "", lowercase: true, index: true },
     ownerCell: { type: String, required: true }, // E.164
     businessPhone: { type: String, default: "" }, // the line customers already call
     areaCode: { type: String, default: "" },

@@ -127,6 +127,12 @@ async function buyNumber(c) {
 }
 
 async function registerSip(c) {
+  // Reuse the number if it's already registered in ElevenLabs; just point it at this client's agent.
+  try {
+    const list = await axios.get(`${EL}/phone-numbers`, { headers: elHeaders(), timeout: 15000 });
+    const hit = (list.data || []).find((p) => String(p.phone_number).replace(/\D/g, "").slice(-10) === String(c.aiNumber).replace(/\D/g, "").slice(-10));
+    if (hit) { await axios.patch(`${EL}/phone-numbers/${hit.phone_number_id}`, { agent_id: c.agentId }, { headers: elHeaders(), timeout: 20000 }); return hit.phone_number_id; }
+  } catch (e) { /* fall through to create */ }
   const space = (process.env.SIGNALWIRE_SPACE || "hsw365-media.signalwire.com").replace(/^https?:\/\//, "");
   const r = await axios.post(`${EL}/phone-numbers`, {
     provider: "sip_trunk",

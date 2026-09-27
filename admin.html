@@ -22,6 +22,11 @@ input{height:40px;border-radius:10px;border:1px solid var(--line);background:#00
 .trial{color:var(--cyan)}.active,.comp{color:var(--ok)}.past_due,.canceled{color:var(--red)}
 .log{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-all;margin-top:6px}
 .acts{display:flex;flex-direction:column;gap:6px}
+.add{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.add h2{margin:0 0 10px;font-size:18px}.add .g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.add input,.add select,.add textarea{width:100%;height:40px;border-radius:10px;border:1px solid var(--line);background:#000;color:var(--ink);padding:0 10px;font:inherit}
+.add textarea{height:70px;padding:8px 10px}.add .full{grid-column:1/-1}
+@media(max-width:800px){.add .g{grid-template-columns:1fr}}
 a{color:var(--cyan)}
 @media(max-width:800px){.row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
@@ -33,6 +38,24 @@ a{color:var(--cyan)}
   <div class="bar"><input id="key" type="password" placeholder="Admin key"><button class="btn pri" id="go">Open</button><button class="btn" id="copy">Copy signup link</button><span class="muted" id="msg"></span></div>
   <div id="app" hidden>
     <div class="kpis"><div class="kpi"><b id="kAll">0</b><span class="muted">Businesses</span></div><div class="kpi"><b id="kTrial">0</b><span class="muted">On trial</span></div><div class="kpi"><b id="kPaid">0</b><span class="muted">Paying</span></div><div class="kpi"><b id="kMrr">$0</b><span class="muted">Monthly revenue</span></div></div>
+    <form class="add" id="addForm">
+      <h2>Add a business</h2>
+      <div class="muted" style="margin-bottom:10px">Fill this in, hit Add. The receptionist and number are set up automatically, and the owner gets one text with a TURN ON link.</div>
+      <div class="g">
+        <input name="businessName" placeholder="Business name *" required>
+        <input name="ownerName" placeholder="Owner name *" required>
+        <input name="ownerCell" type="tel" placeholder="Owner cell * (gets the jobs)" required>
+        <input name="ownerEmail" type="email" placeholder="Owner email (optional)">
+        <input name="industry" placeholder="Industry (Plumbing, HVAC...)">
+        <input name="city" placeholder="City / area">
+        <input name="businessPhone" type="tel" placeholder="Their business phone">
+        <input name="hours" placeholder="Hours">
+        <select name="payMethod"><option value="zelle">Pays by Zelle</option><option value="cashapp">Pays by Cash App</option><option value="card">Pays by card</option></select>
+        <textarea class="full" name="services" placeholder="What they do (the AI tells callers this)"></textarea>
+        <input class="full" name="useNumber" type="tel" placeholder="Use a number you already own (optional, e.g. 856-594-3303). Leave empty to buy a new one.">
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:10px"><button class="btn pri" type="submit" id="addBtn">Add business</button><span class="muted" id="addMsg"></span></div>
+    </form>
     <div id="list"></div>
   </div>
 </div>
@@ -64,7 +87,7 @@ async function load() {
       <div class="log">${esc((c.log || []).join("\n"))}</div></div>
     <div><div class="muted">AI number</div><b>${esc(c.aiNumber || "none yet")}</b><div class="muted" style="margin-top:6px">Agent</div><div class="log">${esc(c.agentId || "-")}</div>
       <div style="margin-top:8px"><a href="portal.html?k=${esc(c.portalKey)}" target="_blank">Open their dashboard</a></div></div>
-    <div class="acts"><button class="btn pri" data-a="mark_paid" data-id="${c.id}">Mark paid (+1 mo)</button><button class="btn" data-a="reprovision" data-id="${c.id}">Retry setup</button><button class="btn" data-a="set_number" data-id="${c.id}">Assign number</button><button class="btn" data-a="comp" data-id="${c.id}">Make free</button><button class="btn" data-a="cancel" data-id="${c.id}">Cancel</button></div></div>`).join("") : '<div class="muted">No signups yet. Send the signup link.</div>';
+    <div class="acts"><button class="btn pri" data-a="mark_paid" data-id="${c.id}">Mark paid (+1 mo)</button><button class="btn" data-a="resend" data-id="${c.id}">Resend TURN ON text</button><button class="btn" data-a="reprovision" data-id="${c.id}">Retry setup</button><button class="btn" data-a="set_number" data-id="${c.id}">Assign number</button><button class="btn" data-a="comp" data-id="${c.id}">Make free</button><button class="btn" data-a="cancel" data-id="${c.id}">Cancel</button></div></div>`).join("") : '<div class="muted">No signups yet. Send the signup link.</div>';
   document.querySelectorAll("[data-a]").forEach((b) => b.onclick = async () => {
     const body = { a: b.dataset.a, id: b.dataset.id };
     if (body.a === "set_number") { body.number = prompt("SignalWire number to assign (e.g. 856-555-0100). Point it at https://calltwin.onrender.com/api/inbound/voice in SignalWire."); if (!body.number) return; }
@@ -75,6 +98,18 @@ async function load() {
     load();
   });
 }
+$("#addForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target)); d.a = "create";
+  const btn = $("#addBtn"); btn.disabled = true; $("#addMsg").textContent = "Setting up receptionist and number (about 20 seconds)...";
+  try {
+    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": KEY }, body: JSON.stringify(d) })).json();
+    if (!r.ok) throw new Error(r.error);
+    $("#addMsg").textContent = r.texted ? `Done. ${r.client.aiNumber} is live and ${d.ownerName} was texted the TURN ON link.` : "Added, still finishing setup. Hit Retry setup on it in a minute.";
+    e.target.reset(); load();
+  } catch (x) { $("#addMsg").textContent = x.message || "Failed."; }
+  btn.disabled = false;
+});
 if (KEY) load();
 </script>
 </body>

@@ -131,7 +131,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
         <div class="ring">&#10003;</div>
         <h3>You're in.</h3>
         <p class="sub" id="doneSub">We're building your AI receptionist right now. It takes about a minute.</p>
-        <div class="box" id="numBox">Your CallTwin number: <b id="num">setting up...</b><br>When it's ready, forward your business line to it: dial <code>*72</code> then the number from your business phone.</div>
+        <div class="box" id="numBox">Your CallTwin number: <b id="num">setting up...</b><br>Last step: open the text we send you <b>on your business phone</b> and tap <b>TURN ON</b>. That's it.<br><br><a class="btn" id="onBtn" href="#" style="height:48px">Turn on now</a></div>
         <div class="box" id="cardBox" hidden>Add your card now so service continues after the trial. You won't be charged for 14 days.<br><br><button class="btn" id="cardBtn" type="button">Add card (no charge today)</button></div>
         <div class="box" id="p2pBox" hidden></div>
         <a class="btn" id="portalBtn" href="#">Open my dashboard</a>
@@ -161,7 +161,7 @@ $("#f").addEventListener("submit", async (e) => {
     if (!j.ok) throw new Error(j.error || "Signup failed. Try again.");
     try { localStorage.setItem("calltwin_portal", j.portal); } catch {}
     $("#formView").hidden = true; $("#doneView").hidden = false;
-    $("#portalBtn").href = j.portal;
+    $("#portalBtn").href = j.portal; $("#onBtn").href = j.on;
     if (j.payMethod === "card") { $("#cardBox").hidden = false; $("#cardBtn").onclick = () => addCard(j.key); }
     else if (j.payMethod === "zelle" || j.payMethod === "cashapp") {
       $("#p2pBox").hidden = false;

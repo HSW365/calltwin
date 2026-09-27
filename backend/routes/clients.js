@@ -62,37 +62,55 @@ function publicClient(c) {
 }
 
 // ---------- signup ----------
+function welcomeText(c) {
+  return `${c.businessName}: your CallTwin AI receptionist is ready. Open this on your business phone and tap TURN ON: ${SITE}/on.html?k=${c.portalKey}`;
+}
+async function createClient(b, { byAdmin = false } = {}) {
+  const email = clip(b.ownerEmail, 160).toLowerCase();
+  const cell = e164(b.ownerCell);
+  if (!clip(b.businessName) || !clip(b.ownerName) || !cell || (!byAdmin && !email.includes("@")))
+    throw Object.assign(new Error(byAdmin ? "Business name, owner name and a 10-digit cell are required." : "Business name, your name, email and a 10-digit cell are required."), { status: 400 });
+  const payMethod = ["card", "zelle", "cashapp"].includes(b.payMethod) ? b.payMethod : (byAdmin ? "zelle" : "card");
+  const comp = COMP_EMAILS.includes(email) || b.comp === true;
+  const c = await Client.create({
+    businessName: clip(b.businessName, 120), industry: clip(b.industry, 60), ownerName: clip(b.ownerName, 120), ownerEmail: email,
+    ownerCell: cell, businessPhone: e164(b.businessPhone) || clip(b.businessPhone, 30), city: clip(b.city, 80),
+    areaCode: String(e164(b.businessPhone) || cell).slice(2, 5),
+    services: clip(b.services, 1500), hours: clip(b.hours, 300), notes: clip(b.notes, 2000),
+    payoutZelle: clip(b.payoutZelle, 120), payoutCashapp: clip(b.payoutCashapp, 60), payoutStripeLink: /^https:\/\//.test(b.payoutStripeLink || "") ? clip(b.payoutStripeLink, 300) : "",
+    portalKey: token(), hookKey: token(), payMethod: comp ? "comp" : payMethod, status: comp ? "comp" : "trial",
+    trialEndsAt: new Date(Date.now() + TRIAL_DAYS * 864e5),
+    aiNumber: byAdmin && e164(b.useNumber) ? e164(b.useNumber) : "",
+  });
+  if (!byAdmin) textAdmin(`New CallTwin signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}${c.ownerEmail ? ", " + c.ownerEmail : ""}). Pays by ${c.payMethod}. Trial ends ${c.trialEndsAt.toDateString()}.`);
+  return c;
+}
+function provisionAndWelcome(c) {
+  return provision(c).then(async (done) => {
+    if (done.aiNumber && done.elPhoneId) await textOwner({ ...done.toObject(), alertSms: true }, welcomeText(done));
+    return done;
+  }).catch((e) => { console.error("[clients] provision:", e.message); return c; });
+}
+
 router.post("/signup", async (req, res) => {
   try {
     const b = req.body || {};
     if (b.website) return res.json({ ok: true }); // honeypot
-    const email = clip(b.ownerEmail, 160).toLowerCase();
-    const cell = e164(b.ownerCell);
-    if (!clip(b.businessName) || !clip(b.ownerName) || !email.includes("@") || !cell)
-      return res.status(400).json({ ok: false, error: "Business name, your name, email and a 10-digit cell are required." });
-    const payMethod = ["card", "zelle", "cashapp"].includes(b.payMethod) ? b.payMethod : "card";
-    const comp = COMP_EMAILS.includes(email);
-    const c = await Client.create({
-      businessName: clip(b.businessName, 120), industry: clip(b.industry, 60), ownerName: clip(b.ownerName, 120), ownerEmail: email,
-      ownerCell: cell, businessPhone: e164(b.businessPhone) || clip(b.businessPhone, 30), city: clip(b.city, 80),
-      areaCode: String(e164(b.businessPhone) || cell).slice(2, 5),
-      services: clip(b.services, 1500), hours: clip(b.hours, 300), notes: clip(b.notes, 2000),
-      payoutZelle: clip(b.payoutZelle, 120), payoutCashapp: clip(b.payoutCashapp, 60), payoutStripeLink: /^https:\/\//.test(b.payoutStripeLink || "") ? clip(b.payoutStripeLink, 300) : "",
-      portalKey: token(), hookKey: token(), payMethod: comp ? "comp" : payMethod, status: comp ? "comp" : "trial",
-      trialEndsAt: new Date(Date.now() + TRIAL_DAYS * 864e5),
-    });
-    textAdmin(`New CallTwin signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}, ${c.ownerEmail}). Pays by ${c.payMethod}. Trial ends ${c.trialEndsAt.toDateString()}.`);
-    // Provision in the background; the portal shows progress.
-    provision(c).then(async (done) => {
-      if (done.aiNumber) {
-        await textOwner(done, `${done.businessName}: your CallTwin AI receptionist is live. Forward your business line to ${done.aiNumber} (dial *72 then the number). Dashboard: ${SITE}/portal.html?k=${done.portalKey}`);
-      }
-    }).catch((e) => console.error("[clients] provision:", e.message));
-    res.json({ ok: true, portal: `${SITE}/portal.html?k=${c.portalKey}`, key: c.portalKey, id: c._id, trialEndsAt: c.trialEndsAt, payMethod: c.payMethod });
+    const c = await createClient(b);
+    provisionAndWelcome(c); // background; the page polls for the number
+    res.json({ ok: true, portal: `${SITE}/portal.html?k=${c.portalKey}`, on: `${SITE}/on.html?k=${c.portalKey}`, key: c.portalKey, id: c._id, trialEndsAt: c.trialEndsAt, payMethod: c.payMethod });
   } catch (e) {
+    if (e.status === 400) return res.status(400).json({ ok: false, error: e.message });
     console.error("[clients] signup:", e);
     res.status(500).json({ ok: false, error: "Signup failed. Try again." });
   }
+});
+
+// Public info for the one-tap activation page.
+router.get("/on", async (req, res) => {
+  const c = await Client.findOne({ portalKey: clip(req.query.k, 80) });
+  if (!c) return res.status(404).json({ ok: false, error: "Link not found." });
+  res.json({ ok: true, businessName: c.businessName, aiNumber: c.aiNumber, ready: !!(c.aiNumber && c.elPhoneId), portal: `${SITE}/portal.html?k=${c.portalKey}` });
 });
 
 // ---------- Stripe: card on file, 14-day trial, then $99/mo ----------
@@ -240,6 +258,13 @@ router.get("/admin", async (req, res) => {
 router.post("/admin", async (req, res) => {
   if (!adminOk(req)) return res.status(401).json({ ok: false, error: "Wrong admin key." });
   const b = req.body || {};
+  if (b.a === "create") {
+    try {
+      const nc = await createClient(b, { byAdmin: true });
+      const done = await provisionAndWelcome(nc); // waits so admin sees the number right away
+      return res.json({ ok: true, client: { ...publicClient(done), portalKey: done.portalKey, log: done.provisionLog.slice(-6) }, texted: !!(done.aiNumber && done.elPhoneId) });
+    } catch (e) { return res.status(e.status || 500).json({ ok: false, error: e.message }); }
+  }
   const c = await Client.findById(b.id).catch(() => null);
   if (!c) return res.status(404).json({ ok: false, error: "Client not found." });
   if (b.a === "mark_paid") { c.status = "active"; c.paidThrough = new Date(Math.max(Date.now(), +(c.paidThrough || 0)) + 31 * 864e5); }
@@ -247,6 +272,7 @@ router.post("/admin", async (req, res) => {
   else if (b.a === "cancel") c.status = "canceled";
   else if (b.a === "set_number") { const n = e164(b.number); if (!n) return res.status(400).json({ ok: false, error: "Bad number." }); c.aiNumber = n; c.elPhoneId = ""; }
   else if (b.a === "reprovision") { /* fall through to provision */ }
+  else if (b.a === "resend") { const ok = await textOwner({ ...c.toObject(), alertSms: true }, welcomeText(c)); return res.json({ ok, error: ok ? undefined : "Text failed." }); }
   else return res.status(400).json({ ok: false, error: "Unknown action." });
   await c.save();
   if (b.a === "set_number" || b.a === "reprovision") await provision(c);

@@ -43,7 +43,10 @@ const BASE = () => (process.env.PUBLIC_BASE_URL || "https://calltwin.onrender.co
 function clientFallbackXml(c, callerId) {
   const vm = `<Say voice="Polly.Matthew">Thanks for calling ${xml(c.businessName)}. Please leave your name, number, and what you need after the tone, and we will call you right back.</Say>` +
     `<Record maxLength="180" playBeep="true" action="${xml(BASE() + "/api/clients/voicemail?c=" + c._id)}" method="POST" /><Hangup/>`;
-  const dial = c.ownerCell ? `<Dial timeout="20" answerOnBridge="true" callerId="${xml(callerId)}">${xml(c.ownerCell)}</Dial>` : "";
+  // If the owner's cell IS the forwarded business line, dialing it would loop back here, so go straight to voicemail.
+  const d10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
+  const loops = d10(c.ownerCell) && d10(c.ownerCell) === d10(c.businessPhone);
+  const dial = c.ownerCell && !loops ? `<Dial timeout="20" answerOnBridge="true" callerId="${xml(callerId)}">${xml(c.ownerCell)}</Dial>` : "";
   return `<?xml version="1.0" encoding="UTF-8"?><Response>${dial}${vm}</Response>`;
 }
 

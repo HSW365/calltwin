@@ -1,4 +1,17 @@
 require("dotenv").config();
+// Accept common alternate names for secrets so a key saved under a different name still works.
+(function envAliases() {
+  const pick = (target, names) => {
+    if (process.env[target]) return;
+    for (const n of names) if (process.env[n]) { process.env[target] = String(process.env[n]).trim(); console.log(`[env] ${target} <- ${n}`); return; }
+  };
+  pick("SIGNALWIRE_API_TOKEN", ["SIGNALWIRE_TOKEN", "SIGNALWIRE_AUTH_TOKEN", "SIGNALWIRE_API_KEY", "SIGNALWIRE_REST_API_TOKEN", "SW_API_TOKEN", "SW_TOKEN"]);
+  pick("SIGNALWIRE_PROJECT_ID", ["SIGNALWIRE_PROJECT", "SIGNALWIRE_PROJECT_KEY", "SW_PROJECT_ID"]);
+  pick("SIGNALWIRE_SPACE", ["SIGNALWIRE_SPACE_URL", "SIGNALWIRE_SPACE_NAME", "SIGNALWIRE_API_HOSTNAME", "SW_SPACE"]);
+  pick("STRIPE_SECRET_KEY", ["STRIPE_SECRET", "STRIPE_API_KEY", "STRIPE_KEY", "STRIPE_SK"]);
+  const sp = process.env.SIGNALWIRE_SPACE;
+  if (sp && !sp.includes(".")) process.env.SIGNALWIRE_SPACE = sp + ".signalwire.com";
+})();
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");

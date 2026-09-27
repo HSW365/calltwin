@@ -182,6 +182,8 @@ router.get("/status", async (req, res) => {
     owner_on_file: !!(oc && oc.owner_cell),
     ai_enabled: oc ? oc.ai_enabled : null,
     stripe_key: !!process.env.STRIPE_SECRET_KEY,
+    // names only, never values: helps spot a secret saved under an unexpected name
+    env_names: Object.keys(process.env).filter((k) => /SIGNAL|^SW_|STRIPE|ELEVEN/i.test(k)).sort(),
   });
 });
 

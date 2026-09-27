@@ -253,6 +253,21 @@ router.post("/admin", async (req, res) => {
   res.json({ ok: true, client: { ...publicClient(c), log: c.provisionLog.slice(-6) } });
 });
 
+// SignalWire credential check (admin only)
+router.get("/admin/swtest", async (req, res) => {
+  if (!adminOk(req)) return res.status(401).json({ ok: false });
+  const axios = require("axios");
+  const { swConfig } = require("../services/provision");
+  const sw = swConfig();
+  if (!sw) return res.json({ ok: false, error: "not configured" });
+  const out = { api: sw.api.replace(/Accounts\/.*/, "Accounts/<project>"), project_prefix: sw.auth.username.slice(0, 8), token_len: (sw.auth.password || "").length, token_prefix: (sw.auth.password || "").slice(0, 3) };
+  for (const [k, url] of [["account", `${sw.api}.json`], ["numbers", `${sw.api}/IncomingPhoneNumbers.json`], ["available", `${sw.api}/AvailablePhoneNumbers/US/Local.json?AreaCode=856&PageSize=2`]]) {
+    try { const r = await axios.get(url, { auth: sw.auth, timeout: 15000 }); out[k] = { status: r.status, body: JSON.stringify(r.data).slice(0, 400) }; }
+    catch (e) { out[k] = { status: e.response && e.response.status, body: e.response ? JSON.stringify(e.response.data).slice(0, 300) : e.message }; }
+  }
+  res.json(out);
+});
+
 // ---------- used by inbound call routing ----------
 async function clientForNumber(to) {
   const d = String(to || "").replace(/\D/g, "").slice(-10);

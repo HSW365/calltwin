@@ -104,24 +104,40 @@ async function ensureInboundRouting() {
   const auth = { username: projectId, password: token };
   const results = [];
 
-  for (const raw of [...new Set(numbers)]) {
-    const e164 = "+1" + String(raw).replace(/\D/g, "").slice(-10);
+  // List every number in the project once and match by last 10 digits (filters differ between accounts).
+  let owned = [];
+  try {
+    let url = `${api}.json?PageSize=100`;
+    for (let page = 0; url && page < 10; page++) {
+      const r = await axios.get(url.startsWith("http") ? url : `https://${space}${url}`, { auth, timeout: 10000 });
+      owned = owned.concat(r.data.incoming_phone_numbers || []);
+      url = r.data.next_page_uri || null;
+    }
+  } catch (e) {
+    const detail = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message;
+    routingState = { done: false, at: new Date().toISOString(), error: "list numbers failed: " + detail };
+    console.log("[inbound] routing:", JSON.stringify(routingState));
+    return;
+  }
+  const last10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
+  for (const raw of [...new Set(numbers.map(last10))]) {
+    const e164 = "+1" + raw;
+    const rec = owned.find((n) => last10(n.phone_number) === raw);
+    if (!rec) { results.push({ number: e164, ok: false, error: "not in this SignalWire project" }); continue; }
     try {
-      const list = await axios.get(`${api}.json`, { auth, params: { PhoneNumber: e164 }, timeout: 10000 });
-      const rec = (list.data.incoming_phone_numbers || [])[0];
-      if (!rec) { results.push({ number: e164, ok: false, error: "number not found in SignalWire project" }); continue; }
       if (rec.voice_url === want && (rec.voice_method || "POST").toUpperCase() === "POST") {
         results.push({ number: e164, ok: true, changed: false }); continue;
       }
       await axios.post(`${api}/${rec.sid}.json`, new URLSearchParams({ VoiceUrl: want, VoiceMethod: "POST" }).toString(),
         { auth, headers: { "Content-Type": "application/x-www-form-urlencoded" }, timeout: 10000 });
-      results.push({ number: e164, ok: true, changed: true });
+      results.push({ number: e164, ok: true, changed: true, was: rec.voice_url || null });
     } catch (e) {
       const detail = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message;
       results.push({ number: e164, ok: false, error: detail });
     }
   }
-  routingState = { done: results.every((r) => r.ok), at: new Date().toISOString(), voice_url: want, results };
+  routingState = { owned: owned.map((n) => n.phone_number) };
+  routingState = { done: results.some((r) => r.ok), at: new Date().toISOString(), voice_url: want, results, owned: routingState.owned };
   console.log("[inbound] routing:", JSON.stringify(routingState));
 }
 

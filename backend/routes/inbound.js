@@ -120,10 +120,32 @@ async function ensureInboundRouting() {
     return;
   }
   const last10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
+  // Newer SignalWire spaces keep numbers in the Relay REST API; check it too.
+  let relay = [];
+  try {
+    const r = await axios.get(`https://${space}/api/relay/rest/phone_numbers?page_size=100`, { auth, timeout: 10000 });
+    relay = r.data.data || [];
+  } catch (e) {
+    console.log("[inbound] relay list failed:", e.response ? e.response.status : e.message);
+  }
   for (const raw of [...new Set(numbers.map(last10))]) {
     const e164 = "+1" + raw;
     const rec = owned.find((n) => last10(n.phone_number) === raw);
-    if (!rec) { results.push({ number: e164, ok: false, error: "not in this SignalWire project" }); continue; }
+    if (!rec) {
+      const rr = relay.find((n) => last10(n.number) === raw);
+      if (!rr) { results.push({ number: e164, ok: false, error: "not in this SignalWire project" }); continue; }
+      try {
+        if (rr.call_handler === "laml_webhooks" && rr.call_request_url === want) { results.push({ number: e164, ok: true, changed: false, api: "relay" }); continue; }
+        await axios.put(`https://${space}/api/relay/rest/phone_numbers/${rr.id}`,
+          { call_handler: "laml_webhooks", call_request_url: want, call_request_method: "POST" },
+          { auth, headers: { "Content-Type": "application/json" }, timeout: 10000 });
+        results.push({ number: e164, ok: true, changed: true, api: "relay", was: rr.call_handler || null });
+      } catch (e) {
+        const detail = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message;
+        results.push({ number: e164, ok: false, api: "relay", error: detail });
+      }
+      continue;
+    }
     try {
       if (rec.voice_url === want && (rec.voice_method || "POST").toUpperCase() === "POST") {
         results.push({ number: e164, ok: true, changed: false }); continue;
@@ -136,7 +158,7 @@ async function ensureInboundRouting() {
       results.push({ number: e164, ok: false, error: detail });
     }
   }
-  routingState = { owned: owned.map((n) => n.phone_number) };
+  routingState = { owned: owned.map((n) => n.phone_number).concat(relay.map((n) => n.number)) };
   routingState = { done: results.some((r) => r.ok), at: new Date().toISOString(), voice_url: want, results, owned: routingState.owned };
   console.log("[inbound] routing:", JSON.stringify(routingState));
 }

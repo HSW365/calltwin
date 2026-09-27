@@ -50,6 +50,19 @@ async function handleInbound(req, res) {
     const oc = await ownerContact().catch(() => null);
     if (oc && oc.ai_enabled === false) return fallback(res, "owner switched AI off", to);
   }
+  // Preferred path: hand the call to ElevenLabs over SIP (number is registered there as a SIP trunk
+  // and assigned to the agent). More reliable than media streams on SignalWire.
+  const digits10 = String(to).replace(/\D/g, "").slice(-10);
+  const sipNumbers = String(process.env.INBOUND_SIP_NUMBERS || "8565943303").split(",").map((n) => n.replace(/\D/g, "").slice(-10));
+  if (process.env.INBOUND_MODE !== "stream" && sipNumbers.includes(digits10)) {
+    const sip = `sip:+1${digits10}@sip.rtc.elevenlabs.io:5060;transport=tcp`;
+    const oc = await ownerContact().catch(() => null);
+    const after = fallbackXml(oc && oc.owner_cell, to).replace(/^<\?xml[^>]*>\s*<Response>/, "").replace(/<\/Response>\s*$/, "");
+    console.log(`[inbound] SIP -> ${sip}`);
+    return res.type("text/xml").send(
+      `<?xml version="1.0" encoding="UTF-8"?><Response><Dial answerOnBridge="true" timeout="30" callerId="${xml(from || to)}"><Sip>${xml(sip)}</Sip></Dial>${after}</Response>`
+    );
+  }
 
   try {
     const r = await axios.post(

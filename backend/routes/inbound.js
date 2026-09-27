@@ -45,7 +45,8 @@ function clientFallbackXml(c, callerId) {
     `<Record maxLength="180" playBeep="true" action="${xml(BASE() + "/api/clients/voicemail?c=" + c._id)}" method="POST" /><Hangup/>`;
   // If the owner's cell IS the forwarded business line, dialing it would loop back here, so go straight to voicemail.
   const d10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
-  const loops = d10(c.ownerCell) && d10(c.ownerCell) === d10(c.businessPhone);
+  const lines = [c.businessPhone, ...(c.forwardedLines || [])].map(d10);
+  const loops = !!d10(c.ownerCell) && lines.includes(d10(c.ownerCell));
   const dial = c.ownerCell && !loops ? `<Dial timeout="20" answerOnBridge="true" callerId="${xml(callerId)}">${xml(c.ownerCell)}</Dial>` : "";
   return `<?xml version="1.0" encoding="UTF-8"?><Response>${dial}${vm}</Response>`;
 }

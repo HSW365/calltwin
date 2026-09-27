@@ -9,6 +9,7 @@ const clientSchema = new mongoose.Schema(
     ownerEmail: { type: String, default: "", lowercase: true, index: true },
     ownerCell: { type: String, required: true }, // E.164
     businessPhone: { type: String, default: "" }, // the line customers already call
+    forwardedLines: { type: [String], default: [] }, // every line the owner forwards to the CallTwin number (office, cell...)
     areaCode: { type: String, default: "" },
     city: { type: String, default: "" },
     services: { type: String, default: "" },

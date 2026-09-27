@@ -48,10 +48,11 @@ a{color:var(--cyan)}
         <input name="ownerEmail" type="email" placeholder="Owner email (optional)">
         <input name="industry" placeholder="Industry (Plumbing, HVAC...)">
         <input name="city" placeholder="City / area">
-        <input name="businessPhone" type="tel" placeholder="Their business phone">
+        <input name="businessPhone" type="tel" placeholder="Their office / business phone">
         <input name="hours" placeholder="Hours">
         <select name="payMethod"><option value="zelle">Pays by Zelle</option><option value="cashapp">Pays by Cash App</option><option value="card">Pays by card</option></select>
         <textarea class="full" name="services" placeholder="What they do (the AI tells callers this)"></textarea>
+        <label class="full muted" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="cellForwarded" style="width:18px;height:18px"> Owner also forwards their cell to CallTwin (office and cell both answered)</label>
         <input class="full" name="useNumber" type="tel" placeholder="Use a number you already own (optional, e.g. 856-594-3303). Leave empty to buy a new one.">
       </div>
       <div style="display:flex;gap:10px;align-items:center;margin-top:10px"><button class="btn pri" type="submit" id="addBtn">Add business</button><span class="muted" id="addMsg"></span></div>

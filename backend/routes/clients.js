@@ -81,6 +81,7 @@ async function createClient(b, { byAdmin = false } = {}) {
     portalKey: token(), hookKey: token(), payMethod: comp ? "comp" : payMethod, status: comp ? "comp" : "trial",
     trialEndsAt: new Date(Date.now() + TRIAL_DAYS * 864e5),
     aiNumber: byAdmin && e164(b.useNumber) ? e164(b.useNumber) : "",
+    forwardedLines: [e164(b.businessPhone), (b.cellForwarded === true || b.cellForwarded === "on") ? cell : null].filter(Boolean),
   });
   if (!byAdmin) textAdmin(`New CallTwin signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}${c.ownerEmail ? ", " + c.ownerEmail : ""}). Pays by ${c.payMethod}. Trial ends ${c.trialEndsAt.toDateString()}.`);
   return c;

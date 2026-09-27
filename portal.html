@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My CallTwin Dashboard</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--ink:#172033;--muted:#59657d;--cyan:#12cfe7;--blue:#3d6cff;--purple:#9b4dff;--line:#e7ebf3;--soft:#f5f8ff;--ok:#0f9d6b;--bad:#d93b3b;--warn:#b7791f}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;color:var(--ink);background:#f6f8fd;font:15px Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:auto;padding:0 18px 60px}
+.nav{height:68px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:22px;font-weight:950;letter-spacing:-.04em}.brand b{color:var(--purple)}
+h1{font-size:30px;letter-spacing:-.03em;margin:6px 0 4px}
+.muted{color:var(--muted)}
+.banner{border-radius:16px;padding:16px 18px;margin:16px 0;border:1px solid;display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.banner.info{background:#eef4ff;border-color:#c9d8ff}.banner.warn{background:#fff8e8;border-color:#f2d9a0}.banner.ok{background:#eafaf2;border-color:#b5e8cf}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi b{display:block;font-size:30px;letter-spacing:-.03em}.kpi span{font-size:13px;color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:14px}
+.card h2{font-size:18px;margin:0 0 12px}
+.num{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--blue)}
+code{background:var(--soft);border:1px solid var(--line);padding:2px 7px;border-radius:7px;font-weight:700}
+.tabs{display:flex;gap:6px;margin-top:18px;flex-wrap:wrap}
+.tabs button{height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:750;cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pane{display:none}.pane.on{display:block}
+.lead{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:#fff}
+.lead.em{border-color:#f3b4b4;background:#fff7f7}
+.lead h4{margin:0;font-size:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:7px;background:var(--soft);border:1px solid var(--line);color:var(--muted)}
+.pill.red{background:#ffecec;border-color:#f3b4b4;color:var(--bad)}
+.lead p{margin:6px 0 0;color:#33405a;white-space:pre-wrap;word-break:break-word}
+.meta{font-size:12.5px;color:var(--muted);margin-top:6px}
+.acts{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 16px;border-radius:10px;border:0;background:linear-gradient(100deg,var(--cyan),var(--blue));color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.btn.gh{background:#fff;color:var(--ink);border:1px solid var(--line)}
+select,input,textarea{height:42px;border-radius:10px;border:1px solid #d7deeb;background:var(--soft);padding:0 12px;font:inherit;color:var(--ink);width:100%}
+textarea{height:90px;padding:10px 12px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form>*{min-width:0}.full{grid-column:1/-1}
+label.l{display:block;font-size:13px;font-weight:750;margin-bottom:5px}
+.tog{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.tog input{width:22px;height:22px;accent-color:var(--blue)}
+.empty{padding:34px;text-align:center;color:var(--muted);border:1px dashed #cfd8e8;border-radius:14px;background:#fff}
+.msg{font-size:14px;margin-top:8px}
+@media(max-width:760px){.grid4{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.lead{grid-template-columns:1fr}.acts{flex-direction:row;align-items:center;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav"><a class="brand" href="./">CallTwin <b>AI</b></a><span class="muted" id="who"></span></nav>
+  <div id="err" class="card" hidden></div>
+  <div id="app" hidden>
+    <h1 id="biz"></h1>
+    <div class="muted" id="sub"></div>
+    <div id="bill"></div>
+
+    <div class="card">
+      <h2>Your CallTwin number</h2>
+      <div class="num" id="aiNum">Setting up...</div>
+      <p class="muted" id="setupNote">We're building your receptionist. This page updates automatically.</p>
+      <p>Forward your business line to it: from your business phone dial <code>*72</code> then the number (turn off with <code>*73</code>). Some carriers use <code id="fwd2">**21*number#</code>. Test it by calling your business line from another phone.</p>
+    </div>
+
+    <div class="grid4">
+      <div class="kpi"><b id="kNew">0</b><span>New jobs</span></div>
+      <div class="kpi"><b id="kWeek">0</b><span>This week</span></div>
+      <div class="kpi"><b id="kAll">0</b><span>All calls captured</span></div>
+      <div class="kpi"><b id="kAi">On</b><span>AI receptionist</span></div>
+    </div>
+
+    <div class="tabs"><button class="on" data-t="jobs">Jobs</button><button data-t="settings">Business info & settings</button><button data-t="billing">Billing</button></div>
+    <div class="pane on" data-p="jobs"><div style="display:flex;justify-content:flex-end;margin:12px 0"><button class="btn gh" id="refresh">Refresh</button></div><div id="leads"></div></div>
+    <div class="pane" data-p="settings">
+      <form class="card" id="sf">
+        <div class="tog"><span><b>AI receptionist</b><br><span class="muted">Off: calls ring your cell instead.</span></span><input type="checkbox" name="aiEnabled"></div>
+        <div class="tog"><span><b>Text me every job</b></span><input type="checkbox" name="alertSms"></div>
+        <div class="form" style="margin-top:12px">
+          <div><label class="l">Business name</label><input name="businessName"></div>
+          <div><label class="l">City / area</label><input name="city"></div>
+          <div><label class="l">Your name</label><input name="ownerName"></div>
+          <div><label class="l">Your cell</label><input name="ownerCell" type="tel"></div>
+          <div><label class="l">Business phone</label><input name="businessPhone" type="tel"></div>
+          <div><label class="l">Hours</label><input name="hours"></div>
+          <div class="full"><label class="l">What you do (the AI tells callers this)</label><textarea name="services"></textarea></div>
+          <div class="full"><label class="l">Anything else the AI should know</label><textarea name="notes"></textarea></div>
+          <div class="full" style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap"><button class="btn gh" type="button" id="testText">Send me a test text</button><button class="btn" type="submit">Save</button></div>
+          <div class="full msg" id="sMsg"></div>
+        </div>
+      </form>
+    </div>
+    <div class="pane" data-p="billing"><div class="card" id="billCard"></div></div>
+  </div>
+</div>
+<script>
+const API = "https://calltwin.onrender.com/api/clients";
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const digits = (s) => String(s || "").replace(/\D/g, "");
+const fmt = (s) => { const d = digits(s).slice(-10); return d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : (s || ""); };
+const q = new URLSearchParams(location.search);
+const K = q.get("k") || (() => { try { return new URL(localStorage.getItem("calltwin_portal")).searchParams.get("k"); } catch { return null; } })();
+let C = null, PRICE = 99, STRIPE = false;
+
+$$(".tabs button").forEach((b) => b.onclick = () => { $$(".tabs button").forEach((x) => x.classList.toggle("on", x === b)); $$(".pane").forEach((p) => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const post = async (body) => (await fetch(API + "/portal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K, ...body }) })).json().catch(() => ({ ok: false, error: "Server error." }));
+
+async function load() {
+  if (!K) { $("#err").hidden = false; $("#err").innerHTML = "Open this page from the dashboard link we texted you, or <a style='color:#3d6cff' href='signup.html'>start a free trial</a>."; return; }
+  const j = await (await fetch(API + "/portal?k=" + encodeURIComponent(K))).json().catch(() => ({ ok: false, error: "The server is waking up. Refresh in 30 seconds." }));
+  if (!j.ok) { $("#err").hidden = false; $("#err").textContent = j.error; return; }
+  C = j.client; PRICE = j.price; STRIPE = j.stripe;
+  try { localStorage.setItem("calltwin_portal", location.origin + location.pathname + "?k=" + K); } catch {}
+  $("#app").hidden = false; render(j.leads);
+  if (!C.ready) setTimeout(load, 6000);
+}
+function render(leads) {
+  $("#biz").textContent = C.businessName; $("#who").textContent = C.ownerName;
+  $("#sub").textContent = [C.industry, C.city].filter(Boolean).join(" · ");
+  $("#aiNum").textContent = C.aiNumber ? fmt(C.aiNumber) : "Setting up...";
+  $("#setupNote").textContent = C.ready ? "Live. Calls forwarded here are answered by your AI receptionist." : C.aiNumber ? "Finishing the connection..." : "We're assigning your number. It's texted to you as soon as it's ready.";
+  if (C.aiNumber) $("#fwd2").textContent = `**21*1${digits(C.aiNumber).slice(-10)}#`;
+  const days = C.trialEndsAt ? Math.ceil((new Date(C.trialEndsAt) - Date.now()) / 864e5) : 0;
+  let b = "";
+  if (C.status === "comp") b = `<div class="banner ok"><span><b>Free account.</b> All features included.</span></div>`;
+  else if (C.status === "trial" && days > 0) b = `<div class="banner info"><span><b>Free trial:</b> ${days} day${days === 1 ? "" : "s"} left. Then $${PRICE}/month.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Set up billing</button></div>`;
+  else if (C.status === "active") b = `<div class="banner ok"><span><b>Active.</b> CallTwin Pro, $${PRICE}/month.</span></div>`;
+  else b = `<div class="banner warn"><span><b>Trial ended.</b> Calls now ring your cell. Pay $${PRICE}/month to turn your AI receptionist back on.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Pay now</button></div>`;
+  $("#bill").innerHTML = b;
+  $("#billCard").innerHTML = `<h2>Billing: $${PRICE}/month</h2>
+    <p class="muted">Status: <b>${esc(C.status)}</b>${C.trialEndsAt && C.status === "trial" ? ` · trial ends ${new Date(C.trialEndsAt).toLocaleDateString()}` : ""}${C.paidThrough ? ` · paid through ${new Date(C.paidThrough).toLocaleDateString()}` : ""}</p>
+    <div class="form">
+      <div class="card" style="margin:0"><b>Card (auto-billed)</b><p class="muted">No charge until your trial ends.</p><button class="btn" id="cardBtn" ${STRIPE ? "" : "disabled"}>${STRIPE ? "Add card" : "Card coming soon"}</button></div>
+      <div class="card" style="margin:0"><b>Zelle</b><p class="muted">Send $${PRICE} to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: ${esc(C.businessName)}</p><button class="btn gh" data-sent="zelle">I sent it</button></div>
+      <div class="card" style="margin:0"><b>Cash App</b><p class="muted">Send $${PRICE} to <b>$hsw365</b>. Note: ${esc(C.businessName)}</p><a class="btn gh" href="https://cash.app/$hsw365/${PRICE}" target="_blank" rel="noopener">Open Cash App</a> <button class="btn gh" data-sent="cashapp" style="margin-top:6px">I sent it</button></div>
+    </div><p class="msg" id="bMsg"></p><p class="muted">To cancel, text or email HSW365 Media: hsw365media@gmail.com</p>`;
+  if (STRIPE) $("#cardBtn").onclick = async () => { const r = await fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K }) }); const j = await r.json(); if (j.url) location.href = j.url; else $("#bMsg").textContent = j.error; };
+  $$("[data-sent]").forEach((x) => x.onclick = async () => { await post({ a: "paid_notice", method: x.dataset.sent }); $("#bMsg").textContent = "Thanks. We'll confirm once it lands."; });
+
+  const wk = Date.now() - 7 * 864e5;
+  $("#kNew").textContent = leads.filter((l) => l.status === "new").length;
+  $("#kWeek").textContent = leads.filter((l) => new Date(l.createdAt) > wk).length;
+  $("#kAll").textContent = leads.length;
+  $("#kAi").textContent = C.aiEnabled ? "On" : "Off";
+  $("#leads").innerHTML = leads.length ? leads.map((l) => {
+    const d = digits(l.phone).slice(-10), em = l.urgency === "Emergency";
+    const rec = (l.summary || "").match(/https:\/\/\S+\.mp3/);
+    return `<div class="lead ${em ? "em" : ""}"><div><h4>${esc(l.name || "Caller")} ${l.urgency ? `<span class="pill ${em ? "red" : ""}">${esc(l.urgency)}</span>` : ""} <span class="pill">${esc(l.source)}</span> ${l.service ? `<span class="pill">${esc(l.service)}</span>` : ""}</h4>
+      <p>${esc((l.summary || l.details || "").replace(/https:\/\/\S+\.mp3/, ""))}</p>${rec ? `<audio controls preload="none" src="${esc(rec[0])}" style="width:100%;max-width:340px;margin-top:8px"></audio>` : ""}
+      <div class="meta">${esc(fmt(l.phone))}${l.address ? " · " + esc(l.address) : ""}${l.preferredTime ? " · wants " + esc(l.preferredTime) : ""} · ${new Date(l.createdAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</div></div>
+      <div class="acts">${d.length === 10 ? `<a class="btn" href="tel:+1${d}">Call back</a><a class="btn gh" href="sms:+1${d}">Text</a>` : ""}<select data-id="${l._id}">${["new","contacted","booked","done","lost"].map((s) => `<option ${s === l.status ? "selected" : ""}>${s}</option>`).join("")}</select></div></div>`;
+  }).join("") : `<div class="empty">No calls yet. Once your line is forwarded, every call the AI answers shows up here and on your cell.</div>`;
+  $$("#leads select").forEach((s) => s.onchange = () => post({ a: "status", id: s.dataset.id, status: s.value }));
+
+  const f = $("#sf");
+  for (const k of ["businessName", "city", "ownerName", "hours", "services", "notes"]) f.elements[k].value = C[k] || "";
+  f.elements.ownerCell.value = fmt(C.ownerCell); f.elements.businessPhone.value = fmt(C.businessPhone);
+  f.elements.aiEnabled.checked = C.aiEnabled; f.elements.alertSms.checked = C.alertSms;
+}
+$("#sf").addEventListener("submit", async (e) => {
+  e.preventDefault(); const f = e.target, s = {};
+  for (const k of ["businessName", "city", "ownerName", "ownerCell", "businessPhone", "hours", "services", "notes"]) s[k] = f.elements[k].value;
+  s.aiEnabled = f.elements.aiEnabled.checked; s.alertSms = f.elements.alertSms.checked;
+  const j = await post({ a: "update", settings: s });
+  $("#sMsg").textContent = j.ok ? "Saved. Your AI receptionist is updated." : j.error; $("#sMsg").style.color = j.ok ? "var(--ok)" : "var(--bad)";
+  if (j.ok) { C = j.client; }
+});
+$("#testText").onclick = async () => { const j = await post({ a: "test_text" }); $("#sMsg").textContent = j.ok ? "Test text sent." : j.error; };
+$("#refresh").onclick = load;
+if (q.get("paid") && q.get("session_id")) fetch(API + "/confirm?session_id=" + encodeURIComponent(q.get("session_id"))).then(load);
+load();
+</script>
+</body>
+</html>

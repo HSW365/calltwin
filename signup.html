@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Start Free | CallTwin AI Receptionist</title>
+<meta name="description" content="Start CallTwin free for 14 days. Your AI receptionist answers every business call 24/7 and texts you each job. Then $99/month, cancel anytime.">
+<style>
+:root{--ink:#172033;--muted:#59657d;--cyan:#12cfe7;--blue:#3d6cff;--purple:#9b4dff;--pink:#ff4fb3;--line:#e7ebf3;--soft:#f5f8ff;--ok:#0f9d6b;--bad:#d93b3b}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 8% 0,#d7fbff 0,transparent 28%),radial-gradient(circle at 92% 0,#f1dcff 0,transparent 30%),#f9fbff;font:16px Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:auto;padding:0 20px}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:24px;font-weight:950;letter-spacing:-.04em}.brand b{color:var(--purple)}
+.nav a.back{font-size:14px;font-weight:750;color:var(--muted)}
+.grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:32px;align-items:start;padding:24px 0 60px}
+.grid>*{min-width:0}
+.ey{display:inline-flex;padding:8px 14px;border-radius:999px;background:#e8fbff;border:1px solid #a9eef7;color:#087b91;font-size:11px;font-weight:950;letter-spacing:.12em}
+h1{font-size:clamp(40px,5.6vw,64px);line-height:.96;letter-spacing:-.05em;margin:18px 0 16px}
+.grad{background:linear-gradient(100deg,var(--cyan),var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:var(--muted);font-size:18px}
+.plan{margin-top:26px;border-radius:22px;background:#fff;border:1px solid var(--line);padding:26px;box-shadow:0 20px 50px -30px #3d6cff55}
+.plan .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.plan h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.free{font-size:40px;font-weight:950;letter-spacing:-.04em}
+.free small{font-size:15px;color:var(--muted);font-weight:700;letter-spacing:0}
+.plan ul{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px}
+.plan li{display:flex;gap:10px;font-size:15px;color:#33405a}
+.plan li::before{content:"";width:18px;height:18px;flex:none;border-radius:6px;margin-top:2px;background:linear-gradient(135deg,var(--cyan),var(--blue)) center/10px no-repeat;-webkit-mask:none}
+.steps{margin-top:18px;display:grid;gap:8px;font-size:14px;color:var(--muted)}
+.steps b{color:var(--ink)}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:0 30px 70px -40px #172033aa}
+.card h3{margin:0 0 4px;font-size:24px;letter-spacing:-.03em}
+.card .sub{color:var(--muted);font-size:14px;margin:0 0 20px}
+.sec{font-size:12px;font-weight:950;letter-spacing:.12em;color:#087b91;margin:22px 0 10px;text-transform:uppercase}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form>*{min-width:0}.full{grid-column:1/-1}
+label.l{display:block;font-size:13px;font-weight:750;margin-bottom:6px}
+label.l span{color:var(--muted);font-weight:600}
+input,select,textarea{width:100%;height:48px;border-radius:12px;border:1px solid #d7deeb;background:var(--soft);padding:0 14px;font:inherit;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
+textarea{height:96px;padding:12px 14px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px #3d6cff22;background:#fff}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opt{position:relative}.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt label{display:block;height:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;cursor:pointer;transition:.15s}
+.opt b{display:block;font-size:15px}.opt small{color:var(--muted);font-size:12.5px;line-height:1.35;display:block;margin-top:2px}
+.opt input:checked+label{border-color:var(--blue);background:#f1f5ff;box-shadow:0 0 0 4px #3d6cff18}
+.opt input:focus-visible+label{box-shadow:0 0 0 4px #3d6cff44}
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#33405a;cursor:pointer}
+.agree input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--blue)}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;height:56px;border-radius:14px;border:0;background:linear-gradient(100deg,var(--cyan),var(--blue));color:#fff;font:inherit;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 12px 30px #3d6cff33;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}.btn[disabled]{opacity:.6;pointer-events:none}
+.msg{display:none;margin-top:4px;padding:12px 14px;border-radius:12px;font-size:14px}
+.msg.show{display:block}.msg.err{background:#fff1f1;border:1px solid #f5c2c2;color:var(--bad)}
+.done{text-align:center}
+.done .ring{width:78px;height:78px;border-radius:50%;margin:6px auto 16px;display:grid;place-items:center;background:#e9fbf3;border:1px solid #a7e9cd;color:var(--ok);font-size:34px;font-weight:900}
+.done h3{font-size:30px}
+.box{text-align:left;border-radius:14px;background:var(--soft);border:1px solid var(--line);padding:16px;margin:14px 0;font-size:14.5px}
+.box code{font-weight:800;color:var(--blue)}
+.foot{color:var(--muted);font-size:12.5px;text-align:center;padding:0 0 40px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:560px){.form,.pay{grid-template-columns:1fr}.card{padding:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav"><a class="brand" href="./">CallTwin <b>AI</b></a><a class="back" href="./">Back to site</a></nav>
+  <div class="grid">
+    <div>
+      <span class="ey">14 DAYS FREE</span>
+      <h1>Your AI receptionist, <span class="grad">live today.</span></h1>
+      <p class="lede">Tell us about your business. CallTwin builds your receptionist, gives you a number to forward your line to, and texts you every job it books.</p>
+      <div class="plan">
+        <div class="top"><h2>CallTwin Pro</h2><div class="free">$0 <small>for 14 days, then $99/mo</small></div></div>
+        <ul>
+          <li>Answers every call 24/7/365 in a natural voice</li>
+          <li>Takes the job: name, number, address, what they need</li>
+          <li>Texts you each job the second the call ends</li>
+          <li>Owner dashboard with every call and callback button</li>
+          <li>English and Spanish callers</li>
+          <li>Cancel anytime. No setup fee.</li>
+        </ul>
+        <div class="steps">
+          <div><b>1.</b> Sign up below (about 2 minutes)</div>
+          <div><b>2.</b> Get your CallTwin number by text and on your dashboard</div>
+          <div><b>3.</b> Forward your business line to it. Done.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="formView">
+        <h3>Start your free trial</h3>
+        <p class="sub">No charge today. Your 14 days start now.</p>
+        <form id="f" novalidate>
+          <div class="sec">Your business</div>
+          <div class="form">
+            <div class="full"><label class="l" for="businessName">Business name</label><input id="businessName" name="businessName" autocomplete="organization" required></div>
+            <div><label class="l" for="industry">Industry</label>
+              <select id="industry" name="industry"><option>Plumbing</option><option>HVAC</option><option>Electrical</option><option>Roofing</option><option>Cleaning</option><option>Landscaping</option><option>Construction</option><option>Auto repair</option><option>Real estate</option><option>Law firm</option><option>Medical / dental</option><option>Beauty & wellness</option><option>Restaurant</option><option>Other</option></select></div>
+            <div><label class="l" for="city">City / area served</label><input id="city" name="city" placeholder="Vineland, NJ"></div>
+            <div class="full"><label class="l" for="services">What you do <span>(the AI tells callers this)</span></label><textarea id="services" name="services" placeholder="Drain cleaning, water heaters, leak repair, 24/7 emergency service. Residential and commercial."></textarea></div>
+            <div><label class="l" for="hours">Hours</label><input id="hours" name="hours" placeholder="Mon–Sat 8am–6pm, emergencies 24/7"></div>
+            <div><label class="l" for="businessPhone">Business phone customers call</label><input id="businessPhone" name="businessPhone" type="tel" placeholder="(856) 555-0100"></div>
+            <div class="full"><label class="l" for="notes">Anything else the AI should know <span>(optional)</span></label><textarea id="notes" name="notes" placeholder="Free estimates. We don't quote prices on the phone. Service area within 30 miles."></textarea></div>
+          </div>
+
+          <div class="sec">You</div>
+          <div class="form">
+            <div><label class="l" for="ownerName">Your name</label><input id="ownerName" name="ownerName" autocomplete="name" required></div>
+            <div><label class="l" for="ownerCell">Your cell <span>(jobs are texted here)</span></label><input id="ownerCell" name="ownerCell" type="tel" autocomplete="tel" required></div>
+            <div class="full"><label class="l" for="ownerEmail">Email</label><input id="ownerEmail" name="ownerEmail" type="email" autocomplete="email" required></div>
+          </div>
+
+          <div class="sec">After your trial, pay $99/month with</div>
+          <div class="pay">
+            <div class="opt"><input type="radio" name="payMethod" id="pCard" value="card" checked><label for="pCard"><b>Card</b><small>Auto-billed after 14 days through Stripe</small></label></div>
+            <div class="opt"><input type="radio" name="payMethod" id="pZelle" value="zelle"><label for="pZelle"><b>Zelle</b><small>Send monthly to 856-796-8081</small></label></div>
+            <div class="opt"><input type="radio" name="payMethod" id="pCash" value="cashapp"><label for="pCash"><b>Cash App</b><small>Send monthly to $hsw365</small></label></div>
+          </div>
+          <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+          <div class="form" style="margin-top:16px">
+            <label class="full agree"><input type="checkbox" id="agree"><span>I agree to a free 14-day trial, then $99 per month until I cancel. I can cancel anytime from my dashboard or by text.</span></label>
+            <div class="full msg err" id="msg" role="status"></div>
+            <div class="full"><button class="btn" type="submit" id="go">Start my free trial</button></div>
+          </div>
+        </form>
+      </div>
+
+      <div id="doneView" class="done" hidden>
+        <div class="ring">&#10003;</div>
+        <h3>You're in.</h3>
+        <p class="sub" id="doneSub">We're building your AI receptionist right now. It takes about a minute.</p>
+        <div class="box" id="numBox">Your CallTwin number: <b id="num">setting up...</b><br>When it's ready, forward your business line to it: dial <code>*72</code> then the number from your business phone.</div>
+        <div class="box" id="cardBox" hidden>Add your card now so service continues after the trial. You won't be charged for 14 days.<br><br><button class="btn" id="cardBtn" type="button">Add card (no charge today)</button></div>
+        <div class="box" id="p2pBox" hidden></div>
+        <a class="btn" id="portalBtn" href="#">Open my dashboard</a>
+        <p class="sub" style="margin-top:12px">Bookmark your dashboard. The link is also texted to your cell.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot">CallTwin by HSW365 Media LLC &middot; hsw365media@gmail.com</div>
+</div>
+<script>
+const API = "https://calltwin.onrender.com/api/clients";
+const $ = (s) => document.querySelector(s);
+const digits = (s) => String(s || "").replace(/\D/g, "");
+const err = (t) => { const m = $("#msg"); m.textContent = t; m.classList.add("show"); };
+fetch("https://calltwin.onrender.com/health").catch(() => {}); // wake the server early
+
+$("#f").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("#msg").classList.remove("show");
+  const d = Object.fromEntries(new FormData(e.target));
+  if (!d.businessName.trim() || !d.ownerName.trim() || !d.ownerEmail.includes("@") || digits(d.ownerCell).length < 10) return err("Add your business name, your name, email and a 10-digit cell.");
+  if (!$("#agree").checked) return err("Check the box to start your trial.");
+  const btn = $("#go"); btn.disabled = true; btn.textContent = "Building your receptionist...";
+  try {
+    const r = await fetch(API + "/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) });
+    const j = await r.json().catch(() => ({}));
+    if (!j.ok) throw new Error(j.error || "Signup failed. Try again.");
+    try { localStorage.setItem("calltwin_portal", j.portal); } catch {}
+    $("#formView").hidden = true; $("#doneView").hidden = false;
+    $("#portalBtn").href = j.portal;
+    if (j.payMethod === "card") { $("#cardBox").hidden = false; $("#cardBtn").onclick = () => addCard(j.key); }
+    else if (j.payMethod === "zelle" || j.payMethod === "cashapp") {
+      $("#p2pBox").hidden = false;
+      $("#p2pBox").innerHTML = j.payMethod === "zelle"
+        ? "After your trial, send <b>$99/month</b> by Zelle to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: your business name."
+        : "After your trial, send <b>$99/month</b> on Cash App to <b>$hsw365</b>. Note: your business name.";
+    }
+    poll(j.key, 0);
+  } catch (x) {
+    err(x.message); btn.disabled = false; btn.textContent = "Start my free trial";
+  }
+});
+
+async function poll(k, n) {
+  try {
+    const j = await (await fetch(API + "/portal?k=" + encodeURIComponent(k))).json();
+    const c = j.client || {};
+    if (c.aiNumber) {
+      const d = digits(c.aiNumber).slice(-10);
+      $("#num").textContent = `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+      $("#doneSub").textContent = c.ready ? "Your AI receptionist is live." : "Almost ready. Finishing the connection.";
+      if (c.ready) return;
+    }
+  } catch {}
+  if (n < 30) setTimeout(() => poll(k, n + 1), 4000);
+  else $("#num").textContent = "being assigned. We'll text it to you shortly.";
+}
+async function addCard(k) {
+  const b = $("#cardBtn"); b.disabled = true; b.textContent = "Opening secure checkout...";
+  const j = await (await fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k }) })).json().catch(() => ({}));
+  if (j.url) location.href = j.url;
+  else { b.disabled = false; b.textContent = "Add card (no charge today)"; alert(j.error || "Card checkout isn't available yet. Your trial is already running."); }
+}
+</script>
+</body>
+</html>

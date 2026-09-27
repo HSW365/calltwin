@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CallTwin Admin</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--ink:#eef1f6;--muted:#8b95a7;--bg:#0a0a0f;--s1:#12151d;--line:rgba(255,255,255,.1);--cyan:#22d3ee;--violet:#a855f7;--ok:#34d399;--red:#ef4444;--yellow:#fbbf24}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,system-ui,sans-serif}
+.wrap{max-width:1200px;margin:auto;padding:24px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}.muted{color:var(--muted)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}
+input{height:40px;border-radius:10px;border:1px solid var(--line);background:#000;color:var(--ink);padding:0 12px;font:inherit}
+.btn{height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:#1a1f2b;color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.btn.pri{background:linear-gradient(100deg,var(--cyan),var(--violet));border:0;color:#050608}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.kpi{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:14px}.kpi b{font-size:26px;display:block}
+.row{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;display:grid;grid-template-columns:1.3fr 1fr auto;gap:14px}
+.row>*{min-width:0}
+.pill{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:7px;border:1px solid var(--line)}
+.trial{color:var(--cyan)}.active,.comp{color:var(--ok)}.past_due,.canceled{color:var(--red)}
+.log{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-all;margin-top:6px}
+.acts{display:flex;flex-direction:column;gap:6px}
+a{color:var(--cyan)}
+@media(max-width:800px){.row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CallTwin Admin</h1>
+  <div class="muted">Every business that signed up through your link. Signup link to send: <a href="signup.html" id="link">signup.html</a></div>
+  <div class="bar"><input id="key" type="password" placeholder="Admin key"><button class="btn pri" id="go">Open</button><button class="btn" id="copy">Copy signup link</button><span class="muted" id="msg"></span></div>
+  <div id="app" hidden>
+    <div class="kpis"><div class="kpi"><b id="kAll">0</b><span class="muted">Businesses</span></div><div class="kpi"><b id="kTrial">0</b><span class="muted">On trial</span></div><div class="kpi"><b id="kPaid">0</b><span class="muted">Paying</span></div><div class="kpi"><b id="kMrr">$0</b><span class="muted">Monthly revenue</span></div></div>
+    <div id="list"></div>
+  </div>
+</div>
+<script>
+const API = "https://calltwin.onrender.com/api/clients/admin";
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const signupUrl = new URL("signup.html", location.href).href;
+$("#link").textContent = signupUrl; $("#link").href = signupUrl;
+$("#copy").onclick = async () => { try { await navigator.clipboard.writeText(signupUrl); $("#msg").textContent = "Copied."; } catch { $("#msg").textContent = signupUrl; } };
+let KEY = ""; try { KEY = sessionStorage.getItem("ct_admin") || ""; } catch {}
+$("#key").value = KEY;
+$("#go").onclick = () => { KEY = $("#key").value.trim(); try { sessionStorage.setItem("ct_admin", KEY); } catch {} load(); };
+async function load() {
+  $("#msg").textContent = "Loading...";
+  const j = await (await fetch(API, { headers: { "x-admin-key": KEY } })).json().catch(() => ({ ok: false, error: "Server waking up. Try again in 30s." }));
+  if (!j.ok) { $("#msg").textContent = j.error; return; }
+  $("#msg").textContent = ""; $("#app").hidden = false;
+  const cs = j.clients;
+  $("#kAll").textContent = cs.length;
+  $("#kTrial").textContent = cs.filter((c) => c.status === "trial").length;
+  const paid = cs.filter((c) => c.status === "active").length;
+  $("#kPaid").textContent = paid; $("#kMrr").textContent = "$" + (paid * j.price).toLocaleString();
+  $("#list").innerHTML = cs.length ? cs.map((c) => `<div class="row"><div>
+      <b style="font-size:16px">${esc(c.businessName)}</b> <span class="pill ${c.status}">${esc(c.status)}</span> ${c.ready ? '<span class="pill active">live</span>' : '<span class="pill past_due">setting up</span>'}
+      <div class="muted">${esc(c.ownerName)} · <a href="tel:${esc(c.ownerCell)}">${esc(c.ownerCell)}</a> · ${esc(c.ownerEmail)}</div>
+      <div class="muted">${esc(c.industry)} ${c.city ? "· " + esc(c.city) : ""} · pays by ${esc(c.payMethod)} · ${c.leads} calls captured</div>
+      <div class="muted">Trial ends ${c.trialEndsAt ? new Date(c.trialEndsAt).toLocaleDateString() : "-"}${c.paidThrough ? " · paid through " + new Date(c.paidThrough).toLocaleDateString() : ""}</div>
+      <div class="log">${esc((c.log || []).join("\n"))}</div></div>
+    <div><div class="muted">AI number</div><b>${esc(c.aiNumber || "none yet")}</b><div class="muted" style="margin-top:6px">Agent</div><div class="log">${esc(c.agentId || "-")}</div>
+      <div style="margin-top:8px"><a href="portal.html?k=${esc(c.portalKey)}" target="_blank">Open their dashboard</a></div></div>
+    <div class="acts"><button class="btn pri" data-a="mark_paid" data-id="${c.id}">Mark paid (+1 mo)</button><button class="btn" data-a="reprovision" data-id="${c.id}">Retry setup</button><button class="btn" data-a="set_number" data-id="${c.id}">Assign number</button><button class="btn" data-a="comp" data-id="${c.id}">Make free</button><button class="btn" data-a="cancel" data-id="${c.id}">Cancel</button></div></div>`).join("") : '<div class="muted">No signups yet. Send the signup link.</div>';
+  document.querySelectorAll("[data-a]").forEach((b) => b.onclick = async () => {
+    const body = { a: b.dataset.a, id: b.dataset.id };
+    if (body.a === "set_number") { body.number = prompt("SignalWire number to assign (e.g. 856-555-0100). Point it at https://calltwin.onrender.com/api/inbound/voice in SignalWire."); if (!body.number) return; }
+    if (body.a === "cancel" && !confirm("Cancel this business?")) return;
+    b.disabled = true;
+    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": KEY }, body: JSON.stringify(body) })).json().catch(() => ({}));
+    if (!r.ok) alert(r.error || "Failed");
+    load();
+  });
+}
+if (KEY) load();
+</script>
+</body>
+</html>

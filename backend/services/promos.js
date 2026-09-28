@@ -3,6 +3,7 @@
  *
  *   calltwinTrialDays  CallTwin receptionist free for N days, then the normal $99/mo.
  *   estimate: "comp"   AI Estimate add-on free (no trial clock, no monthly).
+ *   noSetupFee         skip the one-time CallTwin setup fee at signup.
  *   licenseCents       optional one-time price to own the Estimate add-on outright.
  *
  * Matching is by owner email, or by exact business name ("New Ark", "New Ark Plumbing", not "Newark ...").
@@ -13,6 +14,7 @@ const PROMOS = [
     emails: ["joehernandez555@msn.com"],
     names: [/^\s*new ark(\s+plumbing)?(,?\s+(heating|hvac|llc|inc)\b.*)?\s*$/i, /^\s*ark plumbing\b/i],
     calltwinTrialDays: 30,
+    noSetupFee: true,
     estimate: "comp",
   },
 ];

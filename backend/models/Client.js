@@ -34,6 +34,8 @@ const clientSchema = new mongoose.Schema(
     status: { type: String, enum: ["trial", "active", "past_due", "canceled", "comp"], default: "trial" },
     trialEndsAt: { type: Date },
     promo: { type: String, default: "" }, // custom deal applied (services/promos.js)
+    setupDue: { type: Boolean, default: false }, // one-time setup fee not yet paid (new self-serve signups)
+    setupPaidAt: { type: Date, default: null },
     paidThrough: { type: Date, default: null },
     stripeCustomerId: { type: String, default: "" },
     stripeSubscriptionId: { type: String, default: "" },
@@ -53,12 +55,13 @@ clientSchema.methods.isOwnerComp = function () {
   return COMP_EMAILS.includes(String(this.ownerEmail || "").toLowerCase().trim());
 };
 clientSchema.pre("save", function (next) {
-  if (this.isOwnerComp()) { this.status = "comp"; this.payMethod = "comp"; }
+  if (this.isOwnerComp()) { this.status = "comp"; this.payMethod = "comp"; this.setupDue = false; }
   next();
 });
 
 clientSchema.methods.inService = function () {
   if (this.isOwnerComp()) return true;
+  if (this.setupDue && this.status !== "comp") return false; // receptionist turns on once the setup fee is paid
   if (this.status === "comp" || this.status === "active") return true;
   if (this.status === "trial" && this.trialEndsAt && this.trialEndsAt > new Date()) return true;
   if (this.paidThrough && this.paidThrough > new Date()) return true;

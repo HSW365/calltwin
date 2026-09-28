@@ -104,7 +104,7 @@ const digits = (s) => String(s || "").replace(/\D/g, "");
 const fmt = (s) => { const d = digits(s).slice(-10); return d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : (s || ""); };
 const q = new URLSearchParams(location.search);
 const K = q.get("k") || (() => { try { return new URL(localStorage.getItem("calltwin_portal")).searchParams.get("k"); } catch { return null; } })();
-let C = null, PRICE = 99, STRIPE = false;
+let C = null, PRICE = 99, STRIPE = false, SETUP = 500;
 
 $$(".tabs button").forEach((b) => b.onclick = () => { $$(".tabs button").forEach((x) => x.classList.toggle("on", x === b)); $$(".pane").forEach((p) => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
 document.getElementById("estLink").href = "estimate.html?k=" + encodeURIComponent(K);
@@ -114,7 +114,7 @@ async function load() {
   if (!K) { $("#err").hidden = false; $("#err").innerHTML = "Open this page from the dashboard link we texted you, or <a style='color:#3d6cff' href='signup.html'>start a free trial</a>."; return; }
   const j = await (await fetch(API + "/portal?k=" + encodeURIComponent(K))).json().catch(() => ({ ok: false, error: "The server is waking up. Refresh in 30 seconds." }));
   if (!j.ok) { $("#err").hidden = false; $("#err").textContent = j.error; return; }
-  C = j.client; PRICE = j.price; STRIPE = j.stripe;
+  C = j.client; PRICE = j.price; STRIPE = j.stripe; SETUP = j.setupFee || 500;
   try { localStorage.setItem("calltwin_portal", location.origin + location.pathname + "?k=" + K); } catch {}
   $("#app").hidden = false; render(j.leads);
   if (!C.ready) setTimeout(load, 6000);
@@ -127,17 +127,20 @@ function render(leads) {
   if (C.aiNumber) $("#fwd2").textContent = `**21*1${digits(C.aiNumber).slice(-10)}#`;
   const days = C.trialEndsAt ? Math.ceil((new Date(C.trialEndsAt) - Date.now()) / 864e5) : 0;
   let b = "";
-  if (C.status === "comp") b = `<div class="banner ok"><span><b>Free account.</b> All features included.</span></div>`;
+  if (C.setupDue && C.status !== "comp") b = `<div class="banner warn"><span><b>Pay your $${SETUP} setup to go live.</b> We build your AI receptionist and text you your number as soon as it's paid. Then 14 days free, then $${PRICE}/month.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Pay setup</button></div>`;
+  else if (C.status === "comp") b = `<div class="banner ok"><span><b>Free account.</b> All features included.</span></div>`;
   else if (C.status === "trial" && days > 0) b = `<div class="banner info"><span><b>Free trial:</b> ${days} day${days === 1 ? "" : "s"} left. Then $${PRICE}/month.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Set up billing</button></div>`;
   else if (C.status === "active") b = `<div class="banner ok"><span><b>Active.</b> CallTwin Pro, $${PRICE}/month.</span></div>`;
   else b = `<div class="banner warn"><span><b>Trial ended.</b> Calls now ring your cell. Pay $${PRICE}/month to turn your AI receptionist back on.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Pay now</button></div>`;
   $("#bill").innerHTML = b;
-  $("#billCard").innerHTML = `<h2>Billing: $${PRICE}/month</h2>
+  const due = C.setupDue && C.status !== "comp";
+  const amt = due ? SETUP : PRICE;
+  $("#billCard").innerHTML = `<h2>Billing: ${due ? `$${SETUP} setup due now, then ` : ""}$${PRICE}/month</h2>
     <p class="muted">Status: <b>${esc(C.status)}</b>${C.trialEndsAt && C.status === "trial" ? ` · trial ends ${new Date(C.trialEndsAt).toLocaleDateString()}` : ""}${C.paidThrough ? ` · paid through ${new Date(C.paidThrough).toLocaleDateString()}` : ""}</p>
     <div class="form">
-      <div class="card" style="margin:0"><b>Card (auto-billed)</b><p class="muted">No charge until your trial ends.</p><button class="btn" id="cardBtn" ${STRIPE ? "" : "disabled"}>${STRIPE ? "Add card" : "Card coming soon"}</button></div>
-      <div class="card" style="margin:0"><b>Zelle</b><p class="muted">Send $${PRICE} to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: ${esc(C.businessName)}</p><button class="btn gh" data-sent="zelle">I sent it</button></div>
-      <div class="card" style="margin:0"><b>Cash App</b><p class="muted">Send $${PRICE} to <b>$hsw365</b>. Note: ${esc(C.businessName)}</p><a class="btn gh" href="https://cash.app/$hsw365/${PRICE}" target="_blank" rel="noopener">Open Cash App</a> <button class="btn gh" data-sent="cashapp" style="margin-top:6px">I sent it</button></div>
+      <div class="card" style="margin:0"><b>Card (auto-billed)</b><p class="muted">${due ? `$${SETUP} today, then $${PRICE}/month starting 14 days later.` : "No charge until your trial ends."}</p><button class="btn" id="cardBtn" ${STRIPE ? "" : "disabled"}>${STRIPE ? (due ? `Pay $${SETUP} setup` : "Add card") : "Card coming soon"}</button></div>
+      <div class="card" style="margin:0"><b>Zelle</b><p class="muted">Send $${amt}${due ? " setup" : ""} to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: ${esc(C.businessName)}</p><button class="btn gh" data-sent="zelle">I sent it</button></div>
+      <div class="card" style="margin:0"><b>Cash App</b><p class="muted">Send $${amt}${due ? " setup" : ""} to <b>$hsw365</b>. Note: ${esc(C.businessName)}</p><a class="btn gh" href="https://cash.app/$hsw365/${amt}" target="_blank" rel="noopener">Open Cash App</a> <button class="btn gh" data-sent="cashapp" style="margin-top:6px">I sent it</button></div>
     </div><p class="msg" id="bMsg"></p><p class="muted">To cancel, text or email HSW365 Media: hsw365media@gmail.com</p>`;
   if (STRIPE) $("#cardBtn").onclick = async () => { const r = await fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K }) }); const j = await r.json(); if (j.url) location.href = j.url; else $("#bMsg").textContent = j.error; };
   $$("[data-sent]").forEach((x) => x.onclick = async () => { await post({ a: "paid_notice", method: x.dataset.sent }); $("#bMsg").textContent = "Thanks. We'll confirm once it lands."; });

@@ -28,6 +28,7 @@ router.use((req, res, next) => {
 
 const PRICE_CENTS = Number(process.env.CALLTWIN_PRICE_CENTS || 9900);
 const TRIAL_DAYS = Number(process.env.CALLTWIN_TRIAL_DAYS || 14);
+const SETUP_CENTS = Number(process.env.CALLTWIN_SETUP_CENTS || 50000); // one-time setup fee, paid at signup
 const SITE = (process.env.CALLTWIN_SITE || "https://hsw365.github.io/calltwin").replace(/\/$/, "");
 const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];
 const clip = (v, n = 500) => (v == null ? "" : String(v).trim().slice(0, n));
@@ -63,7 +64,7 @@ function publicClient(c) {
     id: c._id, businessName: c.businessName, industry: c.industry, ownerName: c.ownerName, ownerEmail: c.ownerEmail,
     ownerCell: c.ownerCell, businessPhone: c.businessPhone, city: c.city, services: c.services, hours: c.hours, notes: c.notes,
     aiNumber: c.aiNumber, aiEnabled: c.aiEnabled, alertSms: c.alertSms, status: c.status, payMethod: c.payMethod,
-    trialEndsAt: c.trialEndsAt, paidThrough: c.paidThrough, inService: c.inService(), ready: !!(c.agentId && c.aiNumber && c.elPhoneId),
+    trialEndsAt: c.trialEndsAt, paidThrough: c.paidThrough, inService: c.inService(), setupDue: !!c.setupDue, setupPaidAt: c.setupPaidAt, ready: !!(c.agentId && c.aiNumber && c.elPhoneId),
     agentId: c.agentId, payoutZelle: c.payoutZelle, payoutCashapp: c.payoutCashapp, payoutStripeLink: c.payoutStripeLink, createdAt: c.createdAt,
   };
 }
@@ -88,10 +89,11 @@ async function createClient(b, { byAdmin = false } = {}) {
     portalKey: token(), hookKey: token(), payMethod: comp ? "comp" : payMethod, status: comp ? "comp" : "trial",
     trialEndsAt: new Date(Date.now() + ((promoFor({ ownerEmail: email, businessName: b.businessName }) || {}).calltwinTrialDays || TRIAL_DAYS) * 864e5),
     promo: (promoFor({ ownerEmail: email, businessName: b.businessName }) || {}).id || "",
+    setupDue: !comp && !byAdmin && SETUP_CENTS > 0 && !(promoFor({ ownerEmail: email, businessName: b.businessName }) || {}).noSetupFee,
     aiNumber: byAdmin && e164(b.useNumber) ? e164(b.useNumber) : "",
     forwardedLines: [e164(b.businessPhone), (b.cellForwarded === true || b.cellForwarded === "on") ? cell : null].filter(Boolean),
   });
-  if (!byAdmin) textAdmin(`New CallTwin signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}${c.ownerEmail ? ", " + c.ownerEmail : ""}). Pays by ${c.payMethod}. Trial ends ${c.trialEndsAt.toDateString()}.`);
+  if (!byAdmin) textAdmin(`New CallTwin signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}${c.ownerEmail ? ", " + c.ownerEmail : ""}). Pays by ${c.payMethod}.${c.setupDue ? ` $${SETUP_CENTS / 100} setup due${c.payMethod !== "card" ? " (confirm in admin when it lands)" : ""}.` : ` Trial ends ${c.trialEndsAt.toDateString()}.`}`);
   return c;
 }
 function provisionAndWelcome(c) {
@@ -101,13 +103,25 @@ function provisionAndWelcome(c) {
   }).catch((e) => { console.error("[clients] provision:", e.message); return c; });
 }
 
+/** Setup fee received: start the trial clock now and build the receptionist. Idempotent. */
+async function activateSetup(c, how) {
+  if (!c || !c.setupDue) return false;
+  c.setupDue = false; c.setupPaidAt = new Date();
+  if (c.status !== "comp") { c.status = "trial"; c.trialEndsAt = new Date(Date.now() + ((promoFor(c) || {}).calltwinTrialDays || TRIAL_DAYS) * 864e5); }
+  await c.save();
+  textAdmin(`CallTwin setup paid (${how}): ${c.businessName} (${c.ownerName}). Building their receptionist now.`);
+  provisionAndWelcome(c);
+  return true;
+}
+
 router.post("/signup", async (req, res) => {
   try {
     const b = req.body || {};
     if (b.website) return res.json({ ok: true }); // honeypot
     const c = await createClient(b);
-    provisionAndWelcome(c); // background; the page polls for the number
-    res.json({ ok: true, portal: `${SITE}/portal.html?k=${c.portalKey}`, on: `${SITE}/on.html?k=${c.portalKey}`, key: c.portalKey, id: c._id, trialEndsAt: c.trialEndsAt, payMethod: c.payMethod });
+    if (!c.setupDue) provisionAndWelcome(c); // background; the page polls for the number
+    res.json({ ok: true, portal: `${SITE}/portal.html?k=${c.portalKey}`, on: `${SITE}/on.html?k=${c.portalKey}`, key: c.portalKey, id: c._id, trialEndsAt: c.trialEndsAt, payMethod: c.payMethod,
+      setupDue: c.setupDue, setupCents: SETUP_CENTS, priceCents: PRICE_CENTS, trialDays: TRIAL_DAYS, stripe: !!process.env.STRIPE_SECRET_KEY });
   } catch (e) {
     if (e.status === 400) return res.status(400).json({ ok: false, error: e.message });
     console.error("[clients] signup:", e);
@@ -133,14 +147,19 @@ router.post("/checkout", async (req, res) => {
   try {
     const c = await byKey(req.body && req.body.k);
     if (!c) return res.status(404).json({ ok: false, error: "Account not found." });
-    const trialLeft = Math.max(1, Math.ceil(((c.trialEndsAt || new Date()) - Date.now()) / 864e5));
+    const fullTrial = (promoFor(c) || {}).calltwinTrialDays || TRIAL_DAYS;
+    // Setup still due: trial starts when they pay, so give the full trial on the monthly plan.
+    const trialLeft = c.setupDue ? fullTrial : Math.max(1, Math.ceil(((c.trialEndsAt || new Date()) - Date.now()) / 864e5));
+    const line_items = [{ quantity: 1, price_data: { currency: "usd", unit_amount: PRICE_CENTS, recurring: { interval: "month" },
+      product_data: { name: "CallTwin Pro - 24/7 AI receptionist", description: `${c.businessName}: every call answered, jobs texted to you, owner dashboard.` } } }];
+    if (c.setupDue) line_items.push({ quantity: 1, price_data: { currency: "usd", unit_amount: SETUP_CENTS,
+      product_data: { name: "CallTwin setup (one-time)", description: "AI receptionist build, local phone number, call routing and onboarding." } } });
     const session = await getStripe().checkout.sessions.create({
       mode: "subscription",
       customer_email: c.ownerEmail,
-      line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: PRICE_CENTS, recurring: { interval: "month" },
-        product_data: { name: "CallTwin Pro - 24/7 AI receptionist", description: `${c.businessName}: every call answered, jobs texted to you, owner dashboard.` } } }],
-      subscription_data: { trial_period_days: c.status === "trial" ? Math.min(trialLeft, (promoFor(c) || {}).calltwinTrialDays || TRIAL_DAYS) : undefined, metadata: { client: "calltwin", client_id: String(c._id) } },
-      metadata: { client: "calltwin", client_id: String(c._id) },
+      line_items,
+      subscription_data: { trial_period_days: c.status === "trial" ? Math.min(trialLeft, fullTrial) : undefined, metadata: { client: "calltwin", client_id: String(c._id) } },
+      metadata: { client: "calltwin", client_id: String(c._id), setup: c.setupDue ? "1" : "" },
       success_url: `${SITE}/portal.html?k=${c.portalKey}&paid=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${SITE}/portal.html?k=${c.portalKey}&canceled=1`,
       allow_promotion_codes: true,
@@ -160,6 +179,7 @@ router.get("/confirm", async (req, res) => {
       c.stripeCustomerId = s.customer || ""; c.stripeSubscriptionId = s.subscription || "";
       c.payMethod = "card"; if (c.status !== "comp") c.status = c.trialEndsAt > new Date() ? "trial" : "active";
       await c.save();
+      if (c.setupDue && (s.metadata || {}).setup === "1" && s.payment_status === "paid") await activateSetup(c, "card");
     }
     res.json({ ok: true, complete: s.status === "complete" });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
@@ -173,6 +193,16 @@ async function stripeEvent(type, obj) {
   if (meta.client_id) c = await Client.findById(meta.client_id).catch(() => null);
   if (!c && subId) c = await Client.findOne({ stripeSubscriptionId: subId });
   if (!c) return false;
+  if (type === "checkout.session.completed") {
+    if (meta.client !== "calltwin") return false;
+    c.stripeCustomerId = obj.customer || c.stripeCustomerId; c.stripeSubscriptionId = obj.subscription || c.stripeSubscriptionId;
+    if (c.payMethod !== "comp") c.payMethod = "card";
+    await c.save();
+    if (meta.setup === "1" && obj.payment_status === "paid") await activateSetup(c, "card");
+    return true;
+  }
+  // The first invoice of a subscription is the setup fee (monthly is still in trial): it doesn't pay for a month.
+  if (type === "invoice.paid" && obj.billing_reason === "subscription_create") { if (c.setupDue && (obj.amount_paid || 0) > 0) await activateSetup(c, "card"); return true; }
   if (type === "invoice.paid" && (obj.amount_paid || 0) > 0) { c.status = "active"; c.paidThrough = new Date(Date.now() + 32 * 864e5); }
   if (type === "invoice.payment_failed") c.status = "past_due";
   if (type === "customer.subscription.deleted") c.status = "canceled";
@@ -221,7 +251,7 @@ router.get("/portal", async (req, res) => {
   const c = await byKey(req.query.k);
   if (!c) return res.status(404).json({ ok: false, error: "Dashboard link not found." });
   const leads = await ClientLead.find({ client: c._id }).sort({ createdAt: -1 }).limit(300);
-  res.json({ ok: true, client: publicClient(c), leads, price: PRICE_CENTS / 100, stripe: !!process.env.STRIPE_SECRET_KEY });
+  res.json({ ok: true, client: publicClient(c), leads, price: PRICE_CENTS / 100, setupFee: SETUP_CENTS / 100, trialDays: TRIAL_DAYS, stripe: !!process.env.STRIPE_SECRET_KEY });
 });
 router.post("/portal", async (req, res) => {
   try {
@@ -238,7 +268,7 @@ router.post("/portal", async (req, res) => {
       return res.json({ ok, error: ok ? undefined : "Text alerts aren't connected yet. Jobs still show on this dashboard." });
     }
     if (b.a === "paid_notice") {
-      await textAdmin(`CallTwin payment notice: ${c.businessName} (${c.ownerName}) says they sent $${PRICE_CENTS / 100} by ${clip(b.method, 20) || c.payMethod}. Confirm in admin.`);
+      await textAdmin(`CallTwin payment notice: ${c.businessName} (${c.ownerName}) says they sent $${(c.setupDue ? SETUP_CENTS : PRICE_CENTS) / 100}${c.setupDue ? " setup fee" : ""} by ${clip(b.method, 20) || c.payMethod}. Confirm in admin.`);
       return res.json({ ok: true });
     }
     if (b.a === "update") {
@@ -266,7 +296,7 @@ router.get("/admin", async (req, res) => {
   const clients = await Client.find().sort({ createdAt: -1 }).limit(500);
   const counts = await ClientLead.aggregate([{ $group: { _id: "$client", n: { $sum: 1 } } }]);
   const byId = Object.fromEntries(counts.map((x) => [String(x._id), x.n]));
-  res.json({ ok: true, price: PRICE_CENTS / 100, clients: clients.map((c) => ({ ...publicClient(c), portalKey: c.portalKey, leads: byId[String(c._id)] || 0, log: c.provisionLog.slice(-6) })) });
+  res.json({ ok: true, price: PRICE_CENTS / 100, setupFee: SETUP_CENTS / 100, clients: clients.map((c) => ({ ...publicClient(c), portalKey: c.portalKey, leads: byId[String(c._id)] || 0, log: c.provisionLog.slice(-6) })) });
 });
 router.post("/admin", async (req, res) => {
   if (!adminOk(req)) return res.status(401).json({ ok: false, error: "Wrong admin key." });
@@ -280,6 +310,7 @@ router.post("/admin", async (req, res) => {
   }
   const c = await Client.findById(b.id).catch(() => null);
   if (!c) return res.status(404).json({ ok: false, error: "Client not found." });
+  if (b.a === "setup_paid") { await activateSetup(c, clip(b.method, 20) || c.payMethod); return res.json({ ok: true, client: { ...publicClient(c), log: c.provisionLog.slice(-6) } }); }
   if (b.a === "mark_paid") { c.status = "active"; c.paidThrough = new Date(Math.max(Date.now(), +(c.paidThrough || 0)) + 31 * 864e5); }
   else if (b.a === "comp") { c.status = "comp"; c.payMethod = "comp"; }
   else if (b.a === "cancel") c.status = "canceled";

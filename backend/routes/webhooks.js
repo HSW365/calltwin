@@ -23,7 +23,7 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
     try {
       const o = event.data.object || {};
       if (["invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"].includes(event.type)) await require("./clients").stripeEvent(event.type, o);
-      if (event.type === "checkout.session.completed" && o.metadata && o.metadata.client === "calltwin") return res.json({ received: true });
+      if (event.type === "checkout.session.completed" && o.metadata && o.metadata.client === "calltwin") { await require("./clients").stripeEvent(event.type, o); return res.json({ received: true }); }
     } catch (e) { console.error("[webhooks] clients:", e.message); }
     // Estimate add-on: customer deposits + add-on subscription
     try {

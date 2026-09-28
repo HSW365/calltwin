@@ -283,3 +283,42 @@ test("New Ark website posts estimate requests by site id", { skip: !MongoMemoryS
   r = await request(app).get("/api/estimates/public/site/nope");
   assert.equal(r.status, 404);
 });
+
+test("CallTwin $500 setup fee: due at signup, activates the trial when paid", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+  let r = await request(app).post("/api/clients/signup").send({ businessName: "Joe's HVAC", ownerName: "Joe", ownerEmail: "joe@hvac.test", ownerCell: "5555550155", payMethod: "zelle" });
+  assert.equal(r.body.ok, true, JSON.stringify(r.body));
+  assert.equal(r.body.setupDue, true);
+  assert.equal(r.body.setupCents, 50000);
+  let c = await Client.findById(r.body.id);
+  assert.equal(c.setupDue, true);
+  assert.equal(c.inService(), false, "receptionist stays off until setup is paid");
+  r = await request(app).get(`/api/clients/portal?k=${c.portalKey}`);
+  assert.equal(r.body.client.setupDue, true);
+  assert.equal(r.body.setupFee, 500);
+
+  // Card path: the first invoice (setup) activates the trial but doesn't count as a paid month.
+  const { stripeEvent } = require("../../routes/clients");
+  const before = Date.now();
+  await stripeEvent("invoice.paid", { object: "invoice", billing_reason: "subscription_create", amount_paid: 50000, subscription: "sub_x", metadata: {}, subscription_details: { metadata: { client: "calltwin", client_id: String(c._id) } } });
+  c = await Client.findById(c._id);
+  assert.equal(c.setupDue, true, "unmatched invoice (no client_id on invoice itself) leaves it alone");
+  await stripeEvent("checkout.session.completed", { object: "checkout.session", payment_status: "paid", customer: "cus_1", subscription: "sub_1", metadata: { client: "calltwin", client_id: String(c._id), setup: "1" } });
+  c = await Client.findById(c._id);
+  assert.equal(c.setupDue, false);
+  assert.ok(c.setupPaidAt);
+  assert.equal(c.status, "trial");
+  assert.ok(+c.trialEndsAt >= before + 13.9 * 864e5, "trial clock starts at payment");
+  assert.equal(c.paidThrough, null);
+  await stripeEvent("invoice.paid", { object: "invoice", billing_reason: "subscription_create", amount_paid: 50000, subscription: "sub_1", metadata: {} });
+  c = await Client.findById(c._id);
+  assert.equal(c.paidThrough, null, "setup invoice is not a month of service");
+  assert.equal(c.inService(), true);
+
+  // Owner, promo and existing clients are never charged setup.
+  r = await request(app).post("/api/clients/signup").send({ businessName: "HSW365", ownerName: "Elvin", ownerEmail: "hsw365media@gmail.com", ownerCell: "5555550156" });
+  assert.equal(r.body.setupDue, false);
+  r = await request(app).post("/api/clients/signup").send({ businessName: "New Ark Plumbing", ownerName: "Joe", ownerEmail: "joehernandez555@msn.com", ownerCell: "5555550157" });
+  assert.equal(r.body.setupDue, false);
+  const legacy = await Client.findById(owner._id);
+  assert.equal(legacy.setupDue, false);
+});

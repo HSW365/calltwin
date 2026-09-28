@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Start Free | CallTwin AI Receptionist</title>
-<meta name="description" content="Start CallTwin free for 14 days. Your AI receptionist answers every business call 24/7 and texts you each job. Then $99/month, cancel anytime.">
+<meta name="description" content="Get CallTwin: an AI receptionist that answers every business call 24/7 and texts you each job. $500 one-time setup, first 14 days of service free, then $99/month.">
 <style>
 :root{--ink:#172033;--muted:#59657d;--cyan:#12cfe7;--blue:#3d6cff;--purple:#9b4dff;--pink:#ff4fb3;--line:#e7ebf3;--soft:#f5f8ff;--ok:#0f9d6b;--bad:#d93b3b}
 *{box-sizing:border-box}[hidden]{display:none!important}
@@ -71,14 +71,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
       <h1>Your AI receptionist, <span class="grad">live today.</span></h1>
       <p class="lede">Tell us about your business. CallTwin builds your receptionist, gives you a number to forward your line to, and texts you every job it books.</p>
       <div class="plan">
-        <div class="top"><h2>CallTwin Pro</h2><div class="free">$0 <small>for 14 days, then $99/mo</small></div></div>
+        <div class="top"><h2>CallTwin Pro</h2><div class="free">$500 <small>one-time setup, then 14 days free, then $99/mo</small></div></div>
         <ul>
           <li>Answers every call 24/7/365 in a natural voice</li>
           <li>Takes the job: name, number, address, what they need</li>
           <li>Texts you each job the second the call ends</li>
           <li>Owner dashboard with every call and callback button</li>
           <li>English and Spanish callers</li>
-          <li>Cancel anytime. No setup fee.</li>
+          <li>Cancel the monthly anytime. No contract.</li>
         </ul>
         <div class="steps">
           <div><b>1.</b> Sign up below (about 2 minutes)</div>
@@ -90,8 +90,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
 
     <div class="card">
       <div id="formView">
-        <h3>Start your free trial</h3>
-        <p class="sub">No charge today. Your 14 days start now.</p>
+        <h3>Get CallTwin</h3>
+        <p class="sub">$500 one-time setup today. Your 14 free days start as soon as it's paid.</p>
         <form id="f" novalidate>
           <div class="sec">Your business</div>
           <div class="form">
@@ -112,17 +112,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
             <div class="full"><label class="l" for="ownerEmail">Email</label><input id="ownerEmail" name="ownerEmail" type="email" autocomplete="email" required></div>
           </div>
 
-          <div class="sec">After your trial, pay $99/month with</div>
+          <div class="sec">Pay the $500 setup (and $99/month after 14 days) with</div>
           <div class="pay">
-            <div class="opt"><input type="radio" name="payMethod" id="pCard" value="card" checked><label for="pCard"><b>Card</b><small>Auto-billed after 14 days through Stripe</small></label></div>
-            <div class="opt"><input type="radio" name="payMethod" id="pZelle" value="zelle"><label for="pZelle"><b>Zelle</b><small>Send monthly to 856-796-8081</small></label></div>
-            <div class="opt"><input type="radio" name="payMethod" id="pCash" value="cashapp"><label for="pCash"><b>Cash App</b><small>Send monthly to $hsw365</small></label></div>
+            <div class="opt"><input type="radio" name="payMethod" id="pCard" value="card" checked><label for="pCard"><b>Card</b><small>$500 today, $99/mo auto-billed after 14 days</small></label></div>
+            <div class="opt"><input type="radio" name="payMethod" id="pZelle" value="zelle"><label for="pZelle"><b>Zelle</b><small>Send $500 now, then monthly, to 856-796-8081</small></label></div>
+            <div class="opt"><input type="radio" name="payMethod" id="pCash" value="cashapp"><label for="pCash"><b>Cash App</b><small>Send $500 now, then monthly, to $hsw365</small></label></div>
           </div>
           <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
           <div class="form" style="margin-top:16px">
-            <label class="full agree"><input type="checkbox" id="agree"><span>I agree to a free 14-day trial, then $99 per month until I cancel. I can cancel anytime from my dashboard or by text.</span></label>
+            <label class="full agree"><input type="checkbox" id="agree"><span>I agree to a $500 one-time setup fee, paid today, then 14 days of service free, then $99 per month until I cancel. I can cancel the monthly anytime by text or email.</span></label>
             <div class="full msg err" id="msg" role="status"></div>
-            <div class="full"><button class="btn" type="submit" id="go">Start my free trial</button></div>
+            <div class="full"><button class="btn" type="submit" id="go">Continue to payment</button></div>
           </div>
         </form>
       </div>
@@ -132,7 +132,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
         <h3>You're in.</h3>
         <p class="sub" id="doneSub">We're building your AI receptionist right now. It takes about a minute.</p>
         <div class="box" id="numBox">Your CallTwin number: <b id="num">setting up...</b><br>Last step: open the text we send you <b>on your business phone</b> and tap <b>TURN ON</b>. That's it.<br><br><a class="btn" id="onBtn" href="#" style="height:48px">Turn on now</a></div>
-        <div class="box" id="cardBox" hidden>Add your card now so service continues after the trial. You won't be charged for 14 days.<br><br><button class="btn" id="cardBtn" type="button">Add card (no charge today)</button></div>
+        <div class="box" id="cardBox" hidden>Pay your <b>$500 setup</b> to build your receptionist. Your card is charged $500 today and $99/month starting 14 days later.<br><br><button class="btn" id="cardBtn" type="button">Pay $500 setup</button></div>
         <div class="box" id="p2pBox" hidden></div>
         <a class="btn" id="portalBtn" href="#">Open my dashboard</a>
         <p class="sub" style="margin-top:12px">Bookmark your dashboard. The link is also texted to your cell.</p>
@@ -153,8 +153,8 @@ $("#f").addEventListener("submit", async (e) => {
   $("#msg").classList.remove("show");
   const d = Object.fromEntries(new FormData(e.target));
   if (!d.businessName.trim() || !d.ownerName.trim() || !d.ownerEmail.includes("@") || digits(d.ownerCell).length < 10) return err("Add your business name, your name, email and a 10-digit cell.");
-  if (!$("#agree").checked) return err("Check the box to start your trial.");
-  const btn = $("#go"); btn.disabled = true; btn.textContent = "Building your receptionist...";
+  if (!$("#agree").checked) return err("Check the box to agree to the setup fee and monthly plan.");
+  const btn = $("#go"); btn.disabled = true; btn.textContent = "Saving...";
   try {
     const r = await fetch(API + "/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) });
     const j = await r.json().catch(() => ({}));
@@ -162,16 +162,26 @@ $("#f").addEventListener("submit", async (e) => {
     try { localStorage.setItem("calltwin_portal", j.portal); } catch {}
     $("#formView").hidden = true; $("#doneView").hidden = false;
     $("#portalBtn").href = j.portal; $("#onBtn").href = j.on;
-    if (j.payMethod === "card") { $("#cardBox").hidden = false; $("#cardBtn").onclick = () => addCard(j.key); }
-    else if (j.payMethod === "zelle" || j.payMethod === "cashapp") {
-      $("#p2pBox").hidden = false;
-      $("#p2pBox").innerHTML = j.payMethod === "zelle"
-        ? "After your trial, send <b>$99/month</b> by Zelle to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: your business name."
-        : "After your trial, send <b>$99/month</b> on Cash App to <b>$hsw365</b>. Note: your business name.";
+    const SETUP = "$" + ((j.setupCents || 50000) / 100);
+    if (j.setupDue) {
+      $("#numBox").hidden = true;
+      $("#doneSub").textContent = "Your account is saved. Pay the " + SETUP + " setup and we build your AI receptionist right away.";
+      if (j.payMethod === "card") {
+        $("#cardBox").hidden = false; $("#cardBtn").onclick = () => addCard(j.key);
+        if (j.stripe) return addCard(j.key); // straight to secure checkout
+      } else {
+        $("#p2pBox").hidden = false;
+        $("#p2pBox").innerHTML = (j.payMethod === "zelle"
+          ? "Send your <b>" + SETUP + " setup</b> by Zelle to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: your business name."
+          : "Send your <b>" + SETUP + " setup</b> on Cash App to <b>$hsw365</b>. Note: your business name. <a href='https://cash.app/$hsw365/" + ((j.setupCents || 50000) / 100) + "' target='_blank' rel='noopener'>Open Cash App</a>")
+          + "<br><br>We build your receptionist and text you your number as soon as it lands. Your 14 free days start then, and after that it's $99/month.";
+      }
+      return;
     }
+    if (j.payMethod === "card") { $("#cardBox").hidden = false; $("#cardBox").innerHTML = "Add your card so service continues after your free days.<br><br><button class='btn' id='cardBtn' type='button'>Add card</button>"; $("#cardBtn").onclick = () => addCard(j.key); }
     poll(j.key, 0);
   } catch (x) {
-    err(x.message); btn.disabled = false; btn.textContent = "Start my free trial";
+    err(x.message); btn.disabled = false; btn.textContent = "Continue to payment";
   }
 });
 
@@ -193,7 +203,7 @@ async function addCard(k) {
   const b = $("#cardBtn"); b.disabled = true; b.textContent = "Opening secure checkout...";
   const j = await (await fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k }) })).json().catch(() => ({}));
   if (j.url) location.href = j.url;
-  else { b.disabled = false; b.textContent = "Add card (no charge today)"; alert(j.error || "Card checkout isn't available yet. Your trial is already running."); }
+  else { b.disabled = false; b.textContent = "Pay $500 setup"; alert(j.error || "Card checkout isn't available right now. Pick Zelle or Cash App from your dashboard."); }
 }
 </script>
 </body>

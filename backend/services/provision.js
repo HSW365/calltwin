@@ -195,4 +195,4 @@ async function updateAgent(c) {
   }, { headers: elHeaders(), timeout: 20000 }).catch((e) => console.error("[provision] update agent:", errText(e)));
 }
 
-module.exports = { provision, updateAgent, updateTool, buildPrompt, swConfig };
+module.exports = { provision, updateAgent, updateTool, buildPrompt, swConfig, buyNumber, registerSip };

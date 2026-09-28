@@ -67,6 +67,14 @@ async function handleInbound(req, res) {
   const p = { ...req.query, ...req.body };
   const from = p.From || "";
   const to = p.To || process.env.SIGNALWIRE_PHONE_NUMBER || "";
+  // CallTwin Sign-Up Line: hand to the sign-up agent; if it can't connect, ring HSW365, then voicemail.
+  try {
+    if (await require("../services/signupLine").isSignupLine(to)) {
+      const d10 = String(to).replace(/\D/g, "").slice(-10);
+      console.log(`[inbound] sign-up line call from ${from}`);
+      return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial answerOnBridge="true" timeout="30" callerId="${xml(from || to)}" action="${xml(BASE() + "/api/inbound/after-dial?s=1")}" method="POST"><Sip>${xml(`sip:+1${d10}@sip.rtc.elevenlabs.io:5060;transport=tcp`)}</Sip></Dial></Response>`);
+    }
+  } catch (e) { console.error("[inbound] signup line:", e.message); }
   try {
     const c = await require("./clients").clientForNumber(to);
     if (c) return handleClientCall(c, from, to, res);
@@ -116,6 +124,10 @@ router.post("/after-dial", async (req, res) => {
   const st = String(p.DialCallStatus || "").toLowerCase();
   console.log(`[inbound] after-dial ${p.CallSid || "?"}: ${st}`);
   if (st === "completed" || st === "answered") return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>`);
+  if (p.s) { // sign-up line: AI couldn't connect -> ring HSW365, then take a voicemail
+    const admin = "+1" + String(process.env.CALLTWIN_ADMIN_CELL || "8567968081").replace(/\D/g, "").slice(-10);
+    return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="25" callerId="${xml(p.To || "")}">${xml(admin)}</Dial><Say voice="Polly.Matthew">Thanks for calling CallTwin. Leave your name, business and number after the tone and we will call you right back.</Say><Record maxLength="120" playBeep="true" action="${xml(BASE() + "/api/inbound/signup-voicemail")}" method="POST" /><Hangup/></Response>`);
+  }
   if (p.c) {
     const c = await require("../models/Client").findById(p.c).catch(() => null);
     if (c) return res.type("text/xml").send(clientFallbackXml(c, p.To || ""));
@@ -123,6 +135,16 @@ router.post("/after-dial", async (req, res) => {
   await fallback(res, "SIP leg " + (st || "failed"), p.To || "");
 });
 router.get("/voice", handleInbound);
+router.post("/signup-voicemail", async (req, res) => {
+  const p = { ...req.query, ...req.body };
+  res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Matthew">Got it. We will call you back shortly. Goodbye.</Say><Hangup/></Response>`);
+  if (!p.RecordingUrl) return;
+  try {
+    const admin = "+1" + String(process.env.CALLTWIN_ADMIN_CELL || "8567968081").replace(/\D/g, "").slice(-10);
+    const { sendSms, smsReady } = require("./newark");
+    if (smsReady()) await sendSms(admin, `CallTwin sign-up line voicemail from ${p.From || "unknown"} (${p.RecordingDuration || "?"}s): ${p.RecordingUrl}.mp3`);
+  } catch (e) { console.error("[inbound] signup voicemail:", e.message); }
+});
 
 // Quick check in a browser: which agent a number routes to, and whether keys are present.
 router.get("/status", async (req, res) => {

@@ -75,6 +75,7 @@ async function start() {
   app.listen(PORT, () => {
     console.log(`[server] CallTwin listening on ${PORT}`);
     ensureInboundRouting().catch((e) => console.error("[inbound] routing error:", e.message));
+    require("./services/signupLine").ensureSignupLine().catch((e) => console.error("[signup-line]", e.message));
   });
 }
 start().catch((err) => { console.error("[server] Failed to start:", err); process.exit(1); });

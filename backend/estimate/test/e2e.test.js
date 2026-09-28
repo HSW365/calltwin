@@ -322,3 +322,34 @@ test("CallTwin $500 setup fee: due at signup, activates the trial when paid", { 
   const legacy = await Client.findById(owner._id);
   assert.equal(legacy.setupDue, false);
 });
+
+test("Sign-Up Line: owner signs up by phone, setup due, no email needed", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+  const { AppConfig, prompt, tools } = require("../../services/signupLine");
+  await AppConfig.updateOne({ key: "signup_line" }, { $set: { value: { hookKey: "signup-key-abcdefghijkl", number: "+18565550199" } } }, { upsert: true });
+  let r = await request(app).post("/api/clients/phone-signup").send({ business_name: "X" });
+  assert.equal(r.status, 401);
+  const H = { "x-signup-key": "signup-key-abcdefghijkl" };
+  r = await request(app).post("/api/clients/phone-signup").set(H).send({ business_name: "Tony's Plumbing", owner_name: "Tony Russo", owner_cell: "", caller_number: "+1 (555) 555-0188", pay_method: "cashapp", services: "drains", city: "Millville" });
+  assert.equal(r.body.ok, true, JSON.stringify(r.body));
+  let c = await Client.findOne({ businessName: "Tony's Plumbing" });
+  assert.equal(c.ownerCell, "+15555550188", "falls back to the caller's number");
+  assert.equal(c.ownerEmail, "");
+  assert.equal(c.setupDue, true);
+  assert.equal(c.payMethod, "cashapp");
+  assert.match(r.body.message, /Elvin|text/);
+  // retry within the hour reuses the account
+  r = await request(app).post("/api/clients/phone-signup").set(H).send({ business_name: "Tony's Plumbing", owner_name: "Tony Russo", owner_cell: "5555550188", pay_method: "card" });
+  assert.equal(await Client.countDocuments({ ownerCell: "+15555550188" }), 1);
+  r = await request(app).post("/api/clients/phone-signup").set(H).send({ business_name: "", owner_name: "", owner_cell: "12" });
+  assert.equal(r.body.ok, false);
+  r = await request(app).post("/api/clients/phone-signup/callback").set(H).send({ callback_number: "5555550190", note: "wants a demo" });
+  assert.equal(r.body.ok, true);
+  r = await request(app).get("/api/clients/signup-line");
+  assert.equal(r.body.number, "+18565550199");
+  const p = prompt();
+  assert.match(p, /500 dollars one-time setup/);
+  assert.match(p, /NEVER take card numbers/);
+  const t = tools({ hookKey: "k" });
+  assert.deepEqual(t.map((x) => x.name), ["create_calltwin_account", "send_info_and_callback"]);
+  assert.equal(await require("../../services/signupLine").isSignupLine("856-555-0199"), true);
+});

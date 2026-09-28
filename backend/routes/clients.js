@@ -73,10 +73,10 @@ function publicClient(c) {
 function welcomeText(c) {
   return `${c.businessName}: your CallTwin AI receptionist is ready. Open this on your business phone and tap TURN ON: ${SITE}/on.html?k=${c.portalKey}`;
 }
-async function createClient(b, { byAdmin = false } = {}) {
+async function createClient(b, { byAdmin = false, byPhone = false } = {}) {
   const email = clip(b.ownerEmail, 160).toLowerCase();
   const cell = e164(b.ownerCell);
-  if (!clip(b.businessName) || !clip(b.ownerName) || !cell || (!byAdmin && !email.includes("@")))
+  if (!clip(b.businessName) || !clip(b.ownerName) || !cell || (!byAdmin && !byPhone && !email.includes("@")))
     throw Object.assign(new Error(byAdmin ? "Business name, owner name and a 10-digit cell are required." : "Business name, your name, email and a 10-digit cell are required."), { status: 400 });
   const payMethod = ["card", "zelle", "cashapp"].includes(b.payMethod) ? b.payMethod : (byAdmin ? "zelle" : "card");
   const comp = COMP_EMAILS.includes(email) || b.comp === true;
@@ -93,7 +93,7 @@ async function createClient(b, { byAdmin = false } = {}) {
     aiNumber: byAdmin && e164(b.useNumber) ? e164(b.useNumber) : "",
     forwardedLines: [e164(b.businessPhone), (b.cellForwarded === true || b.cellForwarded === "on") ? cell : null].filter(Boolean),
   });
-  if (!byAdmin) textAdmin(`New CallTwin signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}${c.ownerEmail ? ", " + c.ownerEmail : ""}). Pays by ${c.payMethod}.${c.setupDue ? ` $${SETUP_CENTS / 100} setup due${c.payMethod !== "card" ? " (confirm in admin when it lands)" : ""}.` : ` Trial ends ${c.trialEndsAt.toDateString()}.`}`);
+  if (!byAdmin) textAdmin(`New CallTwin ${byPhone ? "PHONE " : ""}signup: ${c.businessName} (${c.ownerName}, ${c.ownerCell}${c.ownerEmail ? ", " + c.ownerEmail : ""}). Pays by ${c.payMethod}.${c.setupDue ? ` $${SETUP_CENTS / 100} setup due${c.payMethod !== "card" ? " (confirm in admin when it lands)" : ""}.` : ` Trial ends ${c.trialEndsAt.toDateString()}.`}`);
   return c;
 }
 function provisionAndWelcome(c) {
@@ -209,6 +209,69 @@ async function stripeEvent(type, obj) {
   await c.save();
   return true;
 }
+
+// ---------- Sign-Up Line (owners sign up by calling; see services/signupLine.js) ----------
+async function signupLineAuth(req) {
+  const k = await require("../services/signupLine").hookKey().catch(() => "");
+  const got = String(req.get("x-signup-key") || "");
+  return !!k && got.length === k.length && crypto.timingSafeEqual(Buffer.from(got), Buffer.from(k));
+}
+function setupPayText(c) {
+  const amt = `$${SETUP_CENTS / 100}`;
+  if (c.payMethod === "zelle") return `CallTwin for ${c.businessName}: send your ${amt} setup by Zelle to 856-796-8081 or elvintorressr@gmail.com (Elvin Torres Sr.). Memo: ${c.businessName}. As soon as it lands we build your AI receptionist and text you your number. Your dashboard: ${SITE}/portal.html?k=${c.portalKey}`;
+  if (c.payMethod === "cashapp") return `CallTwin for ${c.businessName}: send your ${amt} setup on Cash App to $hsw365 (https://cash.app/$hsw365/${SETUP_CENTS / 100}). Note: ${c.businessName}. As soon as it lands we build your AI receptionist and text you your number.`;
+  return `CallTwin for ${c.businessName}: tap here to pay your ${amt} setup securely by card: ${SITE}/portal.html?k=${c.portalKey}#pay  As soon as it's paid we build your AI receptionist and text you your number. Then ${TRIAL_DAYS} days free, then $${PRICE_CENTS / 100}/month.`;
+}
+
+router.post("/phone-signup", async (req, res) => {
+  try {
+    if (!(await signupLineAuth(req))) return res.status(401).json({ ok: false, error: "Bad key." });
+    const b = req.body || {};
+    const cell = e164(b.owner_cell) || e164(b.caller_number);
+    if (!cell) return res.json({ ok: false, message: "I need a 10-digit cell phone number to text you. Can you say it again?" });
+    // Same caller retrying within an hour: reuse the account instead of making a duplicate.
+    let c = await Client.findOne({ ownerCell: cell, createdAt: { $gte: new Date(Date.now() - 3600e3) } }).sort({ createdAt: -1 });
+    if (!c) c = await createClient({
+      businessName: b.business_name, ownerName: b.owner_name, ownerCell: cell, ownerEmail: b.owner_email, businessPhone: b.business_phone,
+      industry: b.industry, city: b.city, services: b.services, hours: b.hours, payMethod: ["card", "zelle", "cashapp"].includes(b.pay_method) ? b.pay_method : "card",
+      notes: "Signed up by phone.",
+    }, { byPhone: true });
+    let texted = false;
+    if (c.setupDue) texted = await textOwner({ ...c.toObject(), alertSms: true }, setupPayText(c));
+    else provisionAndWelcome(c);
+    const how = c.payMethod === "zelle" ? "Zelle" : c.payMethod === "cashapp" ? "Cash App" : "a secure card link";
+    res.json({ ok: true, texted,
+      message: !c.setupDue
+        ? `Account created. Their receptionist is being built now and they'll get a text with their number and a button to turn it on.`
+        : texted
+          ? `Account created for ${c.businessName}. A text just went to ${c.ownerCell.slice(-4)} with how to pay the $${SETUP_CENTS / 100} setup by ${how}. As soon as it's paid, the receptionist is built and they get a second text with their CallTwin number and a one-tap button to forward their business line. First ${TRIAL_DAYS} days free after that, then $${PRICE_CENTS / 100} a month.`
+          : `Account created for ${c.businessName}, but the text didn't go through. Tell them Elvin from HSW365 will call them shortly to finish payment.` });
+    if (!texted && c.setupDue) textAdmin(`Phone signup ${c.businessName} (${c.ownerCell}): payment text FAILED. Call them to collect the $${SETUP_CENTS / 100} setup.`);
+  } catch (e) {
+    if (e.status === 400) return res.json({ ok: false, message: "I'm missing the business name, their name or a 10-digit cell. Ask for it again." });
+    console.error("[clients] phone-signup:", e);
+    res.json({ ok: false, message: "Something went wrong saving the account. Tell them Elvin from HSW365 will call them back to finish, and use send_info_and_callback." });
+  }
+});
+
+router.post("/phone-signup/callback", async (req, res) => {
+  if (!(await signupLineAuth(req))) return res.status(401).json({ ok: false, error: "Bad key." });
+  const b = req.body || {};
+  const num = e164(b.callback_number) || e164(b.caller_number);
+  let texted = false;
+  if (num && sms().smsReady()) {
+    try { await sms().sendSms(num, `Thanks for calling CallTwin by HSW365. Sign up anytime here: ${SITE}/signup.html  Elvin will also give you a call. Questions? Reply to this text or email hsw365media@gmail.com`); texted = true; } catch (e) { console.error("[clients] callback sms:", e.message); }
+  }
+  await textAdmin(`CallTwin sign-up line: CALL BACK ${clip(b.name, 80) || "caller"}${b.business_name ? " (" + clip(b.business_name, 80) + ")" : ""} at ${num || clip(b.caller_number, 30) || "unknown"}. ${clip(b.note, 400)}`);
+  res.json({ ok: true, message: texted ? "Done. They got a text with the sign-up link, and Elvin will call them back." : "Noted. Elvin will call them back." });
+});
+
+// Public: the number to advertise.
+router.get("/signup-line", async (req, res) => {
+  const sl = require("../services/signupLine");
+  const number = await sl.lineNumber().catch(() => "");
+  res.json({ ok: !!number, number, status: adminOk(req) ? sl.status() : undefined });
+});
 
 // ---------- AI agent tool: save a job ticket ----------
 router.post("/lead", async (req, res) => {

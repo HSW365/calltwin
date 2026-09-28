@@ -142,6 +142,11 @@ function render(leads) {
       <div class="card" style="margin:0"><b>Zelle</b><p class="muted">Send $${amt}${due ? " setup" : ""} to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: ${esc(C.businessName)}</p><button class="btn gh" data-sent="zelle">I sent it</button></div>
       <div class="card" style="margin:0"><b>Cash App</b><p class="muted">Send $${amt}${due ? " setup" : ""} to <b>$hsw365</b>. Note: ${esc(C.businessName)}</p><a class="btn gh" href="https://cash.app/$hsw365/${amt}" target="_blank" rel="noopener">Open Cash App</a> <button class="btn gh" data-sent="cashapp" style="margin-top:6px">I sent it</button></div>
     </div><p class="msg" id="bMsg"></p><p class="muted">To cancel, text or email HSW365 Media: hsw365media@gmail.com</p>`;
+  if (location.hash === "#pay" && due && STRIPE && !window.__payGo) { // one-tap from the setup text: straight to secure checkout
+    window.__payGo = true; history.replaceState(null, "", location.pathname + location.search);
+    fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K }) }).then((r) => r.json()).then((j) => { if (j.url) location.href = j.url; }).catch(() => {});
+    $("#bill").innerHTML = `<div class="banner info"><span><b>Opening secure checkout...</b></span></div>`;
+  } else if (location.hash === "#pay") document.querySelector("[data-t=billing]").click();
   if (STRIPE) $("#cardBtn").onclick = async () => { const r = await fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K }) }); const j = await r.json(); if (j.url) location.href = j.url; else $("#bMsg").textContent = j.error; };
   $$("[data-sent]").forEach((x) => x.onclick = async () => { await post({ a: "paid_notice", method: x.dataset.sent }); $("#bMsg").textContent = "Thanks. We'll confirm once it lands."; });
 

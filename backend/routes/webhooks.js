@@ -25,6 +25,16 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       if (["invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"].includes(event.type)) await require("./clients").stripeEvent(event.type, o);
       if (event.type === "checkout.session.completed" && o.metadata && o.metadata.client === "calltwin") return res.json({ received: true });
     } catch (e) { console.error("[webhooks] clients:", e.message); }
+    // Estimate add-on: customer deposits + add-on subscription
+    try {
+      const o = event.data.object || {};
+      const meta = o.metadata || {};
+      const types = ["checkout.session.completed", "invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"];
+      if (types.includes(event.type) && (meta.estimate_job || meta.addon === "estimate" || o.subscription || o.object === "subscription")) {
+        const handled = await require("../estimate/routes").stripeEvent(event.type, o);
+        if (handled && (meta.estimate_job || meta.addon === "estimate")) return res.json({ received: true });
+      }
+    } catch (e) { console.error("[webhooks] estimate:", e.message); }
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;

@@ -27,6 +27,8 @@ const { router: inboundRoutes, ensureInboundRouting } = require("./routes/inboun
 const { router: newarkRoutes } = require("./routes/newark");
 const { router: clientRoutes } = require("./routes/clients");
 const { startScheduler } = require("./services/scheduler");
+const { router: estimateRoutes } = require("./estimate/routes");
+const { startEstimateScheduler } = require("./estimate/service");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -38,6 +40,8 @@ app.use("/api/inbound", inboundRoutes);
 app.use("/api/newark", newarkRoutes);
 // Self-serve CallTwin clients (signup, AI lead tool, owner portal, admin).
 app.use("/api/clients", clientRoutes);
+// HSW365 AI Estimate add-on (estimates, proposals, e-sign, deposits, follow-ups).
+app.use("/api/estimates", estimateRoutes);
 app.use(express.json());
 app.use("/audio", express.static(path.join(__dirname, "public/audio")));
 app.use("/", legalRoutes);
@@ -67,6 +71,7 @@ async function start() {
   await mongoose.connect(mongoUri);
   console.log("[server] Connected to MongoDB.");
   startScheduler();
+  startEstimateScheduler();
   app.listen(PORT, () => {
     console.log(`[server] CallTwin listening on ${PORT}`);
     ensureInboundRouting().catch((e) => console.error("[inbound] routing error:", e.message));

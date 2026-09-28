@@ -71,6 +71,8 @@ label.l{display:block;font-size:13px;font-weight:750;margin-bottom:5px}
       <div class="kpi"><b id="kAi">On</b><span>AI receptionist</span></div>
     </div>
 
+    <div class="banner info"><div><b>AI Estimates add-on</b><br><span class="muted">Turn every call into a draft estimate, send proposals customers sign online, collect deposits, and follow up automatically.</span></div><a class="btn" id="estLink" href="estimate.html">Open Estimates</a></div>
+
     <div class="tabs"><button class="on" data-t="jobs">Jobs</button><button data-t="settings">Business info & settings</button><button data-t="billing">Billing</button></div>
     <div class="pane on" data-p="jobs"><div style="display:flex;justify-content:flex-end;margin:12px 0"><button class="btn gh" id="refresh">Refresh</button></div><div id="leads"></div></div>
     <div class="pane" data-p="settings">
@@ -105,6 +107,7 @@ const K = q.get("k") || (() => { try { return new URL(localStorage.getItem("call
 let C = null, PRICE = 99, STRIPE = false;
 
 $$(".tabs button").forEach((b) => b.onclick = () => { $$(".tabs button").forEach((x) => x.classList.toggle("on", x === b)); $$(".pane").forEach((p) => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+document.getElementById("estLink").href = "estimate.html?k=" + encodeURIComponent(K);
 const post = async (body) => (await fetch(API + "/portal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K, ...body }) })).json().catch(() => ({ ok: false, error: "Server error." }));
 
 async function load() {

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Request an Estimate</title>
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--panel:#111119;--line:#262633;--line2:#32323f;--ink:#ececf2;--muted:#8b8b9e;--acc:#22d3ee}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:640px;margin:auto;padding:24px 16px 60px}
+.embed .wrap{padding-top:8px}
+h1{font:800 32px "Barlow Condensed",Inter,sans-serif;text-transform:uppercase;margin:0 0 4px}
+.muted{color:var(--muted)}.small{font-size:13px}
+.head{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.head img{max-height:52px;max-width:140px;background:#fff;border-radius:6px;padding:4px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:12px}
+label.l{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 5px}
+input,textarea,select{width:100%;min-height:46px;border-radius:9px;border:1px solid var(--line2);background:#0d0d14;color:var(--ink);padding:10px 12px;font:inherit}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc)}
+textarea{min-height:110px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;height:50px;margin-top:16px;border-radius:10px;border:0;background:var(--acc);color:#07070b;font:800 15px Inter;text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+.btn:disabled{opacity:.5}
+.banner{border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid #1b4a39;background:#0b1a15}
+.banner.bad{border-color:#5b1d1d;background:#1d0d0d}
+.hp{position:absolute;left:-5000px}
+@media(max-width:520px){.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head" id="head"></div>
+  <div id="err" class="banner bad" hidden></div>
+  <div id="done" class="banner" hidden></div>
+
+  <form id="intake" class="card" hidden>
+    <h1>Request an estimate</h1>
+    <div class="muted small">Tell us about the job. The more detail and photos, the more accurate your estimate.</div>
+    <div class="g2">
+      <div><label class="l" for="name">Your name *</label><input id="name" name="name" autocomplete="name" required></div>
+      <div><label class="l" for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel"></div>
+    </div>
+    <label class="l" for="email">Email</label><input id="email" name="email" type="email" autocomplete="email">
+    <label class="l" for="address">Service address</label><input id="address" name="address" autocomplete="street-address">
+    <div class="g2">
+      <div><label class="l" for="service">Type of job</label><input id="service" name="service" list="svc"><datalist id="svc"></datalist></div>
+      <div><label class="l" for="urgency">How soon?</label><select id="urgency" name="urgency"><option value="">Choose</option><option>Emergency</option><option>Today</option><option>This week</option><option>Flexible</option></select></div>
+    </div>
+    <label class="l" for="problem">Describe the job *</label><textarea id="problem" name="problem" required></textarea>
+    <label class="l" for="measurements">Measurements or sizes (if you know them)</label><input id="measurements" name="measurements">
+    <label class="l" for="preferredTime">Best time to reach you</label><input id="preferredTime" name="preferredTime">
+    <label class="l" for="photos">Photos (up to 8)</label><input id="photos" name="photos" type="file" accept="image/*,application/pdf" multiple>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn" id="go">Send request</button>
+    <div class="small muted" style="margin-top:8px">Add a phone number or email so we can send your estimate.</div>
+  </form>
+
+  <form id="photoForm" class="card" hidden>
+    <h1>Send photos</h1>
+    <div class="muted small" id="phSub"></div>
+    <label class="l" for="phFiles">Photos (up to 8)</label><input id="phFiles" name="photos" type="file" accept="image/*,application/pdf" multiple required>
+    <label class="l" for="phNote">Anything to add?</label><textarea id="phNote" name="note"></textarea>
+    <button class="btn" id="phGo">Upload</button>
+  </form>
+</div>
+<script>
+const q = new URLSearchParams(location.search);
+const API = (q.get("api") || "https://calltwin.onrender.com").replace(/\/$/, "") + "/api/estimates/public/";
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+if (q.get("embed")) document.body.classList.add("embed");
+function fail(m) { $("#err").textContent = m; $("#err").hidden = false; }
+function brand(c) {
+  if (!c) return;
+  if (/^#[0-9a-f]{6}$/i.test(c.brandColor || "")) document.documentElement.style.setProperty("--acc", c.brandColor);
+  $("#head").innerHTML = `${c.logoUrl ? `<img src="${esc(c.logoUrl)}" alt="">` : ""}<div><div style="font:800 22px 'Barlow Condensed';text-transform:uppercase">${esc(c.name)}</div>${c.phone ? `<div class="small muted">${esc(c.phone)}</div>` : ""}</div>`;
+  document.title = `Request an estimate · ${c.name}`;
+}
+async function getJson(url, init) { try { const r = await fetch(url, init); return await r.json(); } catch (e) { return { ok: false, error: "Can't connect right now. Please try again in a minute." }; } }
+
+(async function () {
+  const c = q.get("c"), p = q.get("p");
+  if (c) {
+    const j = await getJson(API + "intake/" + encodeURIComponent(c));
+    if (!j.ok) return fail(j.error || "This form isn't available.");
+    brand(j.company);
+    $("#svc").innerHTML = (j.services || []).map((s) => `<option value="${esc(s)}">`).join("");
+    $("#intake").hidden = false;
+    $("#intake").onsubmit = async (e) => {
+      e.preventDefault();
+      if (!$("#phone").value.trim() && !$("#email").value.trim()) return fail("Please add a phone number or email.");
+      const files = $("#photos").files;
+      if (files.length > 8) return fail("Please choose up to 8 photos.");
+      for (const f of files) if (f.size > 5 * 1024 * 1024) return fail(`"${f.name}" is larger than 5 MB.`);
+      $("#go").disabled = true; $("#go").textContent = "Sending..."; $("#err").hidden = true;
+      const j2 = await getJson(API + "intake/" + encodeURIComponent(c), { method: "POST", body: new FormData($("#intake")) });
+      $("#go").disabled = false; $("#go").textContent = "Send request";
+      if (!j2.ok) return fail(j2.error || "Couldn't send. Please try again.");
+      $("#intake").hidden = true; $("#done").hidden = false;
+      $("#done").innerHTML = `<b>Request received${j2.number ? ` (${esc(j2.number)})` : ""}.</b> We'll review it and send your estimate shortly.`;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  } else if (p) {
+    const j = await getJson(API + "photos/" + encodeURIComponent(p));
+    if (!j.ok) return fail(j.error || "This upload link has expired.");
+    brand(j.company);
+    $("#phSub").textContent = `For ${j.number}${j.service ? " · " + j.service : ""}`;
+    $("#photoForm").hidden = false;
+    $("#photoForm").onsubmit = async (e) => {
+      e.preventDefault();
+      $("#phGo").disabled = true; $("#phGo").textContent = "Uploading...";
+      const j2 = await getJson(API + "photos/" + encodeURIComponent(p), { method: "POST", body: new FormData($("#photoForm")) });
+      $("#phGo").disabled = false; $("#phGo").textContent = "Upload";
+      if (!j2.ok) return fail(j2.error || "Upload failed.");
+      $("#photoForm").reset(); $("#done").hidden = false; $("#done").innerHTML = `<b>${j2.added} photo(s) received.</b> Thank you. You can send more anytime with this link.`;
+    };
+  } else fail("This link is incomplete.");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CallTwin Estimates</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--panel:#111119;--panel2:#16161f;--line:#262633;--line2:#32323f;--ink:#ececf2;--muted:#8b8b9e;--cyan:#22d3ee;--violet:#a855f7;--red:#ef4444;--yellow:#fbbf24;--green:#34d399}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font:14.5px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--cyan)}
+.mono{font-family:"Space Mono",ui-monospace,monospace}
+h1,h2,h3{font-family:"Barlow Condensed",Inter,sans-serif;letter-spacing:.01em;margin:0;text-transform:uppercase}
+h1{font-size:30px}h2{font-size:21px}h3{font-size:16px;color:var(--muted)}
+.wrap{max-width:1180px;margin:auto;padding:0 16px 80px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;height:64px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.brand{font:800 22px "Barlow Condensed",sans-serif;letter-spacing:.04em;text-transform:uppercase}.brand b{background:linear-gradient(90deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.who{color:var(--muted);font-size:13px;text-align:right}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.tabs button{height:38px;padding:0 14px;border-radius:9px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);font:700 13px Inter;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+.tabs button.on{border-color:var(--cyan);color:var(--cyan);background:#0f1f25}
+.pane{display:none}.pane.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:14px}
+.card>h2{margin-bottom:10px}
+.banner{border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.banner.info{border-color:#1e4a55;background:#0c1a1f}.banner.warn{border-color:#5a4613;background:#1b160a}.banner.bad{border-color:#5b1d1d;background:#1d0d0d}.banner.ok{border-color:#1b4a39;background:#0b1a15}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.kpi b{display:block;font:700 26px "Barlow Condensed",sans-serif}.kpi span{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.kpi.money b{color:var(--cyan)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;padding:0 14px;border-radius:9px;border:0;background:linear-gradient(100deg,var(--cyan),var(--violet));color:#07070b;font:800 13px Inter;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.btn.gh{background:var(--panel2);color:var(--ink);border:1px solid var(--line2)}
+.btn.red{background:#2a0f0f;color:#fca5a5;border:1px solid #5b1d1d}
+.btn.sm{height:30px;padding:0 10px;font-size:11.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{width:100%;min-height:38px;border-radius:8px;border:1px solid var(--line2);background:#0d0d14;color:var(--ink);padding:7px 10px;font:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--cyan)}
+textarea{min-height:80px;resize:vertical}
+label.l{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 4px}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.full{grid-column:1/-1}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.muted{color:var(--muted)}.small{font-size:12.5px}
+.list .job{display:grid;grid-template-columns:110px 1fr 150px 120px 110px;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:var(--panel);cursor:pointer}
+.list .job:hover{border-color:var(--cyan)}
+.pill{display:inline-block;font:700 10.5px Inter;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
+.pill.cy{color:var(--cyan);border-color:#1e4a55}.pill.vi{color:#c9a4ff;border-color:#43285f}.pill.ye{color:var(--yellow);border-color:#5a4613}.pill.re{color:#fca5a5;border-color:#5b1d1d}.pill.gr{color:var(--green);border-color:#1b4a39}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:6px;border-bottom:1px solid var(--line)}
+td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+td input,td select{min-height:32px;padding:4px 7px;font-size:13px}
+td.num,th.num{text-align:right}
+tr.flag td{background:#1b160a}
+tr.need td{background:#1d0d0d}
+.note{font-size:11.5px;color:var(--yellow);margin-top:3px}
+.totals{margin-left:auto;max-width:380px}
+.totals div{display:flex;justify-content:space-between;padding:4px 0}
+.totals .grand{font:800 22px "Barlow Condensed";border-top:1px solid var(--line2);margin-top:4px;padding-top:8px}
+.issues li{color:#fca5a5}.warns li{color:var(--yellow)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+ul.clean{margin:4px 0 0;padding-left:18px}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.photos .ph{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;aspect-ratio:1;background:#0d0d14;display:flex;align-items:center;justify-content:center}
+.photos img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.photos .x{position:absolute;top:4px;right:4px}
+.drawer{position:fixed;inset:0;background:rgba(5,5,8,.8);z-index:20;overflow:auto}
+.drawer .inner{max-width:1100px;margin:24px auto;background:var(--bg);border:1px solid var(--line2);border-radius:16px;padding:18px}
+.ev{border-left:2px solid var(--line2);padding:4px 0 8px 10px;margin-left:4px}
+.ev.cust{border-color:var(--violet)}.ev.biz{border-color:var(--cyan)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--cyan);color:var(--ink);padding:10px 16px;border-radius:10px;z-index:50;max-width:92vw}
+.toast.err{border-color:var(--red)}
+.linkbox{display:flex;gap:8px}.linkbox input{font-family:"Space Mono",monospace;font-size:12px}
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line2);border-radius:12px}
+.sec{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}.dot.on{background:var(--green)}.dot.off{background:var(--red)}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}.list .job{grid-template-columns:1fr 1fr}.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.est-table{display:block;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">CallTwin <b>Estimate</b></div><div class="who" id="who"></div></div>
+  <div id="err" class="banner bad" hidden></div>
+  <div id="app" hidden>
+    <div id="addonBanner"></div>
+    <div class="tabs" id="tabs">
+      <button data-t="dash" class="on">Dashboard</button>
+      <button data-t="new">New lead</button>
+      <button data-t="book" data-perm="settings">Price book</button>
+      <button data-t="settings" data-perm="settings">Settings</button>
+      <button data-t="team" data-perm="team">Team</button>
+      <button data-t="activity" data-perm="send">Activity</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="pane on" id="p-dash">
+      <div class="kpis" id="kpis"></div>
+      <div class="card">
+        <div class="grid g4">
+          <div><label class="l">Search</label><input id="fQ" placeholder="Customer, job, EST number"></div>
+          <div><label class="l">Status</label><select id="fS">
+            <option value="">All</option>
+            <option value="new">New leads</option>
+            <option value="drafting,ready">Being prepared</option>
+            <option value="sent,viewed">Sent</option>
+            <option value="sent,viewed,changes_requested">Awaiting approval</option>
+            <option value="changes_requested">Changes requested</option>
+            <option value="approved,deposit_paid">Approved</option>
+            <option value="declined">Declined</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="completed">Completed</option>
+            <option value="lost">Lost</option>
+          </select></div>
+          <div><label class="l">From</label><input type="date" id="fF"></div>
+          <div><label class="l">To</label><input type="date" id="fT"></div>
+        </div>
+      </div>
+      <div class="list" id="jobs" style="margin-top:14px"></div>
+    </section>
+
+    <!-- NEW LEAD -->
+    <section class="pane" id="p-new">
+      <div class="card">
+        <h2>New lead</h2>
+        <p class="muted small">Enter what you know. The AI organizes it, flags what's missing, and drafts line items from your price book. Nothing goes to the customer until you approve and send it.</p>
+        <div class="grid g3">
+          <div><label class="l">Customer name</label><input id="nName"></div>
+          <div><label class="l">Phone</label><input id="nPhone" inputmode="tel"></div>
+          <div><label class="l">Email</label><input id="nEmail" type="email"></div>
+          <div class="full"><label class="l">Service address</label><input id="nAddr"></div>
+          <div><label class="l">Type of job</label><input id="nService" list="svcList"></div>
+          <div><label class="l">Urgency</label><select id="nUrg"><option value="">—</option><option>Emergency</option><option>Today</option><option>This week</option><option>Flexible</option></select></div>
+          <div class="row" style="align-items:end"><label class="row small"><input type="checkbox" id="nAfter" style="width:auto;min-height:auto"> After-hours job</label></div>
+          <div class="full"><label class="l">Description of the problem</label><textarea id="nProblem"></textarea></div>
+          <div><label class="l">Measurements</label><textarea id="nMeas" placeholder="Only what was actually measured or stated"></textarea></div>
+          <div><label class="l">Materials needed</label><textarea id="nMat"></textarea></div>
+          <div><label class="l">Labor requirements</label><textarea id="nLabor"></textarea></div>
+          <div class="full"><label class="l">Customer notes</label><textarea id="nNotes"></textarea></div>
+          <div class="full"><label class="l">Photos / documents</label><input type="file" id="nFiles" multiple accept="image/*,application/pdf"></div>
+        </div>
+        <div class="row" style="margin-top:12px"><button class="btn" id="nGo">Create lead + AI analysis</button><button class="btn gh" id="nGoPlain">Create without AI</button><span class="muted small" id="nMsg"></span></div>
+      </div>
+    </section>
+
+    <!-- PRICE BOOK -->
+    <section class="pane" id="p-book">
+      <div class="card">
+        <div class="sec"><h2>Labor rates</h2><span class="spacer"></span><button class="btn gh sm" id="addRate">Add rate</button></div>
+        <table><thead><tr><th>Key</th><th>Name</th><th class="num">Rate / hour ($)</th><th></th></tr></thead><tbody id="rates"></tbody></table>
+      </div>
+      <div class="card">
+        <div class="sec"><h2>Price book</h2><span class="spacer"></span><input id="bookQ" placeholder="Filter" style="max-width:220px"><button class="btn gh sm" id="addItem">Add item</button></div>
+        <p class="muted small">The AI can only use items from this list, and it never sees your prices. Leave "Sell price" blank to use cost + your markup.</p>
+        <div class="est-table"><table><thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Kind</th><th>Unit</th><th class="num">Cost ($)</th><th class="num">Sell price ($)</th><th>Tax</th><th></th></tr></thead><tbody id="book"></tbody></table></div>
+        <details style="margin-top:12px"><summary class="muted">Import from CSV (sku,name,category,kind,unit,cost,price,taxable)</summary>
+          <textarea id="csv" placeholder="WH-50G,50 gal gas water heater,Water heaters,equipment,each,780,,yes"></textarea>
+          <button class="btn gh sm" id="csvGo" style="margin-top:6px">Add rows</button></details>
+      </div>
+      <div class="card">
+        <div class="sec"><h2>Service templates</h2><span class="spacer"></span><button class="btn gh sm" id="addTpl">Add template</button></div>
+        <p class="muted small">Your standard jobs. When the AI recognizes one, it drafts your standard labor hours and items. Items: one per line as <span class="mono">SKU x qty</span>.</p>
+        <div id="tpls"></div>
+      </div>
+      <div class="row" style="margin-top:14px"><button class="btn" id="saveBook">Save price book</button><span class="muted small" id="bookMsg"></span></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="pane" id="p-settings">
+      <div class="card"><h2>Company</h2>
+        <div class="grid g3">
+          <div><label class="l">Company name</label><input id="sName"></div>
+          <div><label class="l">Phone</label><input id="sPhone"></div>
+          <div><label class="l">Email</label><input id="sEmail"></div>
+          <div class="full"><label class="l">Address</label><input id="sAddr"></div>
+          <div><label class="l">Website</label><input id="sWeb"></div>
+          <div><label class="l">License #</label><input id="sLic"></div>
+          <div><label class="l">Brand color</label><input id="sColor" type="color" style="padding:2px"></div>
+          <div class="full"><label class="l">Logo URL (https, PNG or JPG)</label><input id="sLogo"></div>
+        </div>
+      </div>
+      <div class="card"><h2>Pricing rules</h2>
+        <div class="grid g4">
+          <div><label class="l">Tax rate %</label><input id="pTax" type="number" step="0.001"></div>
+          <div><label class="l">Material markup %</label><input id="pMatMk" type="number" step="0.1"></div>
+          <div><label class="l">Equipment markup %</label><input id="pEqMk" type="number" step="0.1"></div>
+          <div><label class="l">Default deposit %</label><input id="pDep" type="number" step="1"></div>
+          <div><label class="l">Service call fee $</label><input id="pSvc" type="number" step="0.01"></div>
+          <div><label class="l">Minimum job $</label><input id="pMin" type="number" step="0.01"></div>
+          <div><label class="l">Travel fee $</label><input id="pTravel" type="number" step="0.01"></div>
+          <div><label class="l">Estimate valid (days)</label><input id="pValid" type="number"></div>
+          <div><label class="l">Emergency fee $</label><input id="pEmFee" type="number" step="0.01"></div>
+          <div><label class="l">Emergency labor +%</label><input id="pEmPct" type="number" step="1"></div>
+          <div><label class="l">After-hours fee $</label><input id="pAfter" type="number" step="0.01"></div>
+          <div class="row" style="align-items:end"><label class="row small"><input type="checkbox" id="pTaxLabor" style="width:auto;min-height:auto"> Tax labor</label></div>
+        </div>
+      </div>
+      <div class="card"><h2>Proposal text</h2>
+        <div class="grid g2">
+          <div><label class="l">Default timeline</label><textarea id="tTimeline"></textarea></div>
+          <div><label class="l">Payment terms</label><textarea id="tPay"></textarea></div>
+          <div><label class="l">Warranty</label><textarea id="tWar"></textarea></div>
+          <div><label class="l">Terms &amp; conditions</label><textarea id="tTerms"></textarea></div>
+          <div class="full"><label class="l">How customers can pay if online deposits aren't set up (Zelle, Cash App, check...)</label><input id="tPayInst"></div>
+        </div>
+      </div>
+      <div class="card"><h2>Automated follow-up</h2>
+        <label class="row small"><input type="checkbox" id="fuOn" style="width:auto;min-height:auto"> Follow up automatically when the customer hasn't responded</label>
+        <p class="muted small">Placeholders: {customer} {business} {service} {total} {deposit} {link} {number}. Follow-ups stop when the customer approves, declines, or texts STOP.</p>
+        <div id="fuSteps"></div>
+      </div>
+      <div class="card"><h2>Automation</h2>
+        <label class="row small"><input type="checkbox" id="aDraft" style="width:auto;min-height:auto"> Draft an estimate automatically from every CallTwin call</label>
+        <label class="row small"><input type="checkbox" id="aSms" style="width:auto;min-height:auto"> Text me when drafts are ready and when customers respond</label>
+        <label class="row small"><input type="checkbox" id="aPhoto" style="width:auto;min-height:auto"> Text callers a link to send job photos</label>
+        <div class="grid g3" style="margin-top:10px"><div><label class="l">Estimate number prefix</label><input id="aPrefix"></div></div>
+      </div>
+      <div class="row" style="margin-top:14px"><button class="btn" id="saveSettings">Save settings</button><span class="muted small" id="setMsg"></span></div>
+      <div class="card"><h2>Lead capture links</h2>
+        <label class="l">Website request form</label>
+        <div class="linkbox"><input id="lIntake" readonly><button class="btn gh sm" data-copy="lIntake">Copy</button></div>
+        <label class="l" style="margin-top:10px">Embed on your website</label>
+        <div class="linkbox"><input id="lEmbed" readonly><button class="btn gh sm" data-copy="lEmbed">Copy</button></div>
+        <div id="lMailWrap"><label class="l" style="margin-top:10px">Email-in address</label><div class="linkbox"><input id="lMail" readonly><button class="btn gh sm" data-copy="lMail">Copy</button></div></div>
+        <p class="muted small">Calls to your CallTwin number and texts to it create leads automatically.</p>
+      </div>
+      <div class="card" data-perm="billing"><h2>Customer deposits</h2>
+        <p class="muted small" id="connectState"></p>
+        <button class="btn gh" id="connectBtn">Connect Stripe to accept deposits</button>
+      </div>
+      <div class="card"><h2>Connections</h2><div id="caps" class="grid g4"></div></div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="pane" id="p-team">
+      <div class="card"><h2>Team</h2>
+        <p class="muted small">Each person gets a private sign-in link. Managers do everything but billing and team. Estimators build estimates but can't send. Techs add leads, notes and photos and don't see pricing.</p>
+        <div class="grid g4"><div><label class="l">Name</label><input id="mName"></div><div><label class="l">Email</label><input id="mEmail"></div>
+          <div><label class="l">Role</label><select id="mRole"><option value="manager">Manager</option><option value="estimator" selected>Estimator</option><option value="tech">Tech</option></select></div>
+          <div class="row" style="align-items:end"><button class="btn" id="mAdd">Add</button></div></div>
+        <div id="mLink" class="banner ok" hidden></div>
+        <table style="margin-top:12px"><thead><tr><th>Name</th><th>Role</th><th>Key</th><th>Status</th><th></th></tr></thead><tbody id="members"></tbody></table>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="pane" id="p-activity"><div class="card"><h2>Audit log</h2><p class="muted small">Every AI output, human edit, send, customer action and payment.</p><div id="auditAll"></div></div></section>
+  </div>
+</div>
+
+<!-- JOB DRAWER -->
+<div class="drawer" id="drawer" hidden><div class="inner" id="jobView"></div></div>
+<datalist id="svcList"></datalist>
+<datalist id="skuList"></datalist>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+const q = new URLSearchParams(location.search);
+const API = (q.get("api") || "https://calltwin.onrender.com").replace(/\/$/, "") + "/api/estimates";
+const SITE = location.origin + location.pathname.replace(/\/[^/]*$/, "");
+let AUTH = {};
+(function () {
+  const k = q.get("k"), t = q.get("t");
+  try {
+    if (k) { localStorage.setItem("ct_est_auth", JSON.stringify({ k })); }
+    else if (t) { localStorage.setItem("ct_est_auth", JSON.stringify({ t })); }
+    AUTH = JSON.parse(localStorage.getItem("ct_est_auth") || "{}");
+  } catch (e) { AUTH = k ? { k } : t ? { t } : {}; }
+  if (k || t) { const u = new URL(location.href); u.searchParams.delete("k"); u.searchParams.delete("t"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+})();
+const HDR = () => (AUTH.k ? { "x-portal-key": AUTH.k } : AUTH.t ? { "x-team-key": AUTH.t } : {});
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (c) => (c == null || isNaN(c) ? "—" : (c / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }));
+const toC = (v) => (v === "" || v == null ? null : Math.round(parseFloat(String(v).replace(/[$,]/g, "")) * 100));
+const toD = (c) => (c == null ? "" : (c / 100).toFixed(2));
+const when = (d) => (d ? new Date(d).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "");
+function toast(msg, err) { const t = $("#toast"); t.textContent = msg; t.className = "toast" + (err ? " err" : ""); t.hidden = false; clearTimeout(t._h); t._h = setTimeout(() => (t.hidden = true), 4200); }
+
+async function api(path, opts = {}) {
+  const init = { method: opts.method || "GET", headers: { ...HDR() } };
+  if (opts.form) init.body = opts.form;
+  else if (opts.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(opts.body); }
+  let r;
+  try { r = await fetch(API + path, init); } catch (e) { return { ok: false, error: "Can't reach the server. It may be waking up; try again in 30 seconds." }; }
+  if (opts.raw) return r;
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error (" + r.status + ")" }));
+  if (!r.ok && j.ok === undefined) j.ok = false;
+  return j;
+}
+
+let ME = null, S = null, JOBS = [], CUR = null;
+const PERMS = { owner: ["view", "job", "estimate", "send", "settings", "team", "billing"], manager: ["view", "job", "estimate", "send", "settings"], estimator: ["view", "job", "estimate"], tech: ["view", "job"] };
+const can = (p) => ME && (PERMS[ME.role] || []).includes(p);
+
+const STATUS = {
+  new: ["New lead", "cy"], drafting: ["AI drafting", "vi"], ready: ["Ready to review", "ye"], sent: ["Sent", "cy"], viewed: ["Viewed", "cy"],
+  changes_requested: ["Changes requested", "ye"], approved: ["Approved", "gr"], declined: ["Declined", "re"], deposit_paid: ["Deposit paid", "gr"],
+  scheduled: ["Scheduled", "vi"], completed: ["Completed", "gr"], lost: ["Lost", "re"],
+};
+const pill = (s) => { const x = STATUS[s] || [s, ""]; return `<span class="pill ${x[1]}">${esc(x[0])}</span>`; };
+
+async function boot() {
+  if (!AUTH.k && !AUTH.t) return fail("Open this page from your CallTwin dashboard link, or a team invite link.");
+  const j = await api("/me");
+  if (!j.ok) return fail(j.error || "Couldn't load your account.");
+  ME = j; S = j.settings;
+  $("#who").innerHTML = `${esc(j.client.businessName)}<br><span class="mono small">${esc(j.role.toUpperCase())}</span>`;
+  $$("[data-perm]").forEach((el) => (el.hidden = !can(el.dataset.perm)));
+  $("#app").hidden = false; $("#err").hidden = true;
+  renderAddon(); fillSettings(); fillBook(); fillTeam(); fillDatalists();
+  if (q.get("addon") === "paid") toast("Card saved. Your Estimate add-on is active.");
+  await loadJobs();
+  const m = location.hash.match(/job=([a-f0-9]{24})/);
+  if (m) openJob(m[1]);
+  if (location.hash === "#settings" && can("settings")) tab("settings");
+}
+function fail(msg) { $("#err").textContent = msg; $("#err").hidden = false; }
+
+function renderAddon() {
+  const a = ME.addon, el = $("#addonBanner");
+  const price = money(a.priceCents);
+  if (a.status === "comp") { el.innerHTML = ""; return; }
+  if (!a.active) {
+    const canBill = can("billing");
+    el.innerHTML = `<div class="banner info"><div><b>Estimate add-on for CallTwin</b><div class="small muted">Turn every call into a draft estimate, send proposals customers can sign and pay a deposit on, and follow up automatically. ${a.trialDays}-day free trial, then ${price}/month.</div></div>${canBill ? `<div class="row">${a.status === "off" || a.status === "canceled" ? `<button class="btn" id="startTrial">Start free trial</button>` : ""}<button class="btn gh" id="addCard">Add card</button></div>` : `<span class="muted small">Ask the owner to turn it on.</span>`}</div>`;
+  } else if (a.status === "trial") {
+    const days = Math.max(0, Math.ceil((new Date(a.trialEndsAt) - Date.now()) / 864e5));
+    el.innerHTML = `<div class="banner warn"><div><b>Free trial: ${days} day${days === 1 ? "" : "s"} left.</b> <span class="small muted">Then ${price}/month.</span></div>${can("billing") ? `<button class="btn gh" id="addCard">Add card to keep it on</button>` : ""}</div>`;
+  } else if (a.status === "past_due") {
+    el.innerHTML = `<div class="banner bad"><b>Payment failed for the Estimate add-on.</b>${can("billing") ? `<button class="btn gh" id="addCard">Update card</button>` : ""}</div>`;
+  } else el.innerHTML = "";
+  const st = $("#startTrial"); if (st) st.onclick = async () => { const r = await api("/addon/start", { method: "POST", body: {} }); if (!r.ok) return toast(r.error, 1); ME.addon = { ...ME.addon, ...r.addon }; renderAddon(); toast("Trial started. Your AI receptionist will now collect estimate details."); };
+  const ac = $("#addCard"); if (ac) ac.onclick = async () => { const r = await api("/addon/checkout", { method: "POST", body: {} }); if (r.url) location.href = r.url; else toast(r.error || "Card payments aren't available yet.", 1); };
+}
+
+// ---------------- tabs ----------------
+function tab(t) { $$("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t)); $$(".pane").forEach((p) => p.classList.toggle("on", p.id === "p-" + t)); if (t === "activity") loadAudit(); }
+$("#tabs").onclick = (e) => { const b = e.target.closest("button"); if (b) tab(b.dataset.t); };
+
+// ---------------- dashboard ----------------
+let fTimer = null;
+["#fQ", "#fS", "#fF", "#fT"].forEach((s) => $(s).addEventListener("input", () => { clearTimeout(fTimer); fTimer = setTimeout(loadJobs, 250); }));
+async function loadJobs() {
+  const p = new URLSearchParams();
+  if ($("#fQ").value) p.set("q", $("#fQ").value);
+  if ($("#fS").value) p.set("status", $("#fS").value);
+  if ($("#fF").value) p.set("from", $("#fF").value);
+  if ($("#fT").value) p.set("to", $("#fT").value);
+  const j = await api("/jobs?" + p);
+  if (!j.ok) return toast(j.error, 1);
+  JOBS = j.jobs; renderStats(j.stats); renderJobs();
+}
+function renderStats(s) {
+  const k = [["New leads", s.newLeads, "new"], ["Being prepared", s.preparing, "drafting,ready"], ["Sent", s.sent + s.viewed, "sent,viewed"], ["Awaiting approval", s.awaiting, "sent,viewed,changes_requested"],
+    ["Approved", s.approved, "approved,deposit_paid"], ["Declined", s.declined, "declined"], ["Scheduled", s.scheduled, "scheduled"],
+    ["Won revenue", money(s.wonCents), "approved,deposit_paid", 1], ["Open pipeline", money(s.pipelineCents), "sent,viewed,changes_requested", 1],
+    ["Collected", money(s.collectedCents), "", 1], ["Conversion", s.conversionPct == null ? "—" : s.conversionPct + "%", ""], ["All jobs", s.total, ""]];
+  $("#kpis").innerHTML = k.map(([l, v, st, m]) => `<div class="kpi${m ? " money" : ""}" data-st="${st}"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+  $$("#kpis .kpi").forEach((el) => (el.onclick = () => { $("#fS").value = el.dataset.st; loadJobs(); }));
+}
+function renderJobs() {
+  const el = $("#jobs");
+  if (!JOBS.length) { el.innerHTML = `<div class="empty">No jobs yet. Calls to your CallTwin number, texts, web requests and manual entries show up here.</div>`; return; }
+  el.innerHTML = JOBS.map((j) => `<div class="job" data-id="${j.id}">
+    <div><div class="mono small">${esc(j.number)}</div><div class="small muted">${when(j.createdAt)}</div></div>
+    <div><b>${esc(j.customer || "Unknown caller")}</b> ${j.urgency && /emerg/i.test(j.urgency) ? '<span class="pill re">Emergency</span>' : ""}<div class="small muted">${esc(j.service || "")} · ${esc(j.source.replace("_", " "))}</div></div>
+    <div>${pill(j.status)}</div>
+    <div class="mono">${j.totalCents ? money(j.totalCents) : '<span class="muted">—</span>'}</div>
+    <div class="small muted">${j.viewedAt ? "Viewed " + when(j.viewedAt) : j.sentAt ? "Sent " + when(j.sentAt) : ""}</div></div>`).join("");
+  $$("#jobs .job").forEach((el) => (el.onclick = () => openJob(el.dataset.id)));
+}
+
+// ---------------- new lead ----------------
+async function createLead(analyze) {
+  const body = { name: $("#nName").value, phone: $("#nPhone").value, email: $("#nEmail").value, address: $("#nAddr").value, service: $("#nService").value,
+    urgency: $("#nUrg").value, afterHours: $("#nAfter").checked, problem: $("#nProblem").value, measurements: $("#nMeas").value, materialsNeeded: $("#nMat").value,
+    laborNotes: $("#nLabor").value, notes: $("#nNotes").value, analyze: false };
+  $("#nMsg").textContent = "Saving...";
+  $("#nGo").disabled = $("#nGoPlain").disabled = true;
+  const r = await api("/jobs", { method: "POST", body });
+  if (!r.ok) { $("#nMsg").textContent = ""; $("#nGo").disabled = $("#nGoPlain").disabled = false; return toast(r.error, 1); }
+  const files = $("#nFiles").files;
+  if (files.length) { const fd = new FormData(); [...files].slice(0, 8).forEach((f) => fd.append("photos", f)); await api(`/jobs/${r.job.id}/photos`, { method: "POST", form: fd }); }
+  if (analyze) { $("#nMsg").textContent = "AI is analyzing the job..."; await api(`/jobs/${r.job.id}/analyze`, { method: "POST", body: {} }); }
+  $$("#p-new input, #p-new textarea").forEach((i) => { if (i.type === "checkbox") i.checked = false; else i.value = ""; }); $("#nUrg").value = "";
+  $("#nMsg").textContent = ""; $("#nGo").disabled = $("#nGoPlain").disabled = false;
+  await loadJobs(); tab("dash"); openJob(r.job.id);
+}
+$("#nGo").onclick = () => createLead(true);
+$("#nGoPlain").onclick = () => createLead(false);
+
+// ---------------- job view ----------------
+let PHOTO_URLS = [];
+async function openJob(id) {
+  const j = await api("/jobs/" + id);
+  if (!j.ok) return toast(j.error, 1);
+  CUR = j; renderJob();
+  $("#drawer").hidden = false; document.body.style.overflow = "hidden";
+  history.replaceState(null, "", "#job=" + id);
+  loadPhotos();
+}
+function closeJob() { $("#drawer").hidden = true; document.body.style.overflow = ""; CUR = null; history.replaceState(null, "", location.pathname + location.search); PHOTO_URLS.forEach(URL.revokeObjectURL); PHOTO_URLS = []; loadJobs(); }
+$("#drawer").addEventListener("click", (e) => { if (e.target.id === "drawer") closeJob(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#drawer").hidden) closeJob(); });
+
+function basisPill(b) { return b === "stated" ? '<span class="pill gr">stated</span>' : b === "template" ? '<span class="pill cy">your template</span>' : b === "owner" ? '<span class="pill">you</span>' : '<span class="pill ye">AI assumption</span>'; }
+
+function renderJob() {
+  const j = CUR.job, a = j.analysis || {}, e = j.estimate || {}, t = e.totals || {}, pr = j.proposal || {};
+  const canEst = can("estimate"), canSend = can("send"), tech = ME.role === "tech";
+  const cust = j.customer || {};
+  const aiName = a.provider === "rules" ? "rules (no AI key)" : [a.provider, a.model].filter(Boolean).join(" · ");
+  $("#jobView").innerHTML = `
+  <div class="row"><h1>${esc(j.number)}</h1>${pill(j.status)}<span class="pill">${esc(j.source.replace("_", " "))}</span>${/emerg/i.test(j.urgency) ? '<span class="pill re">Emergency</span>' : ""}<span class="spacer"></span>
+    ${!tech ? `<button class="btn gh sm" id="pdfEst">Estimate PDF</button><button class="btn gh sm" id="pdfProp">Proposal PDF</button>` : ""}<button class="btn gh sm" id="closeJob">Close</button></div>
+
+  <div class="grid g2" style="margin-top:6px">
+  <div class="card"><h2>Customer &amp; job</h2>
+    <div class="grid g2">
+      <div><label class="l">Name</label><input id="jName" value="${esc(cust.name)}"></div>
+      <div><label class="l">Phone</label><input id="jPhone" value="${esc(cust.phone)}"></div>
+      <div><label class="l">Email</label><input id="jEmail" value="${esc(cust.email)}"></div>
+      <div><label class="l">Type of job</label><input id="jService" list="svcList" value="${esc(j.service)}"></div>
+      <div class="full"><label class="l">Service address</label><input id="jAddr" value="${esc(cust.address)}"></div>
+      <div><label class="l">Urgency</label><select id="jUrg">${["", "Emergency", "Today", "This week", "Flexible"].map((u) => `<option ${u === j.urgency ? "selected" : ""} value="${u}">${u || "—"}</option>`).join("")}</select></div>
+      <div class="row" style="align-items:end"><label class="row small"><input type="checkbox" id="jAfter" ${j.afterHours ? "checked" : ""} style="width:auto;min-height:auto"> After hours</label></div>
+      <div class="full"><label class="l">Problem</label><textarea id="jProblem">${esc(j.problem)}</textarea></div>
+      <div><label class="l">Measurements</label><textarea id="jMeas">${esc(j.measurements)}</textarea></div>
+      <div><label class="l">Materials needed</label><textarea id="jMat">${esc(j.materialsNeeded)}</textarea></div>
+      <div><label class="l">Labor requirements</label><textarea id="jLabor">${esc(j.laborNotes)}</textarea></div>
+      <div><label class="l">Notes</label><textarea id="jNotes">${esc(j.notes)}</textarea></div>
+      ${j.callSummary ? `<div class="full"><label class="l">CallTwin call summary</label><div class="small">${esc(j.callSummary)}</div></div>` : ""}
+      ${j.preferredTime ? `<div class="full small muted">Preferred time: ${esc(j.preferredTime)}</div>` : ""}
+    </div>
+    <div class="row" style="margin-top:10px"><button class="btn gh sm" id="saveJob">Save details</button>
+      <select id="jStatus" style="max-width:190px;min-height:30px"><option value="">Set status...</option><option value="ready">Ready to review</option><option value="completed">Completed</option><option value="lost">Lost</option></select></div>
+  </div>
+
+  <div class="card"><div class="sec"><h2>AI job analysis</h2><span class="spacer"></span>${canEst ? `<button class="btn sm" id="runAi">${a.status === "done" ? "Re-run" : "Run"} analysis</button>` : ""}</div>
+    ${a.status === "running" ? '<div class="banner info">Analyzing...</div>' : ""}
+    ${a.status === "failed" ? `<div class="banner bad small">Analysis failed: ${esc(a.error)}. You can still build the estimate by hand.</div>` : ""}
+    ${a.status === "none" ? '<div class="muted small">Not analyzed yet.</div>' : ""}
+    ${a.status === "done" ? `
+      <div class="small muted">By ${esc(aiName)} · ${when(a.at)}. AI never sets prices; it only uses your price book and flags what it assumed.</div>
+      <p>${esc(a.summary)}</p>
+      ${a.serviceTemplate ? `<div class="small">Matched your template: <b>${esc(a.serviceTemplate)}</b></div>` : ""}
+      ${list("Scope of work", a.scope)}
+      ${a.materials && a.materials.length ? `<h3 style="margin-top:10px">Materials</h3><ul class="clean">${a.materials.map((m) => `<li>${esc(m.name)}${m.qty ? " — " + esc(m.qty) + " " + esc(m.unit || "") : ""} ${basisPill(m.basis)} ${m.sku ? `<span class="pill cy mono">${esc(m.sku)}</span>` : '<span class="pill">not in price book</span>'}${m.note ? `<div class="small muted">${esc(m.note)}</div>` : ""}</li>`).join("")}</ul>` : ""}
+      ${a.labor && a.labor.length ? `<h3 style="margin-top:10px">Labor</h3><ul class="clean">${a.labor.map((l) => `<li>${esc(l.task)}${l.hours ? " — " + esc(l.hours) + " h" : " — hours unknown"} ${basisPill(l.basis)}${l.note ? `<div class="small muted">${esc(l.note)}</div>` : ""}</li>`).join("")}</ul>` : ""}
+      ${list("Possible additional work", a.additionalWork)}
+      ${list("Missing information", a.missingInfo, "issues")}
+      ${list("Assumptions", a.assumptions, "warns")}
+      ${list("Questions for the customer", a.questions)}
+      ${list("Next steps", a.nextSteps)}` : ""}
+  </div>
+  </div>
+
+  <div class="card"><div class="sec"><h2>Photos &amp; documents</h2><span class="spacer"></span><label class="btn gh sm">Upload<input type="file" id="upPh" multiple accept="image/*,application/pdf" hidden></label></div><div class="photos" id="photos"><span class="muted small">Loading...</span></div></div>
+
+  ${tech ? "" : `
+  <div class="card"><div class="sec"><h2>Estimate</h2>${e.approvedAt ? `<span class="pill gr">Approved by ${esc(e.approvedBy)} ${when(e.approvedAt)}</span>` : '<span class="pill ye">Not approved</span>'}<span class="pill mono">v${e.version || 0}</span><span class="spacer"></span>
+    ${canEst ? `<button class="btn gh sm" data-add="labor">+ Labor</button><button class="btn gh sm" data-add="material">+ Item</button><button class="btn gh sm" data-add="fee">+ Fee</button><button class="btn gh sm" data-add="custom">+ Custom</button>` : ""}</div>
+    <div class="est-table"><table id="li"><thead><tr><th style="width:110px">Type</th><th>Description</th><th style="width:120px">SKU / rate</th><th class="num" style="width:80px">Qty</th><th style="width:70px">Unit</th><th class="num" style="width:110px">Unit $</th><th style="width:44px">Tax</th><th class="num" style="width:100px">Amount</th><th style="width:40px"></th></tr></thead><tbody></tbody></table></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div>
+        <div class="grid g3">
+          <div><label class="l">Discount</label><select id="dType"><option value="">None</option><option value="pct" ${e.discount && e.discount.type === "pct" ? "selected" : ""}>Percent</option><option value="flat" ${e.discount && e.discount.type === "flat" ? "selected" : ""}>Flat $</option></select></div>
+          <div><label class="l">Amount</label><input id="dVal" type="number" step="0.01" value="${e.discount && e.discount.type ? esc(e.discount.type === "flat" ? toD(e.discount.value) : e.discount.value) : ""}"></div>
+          <div><label class="l">Label</label><input id="dName" value="${esc((e.discount && e.discount.name) || "")}"></div>
+          <div><label class="l">Deposit %</label><input id="depPct" type="number" step="1" value="${esc(e.depositPct)}"></div>
+          <div><label class="l">Valid until</label><input id="validUntil" type="date" value="${e.validUntil ? new Date(e.validUntil).toISOString().slice(0, 10) : ""}"></div>
+        </div>
+        ${(t.issues || []).length ? `<ul class="clean issues small">${t.issues.map((i) => `<li>${esc(i.message)}</li>`).join("")}</ul>` : ""}
+        ${(t.warnings || []).length ? `<ul class="clean warns small">${t.warnings.map((i) => `<li>${esc(i.message)}</li>`).join("")}</ul>` : ""}
+      </div>
+      <div class="totals">
+        <div><span>Subtotal</span><span class="mono">${money(t.subtotalCents)}</span></div>
+        ${t.minimumAdjustmentCents ? `<div><span>Minimum job adjustment</span><span class="mono">${money(t.minimumAdjustmentCents)}</span></div>` : ""}
+        ${t.discountCents ? `<div><span>Discount</span><span class="mono">-${money(t.discountCents)}</span></div>` : ""}
+        <div><span>Tax (${esc(t.taxRatePct || 0)}%)</span><span class="mono">${money(t.taxCents)}</span></div>
+        <div class="grand"><span>Total</span><span>${money(t.totalCents)}</span></div>
+        ${t.depositCents ? `<div><span>Deposit (${esc(t.depositPct)}%)</span><span class="mono">${money(t.depositCents)}</span></div>` : ""}
+      </div>
+    </div>
+    <details style="margin-top:12px" ${e.scope || pr.overview ? "" : "open"}><summary class="muted">Proposal text</summary>
+      <div class="grid g2" style="margin-top:8px">
+        <div class="full"><label class="l">Project overview</label><textarea id="eOver">${esc(pr.overview)}</textarea></div>
+        <div class="full"><label class="l">Scope of work</label><textarea id="eScope" style="min-height:110px">${esc(e.scope)}</textarea></div>
+        <div><label class="l">Timeline</label><textarea id="eTime">${esc(e.timeline)}</textarea></div>
+        <div><label class="l">Payment terms</label><textarea id="ePay">${esc(e.paymentTerms)}</textarea></div>
+        <div><label class="l">Warranty</label><textarea id="eWar">${esc(e.warranty)}</textarea></div>
+        <div><label class="l">Terms &amp; conditions</label><textarea id="eTerms">${esc(e.terms)}</textarea></div>
+        <div class="full"><label class="l">Notes to customer</label><textarea id="eNotes">${esc(e.notes)}</textarea></div>
+      </div></details>
+    <div class="row" style="margin-top:12px">
+      ${canEst ? `<button class="btn" id="saveEst">Save estimate</button>` : ""}
+      ${canEst && a.status === "done" ? `<button class="btn gh" id="redraft">Re-draft from AI</button>` : ""}
+      <span class="spacer"></span>
+      ${canSend ? `<button class="btn" id="approveEst" ${t.sendable && !e.approvedAt ? "" : "disabled"}>Approve estimate</button>` : '<span class="muted small">An owner or manager approves and sends.</span>'}
+    </div>
+  </div>
+
+  ${canSend ? `<div class="card"><div class="sec"><h2>Send to customer</h2>${pr.sentAt ? `<span class="pill cy">Sent ${when(pr.sentAt)} via ${esc((pr.sentVia || []).join(", "))}</span>` : ""}${pr.viewedAt ? `<span class="pill vi">Viewed ${esc(pr.viewCount)}x · first ${when(pr.viewedAt)}</span>` : ""}</div>
+    ${!e.approvedAt ? '<div class="muted small">Approve the estimate first. Customers only ever see the version you approved and sent.</div>' : `
+    <div class="row"><label class="row small"><input type="checkbox" id="sSms" ${cust.phone ? "checked" : "disabled"} style="width:auto;min-height:auto"> Text ${esc(cust.phone || "(no phone)")}</label>
+      <label class="row small"><input type="checkbox" id="sEmail" ${cust.email && ME.capabilities.email ? "checked" : "disabled"} style="width:auto;min-height:auto"> Email ${esc(cust.email || "(no email)")}${ME.capabilities.email ? "" : " (email not connected)"}</label>
+      <span class="spacer"></span><button class="btn" id="sendBtn">${pr.sentAt ? "Re-send" : "Send proposal"}</button></div>`}
+    ${pr.link ? `<label class="l" style="margin-top:10px">Customer link</label><div class="linkbox"><input id="pLink" readonly value="${esc(pr.link)}"><button class="btn gh sm" data-copy="pLink">Copy</button><a class="btn gh sm" href="${esc(pr.link)}&preview=1" target="_blank" rel="noopener">Preview</a></div>` : ""}
+    ${pr.response === "approved" && pr.signature ? `<div class="banner ok" style="margin-top:10px"><div><b>Signed by ${esc(pr.signature.name)}</b> <span class="small muted">${when(pr.signature.at)} · IP ${esc(pr.signature.ip)}</span></div>${pr.signature.image ? `<img src="${esc(pr.signature.image)}" alt="Signature" style="max-height:60px;background:#fff;border-radius:6px;padding:4px">` : ""}</div>` : ""}
+    ${pr.response === "declined" ? `<div class="banner bad" style="margin-top:10px"><b>Declined</b> ${esc(pr.declineReason || "")}</div>` : ""}
+  </div>` : ""}
+  `}
+
+  <div class="grid g2">
+    <div class="card"><h2>Customer conversation</h2><div id="conv"></div>
+      <div class="grid" style="margin-top:8px"><textarea id="replyTxt" placeholder="Reply by text/email..."></textarea><div class="row"><button class="btn gh sm" id="replyBtn">Send reply</button></div></div></div>
+    <div class="card"><h2>Payment &amp; scheduling</h2>
+      ${tech ? "" : `<div class="small">Deposit due: <b class="mono">${money(j.payment.depositCents || t.depositCents || 0)}</b> · Paid: <b class="mono">${money(j.payment.paidCents || 0)}</b> <span class="pill">${esc(j.payment.status)}</span></div>
+      ${canSend ? `<div class="grid g3" style="margin-top:8px"><div><label class="l">Amount received $</label><input id="payAmt" type="number" step="0.01"></div><div><label class="l">Method</label><select id="payMeth"><option>cash</option><option>check</option><option>zelle</option><option>cashapp</option><option>card</option><option>other</option></select></div><div class="row" style="align-items:end"><button class="btn gh sm" id="payBtn">Record payment</button></div></div>` : ""}`}
+      <div class="grid g3" style="margin-top:12px"><div><label class="l">Job date</label><input type="date" id="schDate" value="${j.schedule && j.schedule.date ? new Date(j.schedule.date).toISOString().slice(0, 10) : ""}"></div>
+        <div><label class="l">Arrival window</label><input id="schWin" value="${esc((j.schedule && j.schedule.window) || "")}" placeholder="8-10am"></div>
+        <div class="row" style="align-items:end"><label class="row small"><input type="checkbox" id="schNotify" style="width:auto;min-height:auto"> Text customer</label></div>
+        <div class="full"><label class="l">Crew notes</label><input id="schNotes" value="${esc((j.schedule && j.schedule.notes) || "")}"></div></div>
+      <div class="row" style="margin-top:8px"><button class="btn gh sm" id="schBtn">Schedule job</button></div>
+    </div>
+  </div>
+
+  <div class="card"><details><summary><b>Audit trail</b> <span class="muted small">(${CUR.audit.length} entries)</span></summary><div style="margin-top:8px">${auditRows(CUR.audit)}</div></details></div>`;
+
+  if (!tech) renderLines();
+  renderConv();
+  bindJob();
+}
+function list(title, arr, cls) { return arr && arr.length ? `<h3 style="margin-top:10px">${esc(title)}</h3><ul class="clean ${cls || ""}">${arr.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""; }
+function auditRows(rows) {
+  if (!rows.length) return '<div class="muted small">No entries.</div>';
+  return rows.map((r) => `<div class="ev ${r.actor === "customer" ? "cust" : r.actor.startsWith("ai") ? "" : "biz"}"><div class="small"><b>${esc(r.action)}</b> <span class="muted">by ${esc(r.actor)} · ${when(r.createdAt)}</span></div>${r.detail ? `<details><summary class="small muted">detail</summary><pre class="mono small" style="white-space:pre-wrap;color:var(--muted)">${esc(JSON.stringify(r.detail, null, 1)).slice(0, 4000)}</pre></details>` : ""}</div>`).join("");
+}
+function renderConv() {
+  const j = CUR.job;
+  const items = [...(j.proposal.events || []).map((e) => ({ at: e.at, who: e.type === "reply" ? "biz" : "cust", label: e.type.replace("_", " "), text: e.text })),
+    ...(j.messages || []).filter((m) => m.from === "customer" && m.channel !== "proposal").map((m) => ({ at: m.at, who: "cust", label: m.channel, text: m.text }))].sort((a, b) => new Date(a.at) - new Date(b.at));
+  $("#conv").innerHTML = items.length ? items.map((i) => `<div class="ev ${i.who}"><div class="small muted">${esc(i.label)} · ${when(i.at)}</div><div>${esc(i.text)}</div></div>`).join("") : '<div class="muted small">No messages yet.</div>';
+}
+
+// ----- line item editor -----
+let LINES = [];
+function renderLines() {
+  LINES = JSON.parse(JSON.stringify(CUR.job.estimate.lineItems || []));
+  drawLines();
+}
+const lid = () => Math.random().toString(36).slice(2, 10);
+function drawLines() {
+  const t = CUR.job.estimate.totals || {};
+  const amt = Object.fromEntries((t.lines || []).map((l) => [l.id, l.lineCents]));
+  const ro = !can("estimate");
+  const rates = (S.laborRates || []);
+  $("#li tbody").innerHTML = LINES.length ? LINES.map((l, i) => {
+    const needP = l.unitCents == null, needQ = l.qty == null || l.qty <= 0, assumed = l.basis === "assumed";
+    return `<tr class="${needP || needQ ? "need" : assumed ? "flag" : ""}" data-i="${i}">
+      <td><select data-f="kind" ${ro ? "disabled" : ""}>${["labor", "material", "equipment", "fee", "custom"].map((k) => `<option ${k === l.kind ? "selected" : ""}>${k}</option>`).join("")}</select></td>
+      <td><input data-f="description" value="${esc(l.description)}" ${ro ? "disabled" : ""}>${l.aiNote ? `<div class="note">${esc(l.aiNote)}</div>` : ""}${assumed ? `<label class="note row"><input type="checkbox" data-confirm style="width:auto;min-height:auto"> AI assumption — confirm quantity</label>` : ""}</td>
+      <td>${l.kind === "labor" ? `<select data-f="laborKey" ${ro ? "disabled" : ""}><option value="">${rates.length ? "default" : "no rates"}</option>${rates.map((r) => `<option value="${esc(r.key)}" ${r.key === l.laborKey ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>` : `<input data-f="sku" list="skuList" value="${esc(l.sku)}" class="mono" ${ro ? "disabled" : ""}>`}</td>
+      <td><input data-f="qty" type="number" step="0.01" value="${l.qty == null ? "" : esc(l.qty)}" style="text-align:right" ${ro ? "disabled" : ""}></td>
+      <td><input data-f="unit" value="${esc(l.unit)}" ${ro ? "disabled" : ""}></td>
+      <td><input data-f="unitCents" type="number" step="0.01" value="${toD(l.unitCents)}" placeholder="price" style="text-align:right" ${ro ? "disabled" : ""}><div class="small muted">${esc(({ price_book: "price book", service_template: "template", owner: "your price", ai_suggested: "needs your price", auto_fee: "your fee" })[l.origin] || "")}</div></td>
+      <td><input data-f="taxable" type="checkbox" ${l.taxable ? "checked" : ""} style="width:auto;min-height:auto" ${ro ? "disabled" : ""}></td>
+      <td class="num mono">${amt[l.id] != null && !needP && !needQ ? money(amt[l.id]) : "—"}</td>
+      <td>${ro ? "" : `<button class="btn red sm" data-del="${i}" title="Remove">X</button>`}</td></tr>`;
+  }).join("") : `<tr><td colspan="9" class="muted small" style="padding:14px">No line items. Add from your price book, or run the AI analysis.</td></tr>`;
+  $$("#li tbody tr[data-i]").forEach((tr) => {
+    const i = +tr.dataset.i;
+    tr.querySelectorAll("[data-f]").forEach((inp) => inp.addEventListener("change", () => {
+      const f = inp.dataset.f, l = LINES[i];
+      if (f === "taxable") l.taxable = inp.checked;
+      else if (f === "qty") l.qty = inp.value === "" ? null : +inp.value;
+      else if (f === "unitCents") l.unitCents = toC(inp.value);
+      else if (f === "sku") { l.sku = inp.value.trim().toUpperCase(); const b = (S.priceBook || []).find((x) => x.sku === l.sku); if (b) { l.description = l.description || b.name; l.unit = b.unit; l.unitCents = null; l.kind = b.kind === "equipment" ? "equipment" : b.kind === "fee" ? "fee" : b.kind === "service" ? "custom" : "material"; l.taxable = b.taxable !== false; } }
+      else l[f] = inp.value;
+      dirty = true;
+    }));
+    const cf = tr.querySelector("[data-confirm]"); if (cf) cf.onchange = () => { LINES[i].confirm = cf.checked; dirty = true; };
+  });
+  $$("#li [data-del]").forEach((b) => (b.onclick = () => { LINES.splice(+b.dataset.del, 1); dirty = true; drawLines(); }));
+}
+let dirty = false;
+
+function estBody() {
+  const dt = $("#dType").value;
+  return {
+    lineItems: LINES, depositPct: +$("#depPct").value || 0,
+    discount: { type: dt, value: dt === "flat" ? toC($("#dVal").value) : +$("#dVal").value || 0, name: $("#dName").value },
+    validUntil: $("#validUntil").value || null,
+    overview: $("#eOver").value, scope: $("#eScope").value, timeline: $("#eTime").value, paymentTerms: $("#ePay").value, warranty: $("#eWar").value, terms: $("#eTerms").value, notes: $("#eNotes").value,
+  };
+}
+async function saveEstimate(quiet) {
+  const r = await api(`/jobs/${CUR.job._id}/estimate`, { method: "PUT", body: estBody() });
+  if (!r.ok) { toast(r.error, 1); return false; }
+  dirty = false; CUR.job = r.job; await reloadJob(); if (!quiet) toast("Estimate saved. Totals recalculated from your pricing rules.");
+  return true;
+}
+async function reloadJob() { const j = await api("/jobs/" + CUR.job._id); if (j.ok) { CUR = j; renderJob(); loadPhotos(); } }
+
+function bindJob() {
+  const j = CUR.job, id = j._id;
+  $("#closeJob").onclick = closeJob;
+  const pdf = async (kind) => { const r = await api(`/jobs/${id}/pdf?kind=${kind}`, { raw: true }); if (!r.ok) return toast("Couldn't build the PDF.", 1); const b = await r.blob(); window.open(URL.createObjectURL(b), "_blank"); };
+  if ($("#pdfEst")) { $("#pdfEst").onclick = () => pdf("estimate"); $("#pdfProp").onclick = () => pdf("proposal"); }
+  $("#saveJob").onclick = async () => {
+    const body = { customer: { name: $("#jName").value, phone: $("#jPhone").value, email: $("#jEmail").value, address: $("#jAddr").value },
+      service: $("#jService").value, urgency: $("#jUrg").value, afterHours: $("#jAfter").checked, problem: $("#jProblem").value, measurements: $("#jMeas").value,
+      materialsNeeded: $("#jMat").value, laborNotes: $("#jLabor").value, notes: $("#jNotes").value };
+    if ($("#jStatus").value) body.status = $("#jStatus").value;
+    const r = await api(`/jobs/${id}`, { method: "PATCH", body });
+    if (!r.ok) return toast(r.error, 1);
+    toast("Saved."); await reloadJob();
+  };
+  const ra = $("#runAi"); if (ra) ra.onclick = async () => { ra.disabled = true; ra.textContent = "Analyzing..."; const r = await api(`/jobs/${id}/analyze`, { method: "POST", body: {} }); if (!r.ok) toast(r.error, 1); await reloadJob(); };
+  const rd = $("#redraft"); if (rd) rd.onclick = async () => { if (!confirm("Replace the current line items with a fresh AI draft? Your pricing rules still set every price.")) return; rd.disabled = true; const r = await api(`/jobs/${id}/analyze`, { method: "POST", body: { redraft: true } }); if (!r.ok) toast(r.error, 1); await reloadJob(); };
+  $("#upPh").onchange = async (e) => { const fd = new FormData(); [...e.target.files].slice(0, 8).forEach((f) => fd.append("photos", f)); const r = await api(`/jobs/${id}/photos`, { method: "POST", form: fd }); if (!r.ok) return toast(r.error, 1); toast(`${r.added} file(s) added.`); loadPhotos(); };
+  $$("[data-add]").forEach((b) => (b.onclick = () => {
+    const k = b.dataset.add;
+    LINES.push({ id: lid(), kind: k, description: k === "labor" ? "Labor" : "", sku: "", laborKey: k === "labor" && S.laborRates[0] ? S.laborRates[0].key : "", qty: 1, unit: k === "labor" ? "hour" : "each", unitCents: null, taxable: k === "material" || k === "equipment" });
+    dirty = true; drawLines();
+    const last = $$("#li tbody tr[data-i]").pop(); if (last) last.querySelector(k === "material" ? "[data-f=sku]" : "[data-f=description]").focus();
+  }));
+  const se = $("#saveEst"); if (se) se.onclick = () => saveEstimate();
+  const ap = $("#approveEst"); if (ap) ap.onclick = async () => {
+    if (dirty && !(await saveEstimate(true))) return;
+    let r = await api(`/jobs/${id}/approve`, { method: "POST", body: {} });
+    if (r.warnings) { if (!confirm("These AI assumptions haven't been confirmed:\n\n" + r.warnings.map((w) => "- " + w.message).join("\n") + "\n\nApprove anyway?")) return; r = await api(`/jobs/${id}/approve`, { method: "POST", body: { acceptAssumptions: true } }); }
+    if (!r.ok) return toast(r.error, 1);
+    toast("Estimate approved. Ready to send."); await reloadJob();
+  };
+  const sb = $("#sendBtn"); if (sb) sb.onclick = async () => {
+    if (dirty) return toast("Save and re-approve your changes first.", 1);
+    sb.disabled = true;
+    const r = await api(`/jobs/${id}/send`, { method: "POST", body: { sms: $("#sSms").checked, email: $("#sEmail").checked } });
+    sb.disabled = false;
+    if (!r.ok) return toast(r.error, 1);
+    toast(r.channels.length ? `Sent by ${r.channels.join(" and ")}.` : "Link created. Copy it and send it to the customer.");
+    await reloadJob();
+  };
+  $("#replyBtn").onclick = async () => { const text = $("#replyTxt").value.trim(); if (!text) return; const r = await api(`/jobs/${id}/reply`, { method: "POST", body: { text } }); if (!r.ok) return toast(r.error, 1); toast(r.channels.length ? "Reply sent." : "Saved as a note (no text/email channel available)."); await reloadJob(); };
+  const pb = $("#payBtn"); if (pb) pb.onclick = async () => { const c = toC($("#payAmt").value); if (!c) return toast("Enter an amount.", 1); const r = await api(`/jobs/${id}/payment`, { method: "POST", body: { amountCents: c, method: $("#payMeth").value } }); if (!r.ok) return toast(r.error, 1); toast("Payment recorded."); await reloadJob(); };
+  $("#schBtn").onclick = async () => { const r = await api(`/jobs/${id}/schedule`, { method: "POST", body: { date: $("#schDate").value, window: $("#schWin").value, notes: $("#schNotes").value, notify: $("#schNotify").checked } }); if (!r.ok) return toast(r.error, 1); toast(r.texted ? "Scheduled and customer texted." : "Scheduled."); await reloadJob(); };
+  bindCopy($("#jobView"));
+}
+async function loadPhotos() {
+  if (!CUR) return;
+  PHOTO_URLS.forEach(URL.revokeObjectURL); PHOTO_URLS = [];
+  const el = $("#photos"); if (!el) return;
+  if (!CUR.photos.length) { el.innerHTML = '<span class="muted small">No photos yet.</span>'; return; }
+  el.innerHTML = CUR.photos.map((p) => `<div class="ph" data-id="${p.id}">${/pdf/.test(p.mime) ? `<a class="small" href="#" data-open="${p.id}">${esc(p.name || "PDF")}</a>` : `<img alt="${esc(p.name)}" data-open="${p.id}">`}${can("job") ? `<button class="btn red sm x" data-rm="${p.id}">X</button>` : ""}</div>`).join("");
+  for (const p of CUR.photos) {
+    const r = await api("/photos/" + p.id, { raw: true }); if (!r.ok) continue;
+    const u = URL.createObjectURL(await r.blob()); PHOTO_URLS.push(u);
+    const box = el.querySelector(`[data-id="${p.id}"]`); if (!box) continue;
+    const img = box.querySelector("img"); if (img) img.src = u;
+    box.querySelector("[data-open]").onclick = (e) => { e.preventDefault(); window.open(u, "_blank"); };
+  }
+  $$("[data-rm]", el).forEach((b) => (b.onclick = async () => { if (!confirm("Delete this file?")) return; await api("/photos/" + b.dataset.rm, { method: "DELETE" }); const j = await api("/jobs/" + CUR.job._id); if (j.ok) { CUR = j; loadPhotos(); } }));
+}
+
+// ---------------- price book ----------------
+let RATES = [], BOOK = [], TPLS = [];
+function fillBook() {
+  if (!S.priceBook) return;
+  RATES = JSON.parse(JSON.stringify(S.laborRates || [])); BOOK = JSON.parse(JSON.stringify(S.priceBook || [])); TPLS = JSON.parse(JSON.stringify(S.services || []));
+  drawRates(); drawBook(); drawTpls();
+}
+function drawRates() {
+  $("#rates").innerHTML = RATES.map((r, i) => `<tr><td><input class="mono" data-r="${i}" data-f="key" value="${esc(r.key)}"></td><td><input data-r="${i}" data-f="name" value="${esc(r.name)}"></td><td><input data-r="${i}" data-f="rate" type="number" step="0.01" value="${toD(r.rateCents)}" style="text-align:right"></td><td><button class="btn red sm" data-rdel="${i}">X</button></td></tr>`).join("") || `<tr><td colspan="4" class="muted small">Add at least one labor rate (e.g. key "standard", "Standard labor", 125).</td></tr>`;
+  $$("#rates [data-r]").forEach((inp) => inp.onchange = () => { const r = RATES[+inp.dataset.r]; if (inp.dataset.f === "rate") r.rateCents = toC(inp.value) || 0; else r[inp.dataset.f] = inp.value; });
+  $$("#rates [data-rdel]").forEach((b) => b.onclick = () => { RATES.splice(+b.dataset.rdel, 1); drawRates(); });
+}
+$("#addRate").onclick = () => { RATES.push({ key: "standard", name: "Standard labor", rateCents: 0 }); drawRates(); };
+function drawBook() {
+  const f = ($("#bookQ").value || "").toLowerCase();
+  $("#book").innerHTML = BOOK.map((b, i) => ({ b, i })).filter(({ b }) => !f || (b.sku + " " + b.name + " " + b.category).toLowerCase().includes(f)).slice(0, 400).map(({ b, i }) => `<tr>
+    <td><input class="mono" data-b="${i}" data-f="sku" value="${esc(b.sku)}"></td><td><input data-b="${i}" data-f="name" value="${esc(b.name)}"></td><td><input data-b="${i}" data-f="category" value="${esc(b.category)}"></td>
+    <td><select data-b="${i}" data-f="kind">${["material", "equipment", "service", "fee"].map((k) => `<option ${k === b.kind ? "selected" : ""}>${k}</option>`).join("")}</select></td>
+    <td><input data-b="${i}" data-f="unit" value="${esc(b.unit)}"></td><td><input data-b="${i}" data-f="costCents" type="number" step="0.01" value="${toD(b.costCents)}" style="text-align:right"></td>
+    <td><input data-b="${i}" data-f="priceCents" type="number" step="0.01" value="${toD(b.priceCents)}" placeholder="markup" style="text-align:right"></td>
+    <td><input data-b="${i}" data-f="taxable" type="checkbox" ${b.taxable !== false ? "checked" : ""} style="width:auto;min-height:auto"></td><td><button class="btn red sm" data-bdel="${i}">X</button></td></tr>`).join("") || `<tr><td colspan="9" class="muted small">Your price book is empty.</td></tr>`;
+  $$("#book [data-b]").forEach((inp) => inp.onchange = () => { const b = BOOK[+inp.dataset.b], k = inp.dataset.f; if (k === "taxable") b.taxable = inp.checked; else if (k.endsWith("Cents")) b[k] = toC(inp.value); else b[k] = inp.value; });
+  $$("#book [data-bdel]").forEach((b) => b.onclick = () => { BOOK.splice(+b.dataset.bdel, 1); drawBook(); });
+}
+$("#bookQ").oninput = drawBook;
+$("#addItem").onclick = () => { BOOK.unshift({ sku: "", name: "", category: "", kind: "material", unit: "each", costCents: null, priceCents: null, taxable: true }); $("#bookQ").value = ""; drawBook(); $("#book input").focus(); };
+$("#csvGo").onclick = () => {
+  const rows = $("#csv").value.split(/\r?\n/).map((l) => l.split(",").map((x) => x.trim())).filter((r) => r[0] && r[1] && !/^sku$/i.test(r[0]));
+  rows.forEach((r) => BOOK.push({ sku: r[0].toUpperCase(), name: r[1], category: r[2] || "", kind: ["material", "equipment", "service", "fee"].includes((r[3] || "").toLowerCase()) ? r[3].toLowerCase() : "material", unit: r[4] || "each", costCents: toC(r[5]), priceCents: toC(r[6]), taxable: !/^(no|n|false|0)$/i.test(r[7] || "yes") }));
+  $("#csv").value = ""; drawBook(); toast(`${rows.length} row(s) added. Save to keep them.`);
+};
+function drawTpls() {
+  $("#tpls").innerHTML = TPLS.map((t, i) => `<div class="card" style="background:var(--panel2)"><div class="grid g4">
+    <div><label class="l">Service name</label><input data-t="${i}" data-f="name" value="${esc(t.name)}"></div>
+    <div><label class="l">Labor rate</label><select data-t="${i}" data-f="laborKey"><option value="">default</option>${RATES.map((r) => `<option value="${esc(r.key)}" ${r.key === t.laborKey ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
+    <div><label class="l">Standard hours</label><input data-t="${i}" data-f="laborHours" type="number" step="0.25" value="${t.laborHours == null ? "" : esc(t.laborHours)}"></div>
+    <div><label class="l">Timeline</label><input data-t="${i}" data-f="timeline" value="${esc(t.timeline || "")}"></div>
+    <div class="full"><label class="l">Description</label><input data-t="${i}" data-f="description" value="${esc(t.description || "")}"></div>
+    <div class="full"><label class="l">Items (SKU x qty per line)</label><textarea data-t="${i}" data-f="items" class="mono" style="min-height:60px">${esc((t.items || []).map((x) => `${x.sku} x ${x.qty}`).join("\n"))}</textarea></div>
+    </div><button class="btn red sm" data-tdel="${i}" style="margin-top:8px">Remove template</button></div>`).join("") || '<div class="muted small">No templates yet. Example: "Water heater replacement", 4 hours, items WH-50G x 1, FLEX-KIT x 1.</div>';
+  $$("#tpls [data-t]").forEach((inp) => inp.onchange = () => { const t = TPLS[+inp.dataset.t], k = inp.dataset.f; if (k === "items") t.items = inp.value.split(/\n/).map((l) => { const m = l.match(/^\s*([A-Za-z0-9._-]+)\s*[xX*]\s*([\d.]+)/); return m ? { sku: m[1].toUpperCase(), qty: +m[2] } : null; }).filter(Boolean); else if (k === "laborHours") t.laborHours = inp.value === "" ? null : +inp.value; else t[k] = inp.value; });
+  $$("#tpls [data-tdel]").forEach((b) => b.onclick = () => { TPLS.splice(+b.dataset.tdel, 1); drawTpls(); });
+}
+$("#addTpl").onclick = () => { TPLS.push({ name: "", laborKey: RATES[0] ? RATES[0].key : "", laborHours: null, items: [], timeline: "" }); drawTpls(); };
+$("#saveBook").onclick = async () => {
+  const missing = TPLS.flatMap((t) => (t.items || []).filter((x) => !BOOK.some((b) => b.sku === x.sku)).map((x) => x.sku));
+  const r = await api("/settings", { method: "PUT", body: { laborRates: RATES, priceBook: BOOK, services: TPLS } });
+  if (!r.ok) return toast(r.error, 1);
+  S = r.settings; fillBook(); fillDatalists();
+  $("#bookMsg").textContent = missing.length ? `Saved. Template SKUs not in your price book: ${[...new Set(missing)].join(", ")}` : "Saved.";
+};
+
+// ---------------- settings ----------------
+function fillSettings() {
+  const c = S.company || {}, p = S.pricing || {};
+  const v = (id, val) => { const el = $(id); if (el) el.value = val == null ? "" : val; };
+  v("#sName", c.name); v("#sPhone", c.phone); v("#sEmail", c.email); v("#sAddr", c.address); v("#sWeb", c.website); v("#sLic", c.license); v("#sColor", c.brandColor || "#22d3ee"); v("#sLogo", c.logoUrl);
+  if (p) { v("#pTax", p.taxRatePct); v("#pMatMk", p.materialMarkupPct); v("#pEqMk", p.equipmentMarkupPct); v("#pDep", p.defaultDepositPct); v("#pSvc", toD(p.serviceCallFeeCents)); v("#pMin", toD(p.minimumChargeCents)); v("#pTravel", toD(p.travelFeeCents)); v("#pValid", p.validDays); v("#pEmFee", toD(p.emergencyFeeCents)); v("#pEmPct", p.emergencyLaborPct); v("#pAfter", toD(p.afterHoursFeeCents)); $("#pTaxLabor").checked = !!p.taxLabor; }
+  v("#tTimeline", S.defaultTimeline); v("#tPay", S.paymentTerms); v("#tWar", S.warranty); v("#tTerms", S.terms); v("#tPayInst", S.payInstructions);
+  $("#fuOn").checked = !!(S.followUps && S.followUps.enabled);
+  $("#fuSteps").innerHTML = ((S.followUps && S.followUps.steps) || []).map((s, i) => `<div class="card" style="background:var(--panel2)"><div class="grid g3">
+    <div><label class="l">Send after (hours without a response)</label><input data-fu="${i}" data-f="afterHours" type="number" value="${esc(s.afterHours)}"></div>
+    <div class="full"><label class="l">Text message</label><textarea data-fu="${i}" data-f="sms" style="min-height:60px">${esc(s.sms)}</textarea></div>
+    <div class="full"><label class="l">Email subject</label><input data-fu="${i}" data-f="emailSubject" value="${esc(s.emailSubject)}"></div>
+    <div class="full"><label class="l">Email</label><textarea data-fu="${i}" data-f="email">${esc(s.email)}</textarea></div></div></div>`).join("");
+  $("#aDraft").checked = S.autoDraftFromCalls !== false; $("#aSms").checked = S.notifyOwnerSms !== false; $("#aPhoto").checked = !!S.textCustomerPhotoLink; v("#aPrefix", S.prefix);
+  const L = ME.links; v("#lIntake", L.intake); v("#lEmbed", `<iframe src="${L.intake}&embed=1" style="width:100%;min-height:900px;border:0" title="Request an estimate"></iframe>`);
+  if (L.inboundEmail) v("#lMail", L.inboundEmail); else $("#lMailWrap").hidden = true;
+  const cap = ME.capabilities;
+  $("#caps").innerHTML = [["AI analysis", cap.ai !== "rules", cap.ai === "rules" ? "Add OPENAI_API_KEY or ANTHROPIC_API_KEY" : cap.ai], ["Text messages", cap.sms, "SignalWire"], ["Email", cap.email, cap.email ? "SendGrid" : "Add SENDGRID_API_KEY + ESTIMATE_FROM_EMAIL"], ["Online deposits", cap.deposits, cap.deposits ? "Stripe" : "Connect Stripe below"]]
+    .map(([n, on, d]) => `<div><span class="dot ${on ? "on" : "off"}"></span> <b>${esc(n)}</b><div class="small muted">${esc(d)}</div></div>`).join("");
+  $("#connectState").textContent = S.stripeConnectId ? "Stripe account connected. Customer deposits are paid straight to your Stripe account." : "Customers pay deposits by card straight to your own Stripe account. Until then, they'll see your payment instructions above.";
+  $("#connectBtn").textContent = S.stripeConnectId ? "Open Stripe onboarding" : "Connect Stripe to accept deposits";
+  bindCopy(document);
+}
+$("#saveSettings").onclick = async () => {
+  const val = (id) => $(id).value;
+  const steps = ((S.followUps && S.followUps.steps) || []).map((s, i) => { const o = { ...s }; $$(`[data-fu="${i}"]`).forEach((el) => (o[el.dataset.f] = el.dataset.f === "afterHours" ? +el.value : el.value)); return o; });
+  const body = {
+    company: { name: val("#sName"), phone: val("#sPhone"), email: val("#sEmail"), address: val("#sAddr"), website: val("#sWeb"), license: val("#sLic"), brandColor: val("#sColor"), logoUrl: val("#sLogo") },
+    pricing: { taxRatePct: +val("#pTax") || 0, materialMarkupPct: +val("#pMatMk") || 0, equipmentMarkupPct: +val("#pEqMk") || 0, defaultDepositPct: +val("#pDep") || 0, serviceCallFeeCents: toC(val("#pSvc")) || 0,
+      minimumChargeCents: toC(val("#pMin")) || 0, travelFeeCents: toC(val("#pTravel")) || 0, validDays: +val("#pValid") || 30, emergencyFeeCents: toC(val("#pEmFee")) || 0, emergencyLaborPct: +val("#pEmPct") || 0, afterHoursFeeCents: toC(val("#pAfter")) || 0, taxLabor: $("#pTaxLabor").checked },
+    defaultTimeline: val("#tTimeline"), paymentTerms: val("#tPay"), warranty: val("#tWar"), terms: val("#tTerms"), payInstructions: val("#tPayInst"),
+    followUps: { enabled: $("#fuOn").checked, steps }, autoDraftFromCalls: $("#aDraft").checked, notifyOwnerSms: $("#aSms").checked, textCustomerPhotoLink: $("#aPhoto").checked, prefix: val("#aPrefix"),
+  };
+  const r = await api("/settings", { method: "PUT", body });
+  if (!r.ok) return toast(r.error, 1);
+  S = r.settings; fillSettings(); $("#setMsg").textContent = "Saved."; toast("Settings saved.");
+};
+$("#connectBtn").onclick = async () => { const r = await api("/connect", { method: "POST", body: {} }); if (r.url) location.href = r.url; else toast(r.error || "Stripe isn't available yet.", 1); };
+
+// ---------------- team ----------------
+function fillTeam() {
+  $("#members").innerHTML = (S.members || []).map((m) => `<tr><td>${esc(m.name)}<div class="small muted">${esc(m.email)}</div></td><td>${esc(m.role)}</td><td class="mono small">...${esc(m.keyHint)}</td><td>${m.active ? '<span class="pill gr">active</span>' : '<span class="pill re">removed</span>'}</td><td>${m.active ? `<button class="btn red sm" data-mdel="${m.id}">Remove</button>` : ""}</td></tr>`).join("") || `<tr><td colspan="5" class="muted small">Just you so far.</td></tr>`;
+  $$("[data-mdel]").forEach((b) => b.onclick = async () => { if (!confirm("Remove this person's access?")) return; const r = await api("/team/" + b.dataset.mdel, { method: "DELETE" }); if (r.ok) { S = r.settings; fillTeam(); } });
+}
+$("#mAdd").onclick = async () => {
+  const r = await api("/team", { method: "POST", body: { name: $("#mName").value, email: $("#mEmail").value, role: $("#mRole").value } });
+  if (!r.ok) return toast(r.error, 1);
+  S = r.settings; fillTeam(); $("#mName").value = $("#mEmail").value = "";
+  const link = r.link.replace(/^https:\/\/[^/]+\/[^?]*/, SITE + "/estimate.html");
+  $("#mLink").hidden = false; $("#mLink").innerHTML = `<div style="flex:1"><b>Send this private link to them. It's shown once.</b><div class="linkbox" style="margin-top:6px"><input id="mLinkIn" readonly value="${esc(link)}"><button class="btn gh sm" data-copy="mLinkIn">Copy</button></div></div>`;
+  bindCopy($("#mLink"));
+};
+
+async function loadAudit() { const r = await api("/audit"); $("#auditAll").innerHTML = r.ok ? auditRows(r.audit) : esc(r.error); }
+
+function fillDatalists() {
+  $("#svcList").innerHTML = (S.services || []).map((s) => `<option value="${esc(s.name)}">`).join("");
+  $("#skuList").innerHTML = (S.priceBook || []).filter((b) => b.active !== false).map((b) => `<option value="${esc(b.sku)}">${esc(b.name)}</option>`).join("");
+}
+function bindCopy(root) { $$("[data-copy]", root).forEach((b) => (b.onclick = () => { const i = document.getElementById(b.dataset.copy); i.select(); navigator.clipboard.writeText(i.value).then(() => toast("Copied.")).catch(() => document.execCommand("copy")); })); }
+
+boot();
+</script>
+</body>
+</html>

@@ -116,3 +116,7 @@ Do not advertise a provider-free live calling experience until the selected tele
 8. Test Stripe checkout and webhook activation.
 9. Run a real-world test from a second phone before selling the deployment.
 10. Upgrade the Render service before relying on it for production calls so cold starts do not interrupt callers.
+
+## Add-on: HSW365 AI Estimate
+
+Turns every CallTwin call (plus texts, emails and web requests) into a draft estimate priced only from the owner's own rules, then a proposal the customer signs and pays a deposit on, with automated follow-up. Owner app: `estimate.html`; customer pages: `proposal.html`, `request.html`. Details: [`backend/estimate/README.md`](backend/estimate/README.md).

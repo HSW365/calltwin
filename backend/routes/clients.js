@@ -160,6 +160,7 @@ router.get("/confirm", async (req, res) => {
 async function stripeEvent(type, obj) {
   const subId = obj.subscription || (obj.object === "subscription" ? obj.id : null);
   const meta = obj.metadata || {};
+  if (meta.addon === "estimate" || ((obj.subscription_details || {}).metadata || {}).addon === "estimate") return false; // add-on billing is handled in estimate/routes.js
   let c = null;
   if (meta.client_id) c = await Client.findById(meta.client_id).catch(() => null);
   if (!c && subId) c = await Client.findOne({ stripeSubscriptionId: subId });
@@ -182,6 +183,8 @@ router.post("/lead", async (req, res) => {
       urgency: clip(b.urgency, 40), address: clip(b.address, 300), preferredTime: clip(b.preferred_time, 120), details: clip(b.details, 2000),
       summary: clip(b.summary, 2000), conversationId: clip(b.conversation_id, 120),
     });
+    // HSW365 AI Estimate add-on: turn the call into a draft estimate for the owner to review (no-op when the add-on is off).
+    require("../estimate/service").fromCallTwinLead(c, lead, { measurements: clip(b.measurements, 1000), equipment: clip(b.equipment, 500), access: clip(b.access_notes, 500) });
     const d = String(lead.phone || "").replace(/\D/g, "");
     lead.notified = await textOwner(c, [`${lead.urgency === "Emergency" ? "EMERGENCY " : ""}New call for ${c.businessName}: ${lead.name || "Caller"} ${lead.phone || ""}`,
       [lead.service, lead.urgency].filter(Boolean).join(" / "), lead.address, lead.summary || lead.details, d ? `Call back: tel:${d}` : ""].filter(Boolean).join("\n"));
@@ -202,6 +205,7 @@ router.post("/voicemail", async (req, res) => {
   const lead = await ClientLead.create({ client: c._id, source: "voicemail", name: "Voicemail caller", phone: p.From || "", summary: `Voicemail (${p.RecordingDuration || "?"}s): ${p.RecordingUrl}.mp3` });
   lead.notified = await textOwner(c, `New voicemail for ${c.businessName} from ${p.From || "unknown"}. Listen: ${p.RecordingUrl}.mp3`);
   await lead.save();
+  require("../estimate/service").fromCallTwinLead(c, lead);
 });
 
 // ---------- owner portal ----------

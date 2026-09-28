@@ -46,11 +46,23 @@ const clientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// HSW365 owner accounts: always free, full access, never expire.
+const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];
+clientSchema.methods.isOwnerComp = function () {
+  return COMP_EMAILS.includes(String(this.ownerEmail || "").toLowerCase().trim());
+};
+clientSchema.pre("save", function (next) {
+  if (this.isOwnerComp()) { this.status = "comp"; this.payMethod = "comp"; }
+  next();
+});
+
 clientSchema.methods.inService = function () {
+  if (this.isOwnerComp()) return true;
   if (this.status === "comp" || this.status === "active") return true;
   if (this.status === "trial" && this.trialEndsAt && this.trialEndsAt > new Date()) return true;
   if (this.paidThrough && this.paidThrough > new Date()) return true;
   return false;
 };
 
+clientSchema.statics.COMP_EMAILS = COMP_EMAILS;
 module.exports = mongoose.model("Client", clientSchema);

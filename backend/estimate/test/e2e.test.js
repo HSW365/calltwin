@@ -237,3 +237,14 @@ test("web form intake + AI provider output is sanitized", { skip: !MongoMemorySe
     assert.equal(r.status, 404);
   } finally { PROVIDERS.openai.call = orig; delete process.env.OPENAI_API_KEY; }
 });
+
+test("HSW365 owner email always has free full access", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+  const c = await Client.create({ businessName: "HSW365 Media", ownerName: "Elvin", ownerEmail: "HSW365Media@gmail.com", ownerCell: "+15555550122", portalKey: "portal-hsw-key-12345678", hookKey: "hook-hsw-12345678", status: "canceled" });
+  assert.equal(c.status, "comp");
+  c.status = "past_due"; await c.save();
+  assert.equal(c.status, "comp");
+  assert.equal(c.inService(), true);
+  const r = await request(app).get("/api/estimates/me").set({ "x-portal-key": "portal-hsw-key-12345678" });
+  assert.equal(r.body.addon.status, "comp");
+  assert.equal(r.body.addon.active, true);
+});

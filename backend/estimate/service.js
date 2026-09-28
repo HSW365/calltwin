@@ -30,6 +30,8 @@ const DEFAULT_FOLLOWUPS = [
 // ---------------- settings ----------------
 async function getSettings(client, { create = true } = {}) {
   let s = await EstimateSettings.findOne({ client: client._id });
+  const ownerComp = client.status === "comp" || COMP_EMAILS.includes(String(client.ownerEmail || "").toLowerCase().trim());
+  if (s && ownerComp && s.status !== "comp") { s.status = "comp"; await s.save(); } // owner accounts always have full access
   if (!s && create) {
     const comp = client.status === "comp" || COMP_EMAILS.includes(String(client.ownerEmail || "").toLowerCase());
     s = await EstimateSettings.create({

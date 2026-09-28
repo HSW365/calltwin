@@ -29,7 +29,7 @@ test.before(async () => {
   app = express();
   app.use("/api/clients", clientRoutes);
   app.use("/api/estimates", estimateRoutes);
-  owner = await Client.create({ businessName: "New Ark Plumbing", ownerName: "Joe", ownerEmail: "joe@example.com", ownerCell: "+15555550100", portalKey: "portal-owner-key-123456", hookKey: "hook-key-123456", status: "active", aiNumber: "+15555550199" });
+  owner = await Client.create({ businessName: "Test Plumbing Co", ownerName: "Joe", ownerEmail: "joe@example.com", ownerCell: "+15555550100", portalKey: "portal-owner-key-123456", hookKey: "hook-key-123456", status: "active", aiNumber: "+15555550199" });
   other = await Client.create({ businessName: "Other Co", ownerName: "Ann", ownerEmail: "ann@example.com", ownerCell: "+15555550111", portalKey: "portal-other-key-123456", hookKey: "hook-other-123456", status: "active" });
 });
 test.after(async () => { if (mongo) { await mongoose.disconnect(); await mongo.stop(); } });
@@ -247,4 +247,24 @@ test("HSW365 owner email always has free full access", { skip: !MongoMemoryServe
   const r = await request(app).get("/api/estimates/me").set({ "x-portal-key": "portal-hsw-key-12345678" });
   assert.equal(r.body.addon.status, "comp");
   assert.equal(r.body.addon.active, true);
+});
+
+test("New Ark deal: 30-day free trial auto-starts, $2,000 outright license offered", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+  const c = await Client.create({ businessName: "New Ark", ownerName: "Joe", ownerEmail: "joehernandez555@msn.com", ownerCell: "+15555550133", portalKey: "portal-newark-key-1234567", hookKey: "hook-newark-1234567", status: "active" });
+  const H = { "x-portal-key": c.portalKey };
+  const r = await request(app).get("/api/estimates/me").set(H);
+  assert.equal(r.status, 200);
+  assert.equal(r.body.addon.status, "trial");
+  assert.equal(r.body.addon.active, true);
+  assert.equal(r.body.addon.trialDays, 30);
+  assert.equal(r.body.addon.licenseCents, 200000);
+  const days = (new Date(r.body.addon.trialEndsAt) - Date.now()) / 864e5;
+  assert.ok(days > 29.9 && days <= 30);
+  // Applied once: reloading doesn't extend the trial.
+  const r2 = await request(app).get("/api/estimates/me").set(H);
+  assert.equal(r2.body.addon.trialEndsAt, r.body.addon.trialEndsAt);
+  // Other businesses get the normal offer and no license.
+  const o = await request(app).get("/api/estimates/me").set({ "x-portal-key": "portal-other-key-123456" });
+  assert.equal(o.body.addon.licenseCents, 0);
+  assert.equal(o.body.addon.trialDays, 14);
 });

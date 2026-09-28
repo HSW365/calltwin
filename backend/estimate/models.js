@@ -69,6 +69,8 @@ const settingsSchema = new Schema({
   trialEndsAt: { type: Date, default: null },
   paidThrough: { type: Date, default: null },
   stripeSubscriptionId: { type: String, default: "" },
+  promo: { type: String, default: "" },            // custom deal applied to this business (see service.js PROMOS)
+  licensed: { type: Boolean, default: false },     // bought the add-on outright (one-time license)
   stripeSessionId: { type: String, default: "" },
   stripeConnectId: { type: String, default: "" }, // contractor's own Stripe account for customer deposits
 

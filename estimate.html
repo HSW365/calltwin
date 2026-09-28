@@ -324,17 +324,19 @@ function fail(msg) { $("#err").textContent = msg; $("#err").hidden = false; }
 function renderAddon() {
   const a = ME.addon, el = $("#addonBanner");
   const price = money(a.priceCents);
-  if (a.status === "comp") { el.innerHTML = ""; return; }
+  if (a.status === "comp") { el.innerHTML = a.licensed ? `<div class="banner info"><b>You own the Estimate add-on.</b> <span class="small muted">No monthly fee.</span></div>` : ""; return; }
+  const lic = a.licenseCents && can("billing") ? `<button class="btn gh" id="buyLicense">Own it outright: ${money(a.licenseCents)}</button>` : "";
   if (!a.active) {
     const canBill = can("billing");
-    el.innerHTML = `<div class="banner info"><div><b>Estimate add-on for CallTwin</b><div class="small muted">Turn every call into a draft estimate, send proposals customers can sign and pay a deposit on, and follow up automatically. ${a.trialDays}-day free trial, then ${price}/month.</div></div>${canBill ? `<div class="row">${a.status === "off" || a.status === "canceled" ? `<button class="btn" id="startTrial">Start free trial</button>` : ""}<button class="btn gh" id="addCard">Add card</button></div>` : `<span class="muted small">Ask the owner to turn it on.</span>`}</div>`;
+    el.innerHTML = `<div class="banner info"><div><b>Estimate add-on for CallTwin</b><div class="small muted">Turn every call into a draft estimate, send proposals customers can sign and pay a deposit on, and follow up automatically. ${a.trialDays}-day free trial, then ${price}/month.</div></div>${canBill ? `<div class="row">${a.status === "off" || a.status === "canceled" ? `<button class="btn" id="startTrial">Start free trial</button>` : ""}<button class="btn gh" id="addCard">Add card</button>${lic}</div>` : `<span class="muted small">Ask the owner to turn it on.</span>`}</div>`;
   } else if (a.status === "trial") {
     const days = Math.max(0, Math.ceil((new Date(a.trialEndsAt) - Date.now()) / 864e5));
-    el.innerHTML = `<div class="banner warn"><div><b>Free trial: ${days} day${days === 1 ? "" : "s"} left.</b> <span class="small muted">Then ${price}/month.</span></div>${can("billing") ? `<button class="btn gh" id="addCard">Add card to keep it on</button>` : ""}</div>`;
+    el.innerHTML = `<div class="banner warn"><div><b>Free trial: ${days} day${days === 1 ? "" : "s"} left.</b> <span class="small muted">Then ${price}/month${a.licenseCents ? `, or own it outright for ${money(a.licenseCents)}` : ""}.</span></div>${can("billing") ? `<div class="row"><button class="btn gh" id="addCard">Add card to keep it on</button>${lic}</div>` : ""}</div>`;
   } else if (a.status === "past_due") {
     el.innerHTML = `<div class="banner bad"><b>Payment failed for the Estimate add-on.</b>${can("billing") ? `<button class="btn gh" id="addCard">Update card</button>` : ""}</div>`;
   } else el.innerHTML = "";
   const st = $("#startTrial"); if (st) st.onclick = async () => { const r = await api("/addon/start", { method: "POST", body: {} }); if (!r.ok) return toast(r.error, 1); ME.addon = { ...ME.addon, ...r.addon }; renderAddon(); toast("Trial started. Your AI receptionist will now collect estimate details."); };
+  const bl = $("#buyLicense"); if (bl) bl.onclick = async () => { const r = await api("/addon/license", { method: "POST", body: {} }); if (r.url) location.href = r.url; else toast(r.error || "Card payments aren't available yet.", 1); };
   const ac = $("#addCard"); if (ac) ac.onclick = async () => { const r = await api("/addon/checkout", { method: "POST", body: {} }); if (r.url) location.href = r.url; else toast(r.error || "Card payments aren't available yet.", 1); };
 }
 

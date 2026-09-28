@@ -11,6 +11,24 @@ const { analyzeJob } = require("./ai");
 const SITE = () => (process.env.CALLTWIN_SITE || "https://hsw365.github.io/calltwin").replace(/\/$/, "");
 const TRIAL_DAYS = () => Number(process.env.ESTIMATE_TRIAL_DAYS || 14);
 const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];
+// Custom deals for specific businesses: free trial of N days (auto-started), then the normal monthly price,
+// or buy the add-on outright for a one-time license price.
+const PROMOS = [
+  { id: "newark-30", emails: ["joehernandez555@msn.com"], names: [/new\s*ark/i, /\bark plumbing\b/i], trialDays: 30, licenseCents: 200000 },
+];
+function promoFor(client) {
+  const email = String((client && client.ownerEmail) || "").toLowerCase().trim();
+  const name = String((client && client.businessName) || "");
+  return PROMOS.find((p) => (email && p.emails.includes(email)) || p.names.some((r) => r.test(name))) || null;
+}
+/** Apply a business's custom deal once: starts its free trial with the promo length. */
+function applyPromo(client, s) {
+  const p = promoFor(client);
+  if (!p || !s || s.promo === p.id || s.status === "comp" || s.licensed) return false;
+  s.promo = p.id;
+  if (["off", "canceled", "trial"].includes(s.status)) { s.status = "trial"; s.trialEndsAt = new Date(Date.now() + p.trialDays * 864e5); }
+  return true;
+}
 const e164 = (n) => {
   const d = String(n || "").replace(/\D/g, "");
   if (d.length === 10) return "+1" + d;
@@ -45,6 +63,9 @@ async function getSettings(client, { create = true } = {}) {
       warranty: "",
       paymentTerms: "Deposit due at approval to schedule the work. Balance due on completion.",
     });
+  }
+  if (s && applyPromo(client, s)) { await s.save(); await audit(client._id, null, "system", "addon.promo_applied", { promo: s.promo, trialEndsAt: s.trialEndsAt });
+    if (client.toolId && process.env.NODE_ENV !== "test") setImmediate(() => { try { const { updateTool, updateAgent } = require("../services/provision"); updateTool(client).then(() => updateAgent(client)).catch(() => {}); } catch (_) {} }); // teach the AI receptionist to collect estimate details
   }
   return s;
 }
@@ -296,5 +317,5 @@ function startEstimateScheduler() {
 module.exports = {
   getSettings, startTrial, audit, createJob, runAnalysis, draftLineItems, recompute, customerOf, searchKey,
   sendSms, sendEmail, emailReady, fill, msgVars, proposalLink, ownerLink, notifyOwner, fromCallTwinLead,
-  followUpTick, startEstimateScheduler, DEFAULT_FOLLOWUPS, COMP_EMAILS, SITE, e164, clip, lid,
+  followUpTick, startEstimateScheduler, DEFAULT_FOLLOWUPS, COMP_EMAILS, PROMOS, promoFor, applyPromo, SITE, e164, clip, lid,
 };

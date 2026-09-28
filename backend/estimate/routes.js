@@ -179,10 +179,34 @@ router.get("/me", auth, wrap(async (req, res) => {
     ok: true, role: req.role, actor: req.actor,
     client: { id: c._id, businessName: c.businessName, ownerName: c.ownerName, ownerEmail: c.ownerEmail, aiNumber: c.aiNumber, status: c.status, portalKey: req.role === "owner" ? c.portalKey : undefined },
     settings: settingsOut(s, req.role),
-    addon: { status: s.status, active: s.addonActive(), trialEndsAt: s.trialEndsAt, paidThrough: s.paidThrough, priceCents: ADDON_PRICE_CENTS(), trialDays: Number(process.env.ESTIMATE_TRIAL_DAYS || 14) },
+    addon: addonOut(c, s),
     capabilities: { ai: pickProvider() || "rules", sms: require("../routes/newark").smsReady(), email: S.emailReady(), stripe: !!process.env.STRIPE_SECRET_KEY, deposits: !!(s.stripeConnectId || process.env.ESTIMATE_PLATFORM_DEPOSITS === "true") && !!process.env.STRIPE_SECRET_KEY },
     links: { intake: `${S.SITE()}/request.html?c=${s.intakeKey}`, portal: `${S.SITE()}/portal.html?k=${c.portalKey}`, inboundEmail: process.env.ESTIMATE_INBOUND_DOMAIN ? `est+${s.intakeKey}@${process.env.ESTIMATE_INBOUND_DOMAIN}` : "" },
   });
+}));
+
+function addonOut(c, s) {
+  const p = S.promoFor(c);
+  return { status: s.status, active: s.addonActive(), licensed: !!s.licensed, trialEndsAt: s.trialEndsAt, paidThrough: s.paidThrough, priceCents: ADDON_PRICE_CENTS(),
+    trialDays: p ? p.trialDays : Number(process.env.ESTIMATE_TRIAL_DAYS || 14), licenseCents: p && !s.licensed ? p.licenseCents : 0 };
+}
+
+// One-time license: buy the add-on outright (only offered where a deal sets a license price).
+router.post("/addon/license", auth, can("billing"), wrap(async (req, res) => {
+  const c = req.client, s = req.settings, p = S.promoFor(c);
+  if (s.licensed || s.status === "comp") return res.json({ ok: true, licensed: true });
+  if (!p || !p.licenseCents) return bad(res, "Outright license isn't offered on this account.", 400);
+  const session = await getStripe().checkout.sessions.create({
+    mode: "payment",
+    customer_email: c.ownerEmail || undefined,
+    line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: p.licenseCents,
+      product_data: { name: "CallTwin AI Estimate add-on — lifetime license", description: "Own the AI Estimate add-on outright. No monthly fee." } } }],
+    metadata: { addon: "estimate", license: "1", client_id: String(c._id) },
+    success_url: `${S.SITE()}/estimate.html?k=${c.portalKey}&addon=licensed`,
+    cancel_url: `${S.SITE()}/estimate.html?k=${c.portalKey}&addon=canceled`,
+  });
+  s.stripeSessionId = session.id; await s.save();
+  res.json({ ok: true, url: session.url });
 }));
 
 router.post("/addon/start", auth, can("billing"), wrap(async (req, res) => {
@@ -192,7 +216,7 @@ router.post("/addon/start", auth, can("billing"), wrap(async (req, res) => {
     const { updateTool, updateAgent } = require("../services/provision");
     updateTool(req.client).then(() => updateAgent(req.client)).catch(() => {});
   }
-  res.json({ ok: true, addon: { status: s.status, active: s.addonActive(), trialEndsAt: s.trialEndsAt } });
+  res.json({ ok: true, addon: addonOut(req.client, s) });
 }));
 
 let stripe = null;
@@ -813,6 +837,14 @@ async function stripeEvent(type, obj) {
   const subId = obj.subscription || (obj.object === "subscription" ? obj.id : null);
   if (!s && subId) s = await EstimateSettings.findOne({ stripeSubscriptionId: subId });
   if (!s) return false;
+  if (type === "checkout.session.completed" && meta.license === "1") {
+    s.licensed = true; s.status = "comp";
+    if (s.stripeSubscriptionId) { try { await getStripe().subscriptions.cancel(s.stripeSubscriptionId); } catch (e) { console.error("[estimate] cancel sub after license:", e.message); } }
+    await s.save(); await S.audit(s.client, null, "system", "addon.licensed", { amountCents: obj.amount_total, session: obj.id });
+    const client = await Client.findById(s.client);
+    if (client) S.notifyOwner(client, s, `You own the CallTwin AI Estimate add-on now. No more monthly fee for it. Thank you!`);
+    return true;
+  }
   if (type === "checkout.session.completed") { s.stripeSubscriptionId = obj.subscription || s.stripeSubscriptionId; if (s.status !== "comp") s.status = s.trialEndsAt && s.trialEndsAt > new Date() ? "trial" : "active"; }
   if (type === "invoice.paid" && (obj.amount_paid || 0) > 0) { s.status = "active"; s.paidThrough = new Date(Date.now() + 32 * 864e5); }
   if (type === "invoice.payment_failed") s.status = "past_due";

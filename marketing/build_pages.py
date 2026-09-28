@@ -49,7 +49,7 @@ def foot(extra=""):
     return f"""<section><h2>Get CallTwin</h2><div class="price">$500 setup &middot; 14 days free &middot; $99/mo</div>
 <p class="lede">No contract. Pay by card, Zelle or Cash App. Not a computer person? Call and we'll sign you up on the phone.</p>
 <div class="btns"><a class="btn" href="{SITE}/signup.html">Sign up online</a><a class="btn gh" href="tel:{PHONE_TEL}">Call {PHONE}</a></div></section>
-{extra}<footer>CallTwin by HSW365 Media LLC &middot; Serving {e(CITIES)} &middot; <a href="{SITE}/for/">All industries</a> &middot; <a href="{SITE}/blog/">Articles</a> &middot; hsw365media@gmail.com</footer></div></body></html>"""
+{extra}<footer>CallTwin by HSW365 Media LLC &middot; Serving {e(CITIES)} &middot; <a href="{SITE}/for/">All industries</a> &middot; <a href="{SITE}/blog/">Articles</a> &middot; Client: <a href="{SITE}/newark/">New Ark Plumbing, Heating &amp; Air</a> &middot; hsw365media@gmail.com</footer></div></body></html>"""
 
 def industry_page(ind):
     url = f"{SITE}/for/{ind['slug']}.html"
@@ -110,6 +110,10 @@ def main():
     urls = [(f"{SITE}/", today, "1.0"), (f"{SITE}/signup.html", today, "0.9"), (f"{SITE}/for/", today, "0.8"), (f"{SITE}/blog/", today, "0.7")]
     urls += [(f"{SITE}/for/{i['slug']}.html", today, "0.8") for i in INDUSTRIES]
     urls += [(f"{SITE}/blog/{p}", dates.get(p, today), "0.6") for p in posts]
+    nk = os.path.join(ROOT, "newark", "sitemap.xml")  # include client sites hosted here (New Ark)
+    if os.path.exists(nk):
+        for loc, mod in re.findall(r"<loc>([^<]+)</loc><lastmod>([^<]+)</lastmod>", open(nk, encoding="utf-8").read()):
+            urls.append((loc, mod, "0.7"))
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod><priority>{p}</priority></url>\n" for u, d, p in urls) + "</urlset>\n"
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write(sm)
     print(f"built {len(INDUSTRIES)} industry pages, {len(posts)} articles, sitemap with {len(urls)} urls")

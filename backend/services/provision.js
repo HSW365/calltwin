@@ -22,7 +22,7 @@ function swConfig() {
   return { api: `https://${space}/api/laml/2010-04-01/Accounts/${project}`, auth: { username: project, password: token } };
 }
 
-function buildPrompt(c) {
+function buildPrompt(c, opts = {}) {
   return `# Role
 You are the 24/7 receptionist for ${c.businessName}${c.city ? ` in ${c.city}` : ""}. You answer every call to the business, day or night. You sound like a warm, calm, competent person at a front desk: short sentences, natural pace, never robotic.
 
@@ -36,7 +36,7 @@ ${c.notes ? `- Other things to know: ${c.notes}\n` : ""}
 1. Find out what the caller needs in their own words. One question at a time; one or two sentences per turn.
 2. If it is an emergency or safety issue, tell them to call 911 first when appropriate, then get their details fast.
 3. Collect: full name, best callback number (read it back digit by digit and confirm), address or town if relevant, what they need, how urgent, preferred time, and email only if offered.
-4. Call save_job_ticket as soon as you have name, callback number and a summary. It texts the owner instantly. Then confirm: "You're all set. The owner has your details and will call you back at [number]."
+${opts.estimate ? `3b. For repair or project requests, also ask (one question at a time, skip what doesn't apply): the size or measurements if they know them, the brand/model and age of the equipment involved, and anything about access (floor, crawlspace, parking). Never guess these; if they don't know, that's fine. Put them in measurements and equipment. Tell them the owner will prepare an estimate.\n` : ""}4. Call save_job_ticket as soon as you have name, callback number and a summary. It texts the owner instantly. Then confirm: "You're all set. The owner has your details and will call you back at [number]."
 5. Ask if there is anything else, then close politely and end the call.
 
 # Rules
@@ -47,9 +47,8 @@ ${c.notes ? `- Other things to know: ${c.notes}\n` : ""}
 - If the caller speaks Spanish, answer in Spanish.`;
 }
 
-async function createTool(c) {
-  const r = await axios.post(`${EL}/tools`, {
-    tool_config: {
+function toolConfig(c) {
+  return {
       type: "webhook",
       name: "save_job_ticket",
       description: `Save the caller's request for ${c.businessName}. This texts the owner immediately. Call once you have name, callback number and a short summary.`,
@@ -72,13 +71,34 @@ async function createTool(c) {
             preferred_time: { type: "string", description: "When they want service or a callback" },
             details: { type: "string", description: "Details in the caller's words" },
             summary: { type: "string", description: "One or two sentence summary for the owner" },
+            measurements: { type: "string", description: "Sizes or measurements exactly as the caller stated them" },
+            equipment: { type: "string", description: "Brand, model, age of the equipment involved, as stated" },
+            access_notes: { type: "string", description: "Access details: floor, crawlspace, attic, parking" },
             conversation_id: { type: "string", dynamic_variable: "system__conversation_id" },
           },
         },
       },
-    },
-  }, { headers: elHeaders(), timeout: 20000 });
+  };
+}
+
+async function createTool(c) {
+  const r = await axios.post(`${EL}/tools`, { tool_config: toolConfig(c) }, { headers: elHeaders(), timeout: 20000 });
   return r.data.id;
+}
+
+/** Push the latest tool schema (e.g. new estimate fields) to an existing client's tool. */
+async function updateTool(c) {
+  if (!c.toolId || !process.env.ELEVENLABS_API_KEY) return;
+  await axios.patch(`${EL}/tools/${c.toolId}`, { tool_config: toolConfig(c) }, { headers: elHeaders(), timeout: 20000 })
+    .catch((e) => console.error("[provision] update tool:", errText(e)));
+}
+
+async function estimateOn(c) {
+  try {
+    const { EstimateSettings } = require("../estimate/models");
+    const s = await EstimateSettings.findOne({ client: c._id });
+    return !!(s && s.addonActive());
+  } catch (e) { return false; }
 }
 
 async function createAgent(c) {
@@ -90,7 +110,7 @@ async function createAgent(c) {
         first_message: `Thanks for calling ${c.businessName}. How can I help you today?`,
         language: "en",
         prompt: {
-          prompt: buildPrompt(c),
+          prompt: buildPrompt(c, { estimate: await estimateOn(c) }),
           llm: "gemini-2.5-flash",
           temperature: 0,
           tool_ids: [c.toolId],
@@ -121,7 +141,7 @@ async function buyNumber(c) {
   }
   if (!pick) throw new Error("no numbers available");
   await axios.post(`${sw.api}/IncomingPhoneNumbers.json`,
-    new URLSearchParams({ PhoneNumber: pick, FriendlyName: `CallTwin ${c.businessName}`.slice(0, 60), VoiceUrl: `${base()}/api/inbound/voice`, VoiceMethod: "POST" }).toString(),
+    new URLSearchParams({ PhoneNumber: pick, FriendlyName: `CallTwin ${c.businessName}`.slice(0, 60), VoiceUrl: `${base()}/api/inbound/voice`, VoiceMethod: "POST", SmsUrl: `${base()}/api/estimates/inbound/sms`, SmsMethod: "POST" }).toString(),
     { auth: sw.auth, headers: { "Content-Type": "application/x-www-form-urlencoded" }, timeout: 20000 });
   return pick;
 }
@@ -168,10 +188,11 @@ async function provision(c, opts = {}) {
 /** Keep the agent's prompt in sync after the owner edits business info. */
 async function updateAgent(c) {
   if (!c.agentId || !process.env.ELEVENLABS_API_KEY) return;
+  const estimate = await estimateOn(c);
   await axios.patch(`${EL}/agents/${c.agentId}`, {
     name: `${c.businessName} — CallTwin`,
-    conversation_config: { agent: { first_message: `Thanks for calling ${c.businessName}. How can I help you today?`, prompt: { prompt: buildPrompt(c), llm: "gemini-2.5-flash", tool_ids: [c.toolId] } } },
+    conversation_config: { agent: { first_message: `Thanks for calling ${c.businessName}. How can I help you today?`, prompt: { prompt: buildPrompt(c, { estimate }), llm: "gemini-2.5-flash", tool_ids: [c.toolId] } } },
   }, { headers: elHeaders(), timeout: 20000 }).catch((e) => console.error("[provision] update agent:", errText(e)));
 }
 
-module.exports = { provision, updateAgent, buildPrompt, swConfig };
+module.exports = { provision, updateAgent, updateTool, buildPrompt, swConfig };

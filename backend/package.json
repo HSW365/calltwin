@@ -4,7 +4,8 @@
   "description": "CallTwin — autonomous AI sales calling backend. SignalWire + ElevenLabs + Claude.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test estimate/test/*.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",
@@ -19,7 +20,12 @@
     "mongoose": "^8.4.0",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
+    "pdfkit": "^0.15.0",
     "stripe": "^16.0.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "mongodb-memory-server-core": "^10.4.3",
+    "supertest": "^7.3.0"
   }
 }

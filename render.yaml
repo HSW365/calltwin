@@ -47,3 +47,16 @@ services:
         sync: false
       - key: PUBLIC_BASE_URL
         sync: false
+      # HSW365 AI Estimate add-on
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ESTIMATE_ENC_KEY
+        sync: false
+      - key: ESTIMATE_ADDON_PRICE_CENTS
+        value: "4900"
+      - key: ESTIMATE_TRIAL_DAYS
+        value: "14"
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: ESTIMATE_FROM_EMAIL
+        sync: false

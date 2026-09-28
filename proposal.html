@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Proposal</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--panel:#111119;--panel2:#16161f;--line:#262633;--line2:#32323f;--ink:#ececf2;--muted:#8b8b9e;--acc:#22d3ee;--violet:#a855f7;--red:#ef4444;--yellow:#fbbf24;--green:#34d399}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:820px;margin:auto;padding:22px 16px 90px}
+h1,h2{font-family:"Barlow Condensed",Inter,sans-serif;text-transform:uppercase;letter-spacing:.02em;margin:0}
+h1{font-size:34px;line-height:1.05}h2{font-size:19px;color:var(--acc);margin-bottom:8px}
+.mono{font-family:"Space Mono",ui-monospace,monospace}
+.muted{color:var(--muted)}.small{font-size:13px}
+.head{display:flex;gap:16px;align-items:center;padding-bottom:16px;border-bottom:2px solid var(--acc);margin-bottom:18px}
+.head img{max-height:56px;max-width:150px;border-radius:6px;background:#fff;padding:4px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:14px}
+.pre{white-space:pre-wrap}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:6px 4px;border-bottom:1px solid var(--line)}
+td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.num{text-align:right;white-space:nowrap}
+.grp td{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:12px;border-bottom:0}
+.totals{max-width:360px;margin-left:auto;margin-top:10px}
+.totals div{display:flex;justify-content:space-between;padding:3px 0}
+.totals .grand{font:800 26px "Barlow Condensed";border-top:1px solid var(--line2);margin-top:6px;padding-top:8px;color:var(--acc)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 20px;border-radius:10px;border:0;background:var(--acc);color:#07070b;font:800 14px Inter;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;text-decoration:none}
+.btn.gh{background:var(--panel2);color:var(--ink);border:1px solid var(--line2)}
+.btn.red{background:#2a0f0f;color:#fca5a5;border:1px solid #5b1d1d}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input,textarea{width:100%;min-height:44px;border-radius:9px;border:1px solid var(--line2);background:#0d0d14;color:var(--ink);padding:10px 12px;font:inherit}
+input:focus,textarea:focus{outline:none;border-color:var(--acc)}
+textarea{min-height:90px}
+label.l{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 5px}
+.sig{width:100%;height:170px;background:#fff;border-radius:10px;touch-action:none;display:block;cursor:crosshair;user-select:none;-webkit-user-select:none}
+.agree{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:13.5px}.agree input{width:20px;min-height:20px;margin-top:2px;flex:none}
+.banner{border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid}
+.banner.ok{border-color:#1b4a39;background:#0b1a15}.banner.bad{border-color:#5b1d1d;background:#1d0d0d}.banner.warn{border-color:#5a4613;background:#1b160a}.banner.info{border-color:#1e4a55;background:#0c1a1f}
+.actions{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);padding:18px 0 8px;margin-top:10px}
+.ev{border-left:2px solid var(--line2);padding:4px 0 8px 10px}.ev.biz{border-color:var(--acc)}
+.foot{margin-top:30px;font-size:12px;color:var(--muted);text-align:center}
+@media(max-width:560px){h1{font-size:28px}.hide-sm{display:none}td,th{font-size:13.5px}}
+@media print{.actions,.noprint{display:none!important}body{background:#fff;color:#111}.card{border-color:#ddd;background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="err" class="banner bad" hidden></div>
+  <div id="app" hidden></div>
+  <div class="foot">Secure proposal link. Powered by CallTwin Estimate · HSW365</div>
+</div>
+<script>
+const q = new URLSearchParams(location.search);
+const API = (q.get("api") || "https://calltwin.onrender.com").replace(/\/$/, "") + "/api/estimates/public/proposal/";
+const T = q.get("t") || "";
+const PREVIEW = q.get("preview") === "1";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (c) => (c == null || isNaN(c) ? "—" : (c / 100).toLocaleString("en-US", { style: "currency", currency: "USD" }));
+const date = (d) => (d ? new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "");
+let P = null, MODE = "";
+
+async function load() {
+  if (!T) return fail("This link is incomplete. Please use the full link you were sent.");
+  let r; try { r = await fetch(API + encodeURIComponent(T) + (PREVIEW ? "?preview=1" : "")); } catch (e) { return fail("Can't connect right now. Please try again in a minute."); }
+  const j = await r.json().catch(() => ({}));
+  if (!j.ok) return fail(j.error || "This proposal couldn't be loaded.");
+  P = j.proposal; render();
+}
+function fail(m) { $("#err").textContent = m; $("#err").hidden = false; }
+async function act(path, body) {
+  const r = await fetch(API + encodeURIComponent(T) + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) }).catch(() => null);
+  if (!r) return { ok: false, error: "Can't connect right now." };
+  return r.json().catch(() => ({ ok: false, error: "Something went wrong." }));
+}
+
+function render() {
+  const c = P.company || {}, e = P.estimate || {}, t = e.totals || {};
+  if (/^#[0-9a-f]{6}$/i.test(c.brandColor || "")) document.documentElement.style.setProperty("--acc", c.brandColor);
+  document.title = `Proposal ${P.number} · ${c.name || ""}`;
+  const amt = Object.fromEntries((t.lines || []).map((l) => [l.id, l.lineCents]));
+  const groups = [["labor", "Labor"], ["material", "Materials"], ["equipment", "Equipment"], ["fee", "Fees"], ["custom", "Other"]];
+  const rows = groups.map(([k, label]) => { const ls = (e.lineItems || []).filter((l) => l.kind === k); if (!ls.length) return ""; return `<tr class="grp"><td colspan="4">${label}</td></tr>` + ls.map((l) => `<tr><td>${esc(l.description)}</td><td class="num hide-sm">${l.qty != null ? esc(l.qty) + " " + esc(l.unit || "") : ""}</td><td class="num hide-sm mono">${money(l.unitCents)}</td><td class="num mono">${money(amt[l.id])}</td></tr>`).join(""); }).join("");
+  const decided = P.response === "approved" || P.response === "declined";
+  const due = Math.max(0, (P.payment.depositCents || 0) - (P.payment.paidCents || 0));
+  const sec = (title, body) => (body ? `<div class="card"><h2>${esc(title)}</h2><div class="pre">${esc(body)}</div></div>` : "");
+  const thread = (P.events || []).map((ev) => `<div class="ev ${ev.fromBusiness ? "biz" : ""}"><div class="small muted">${ev.fromBusiness ? esc(c.name || "Business") : "You"} · ${ev.type === "change_request" ? "change request" : ev.type === "reply" ? "reply" : "question"} · ${date(ev.at)}</div><div>${esc(ev.text)}</div></div>`).join("");
+
+  $("#app").hidden = false;
+  $("#app").innerHTML = `
+  <div class="head">${c.logoUrl ? `<img src="${esc(c.logoUrl)}" alt="">` : ""}<div><div style="font:800 22px 'Barlow Condensed';text-transform:uppercase">${esc(c.name)}</div><div class="small muted">${esc([c.phone, c.email, c.website].filter(Boolean).join(" · "))}${c.license ? ` · License ${esc(c.license)}` : ""}</div></div></div>
+  ${PREVIEW ? '<div class="banner info small">Owner preview. Views here are not counted.</div>' : ""}
+  ${q.get("paid") ? '<div class="banner ok"><b>Payment received. Thank you!</b> You\'ll get a confirmation from the business about scheduling.</div>' : ""}
+  ${P.response === "approved" ? `<div class="banner ok"><b>Approved and signed by ${esc(P.signature && P.signature.name)}</b> on ${date(P.signature && P.signature.at)}.${due > 0 ? ` Deposit due: <b>${money(due)}</b>.` : P.payment.paidCents ? " Deposit paid." : ""}</div>` : ""}
+  ${P.response === "declined" ? '<div class="banner bad"><b>You declined this proposal.</b> Contact the business if you change your mind.</div>' : ""}
+  ${P.response === "changes_requested" ? '<div class="banner warn"><b>Change request sent.</b> The business will send you an updated proposal.</div>' : ""}
+  ${P.revised ? '<div class="banner warn">The business is preparing an updated version of this proposal.</div>' : ""}
+  ${P.expired ? '<div class="banner warn">This proposal has passed its valid-until date. You can still ask a question.</div>' : ""}
+
+  <div class="small muted mono">PROPOSAL ${esc(P.number)} · ${date(P.sentAt)}${e.validUntil ? ` · VALID UNTIL ${esc(date(e.validUntil).toUpperCase())}` : ""}</div>
+  <h1>${esc(P.service || "Your project")}</h1>
+  <div class="muted">Prepared for ${esc(P.customer.name || "you")}${P.customer.address ? ` · ${esc(P.customer.address)}` : ""}</div>
+
+  ${sec("Project overview", P.overview)}
+  ${sec("Scope of work", e.scope)}
+  <div class="card"><h2>Investment</h2>
+    <table><thead><tr><th>Item</th><th class="num hide-sm">Qty</th><th class="num hide-sm">Price</th><th class="num">Amount</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="totals">
+      <div><span>Subtotal</span><span class="mono">${money(t.subtotalCents)}</span></div>
+      ${t.minimumAdjustmentCents ? `<div><span>Minimum job charge</span><span class="mono">${money(t.minimumAdjustmentCents)}</span></div>` : ""}
+      ${t.discountCents ? `<div><span>Discount${e.discount && e.discount.name ? ` (${esc(e.discount.name)})` : ""}</span><span class="mono">-${money(t.discountCents)}</span></div>` : ""}
+      ${t.taxCents ? `<div><span>Tax (${esc(t.taxRatePct)}%)</span><span class="mono">${money(t.taxCents)}</span></div>` : ""}
+      <div class="grand"><span>Total</span><span>${money(t.totalCents)}</span></div>
+      ${t.depositCents ? `<div><span>Deposit due at approval (${esc(t.depositPct)}%)</span><span class="mono">${money(t.depositCents)}</span></div>` : ""}
+    </div>
+  </div>
+  ${sec("Project timeline", e.timeline)}
+  ${sec("Payment terms", e.paymentTerms)}
+  ${sec("Warranty", e.warranty)}
+  ${sec("Terms & conditions", e.terms)}
+  ${sec("Notes", e.notes)}
+  ${thread ? `<div class="card"><h2>Messages</h2>${thread}</div>` : ""}
+
+  <div class="card noprint" id="panel" hidden></div>
+
+  <div class="card noprint"><div class="row">
+    <button class="btn gh" id="bAsk">Ask a question</button>
+    ${!decided ? `<button class="btn gh" id="bChange">Request changes</button><button class="btn red" id="bDecline">Decline</button>` : ""}
+    <a class="btn gh" id="bPdf" href="${API + encodeURIComponent(T)}/pdf">Download PDF</a>
+  </div></div>
+  ${(!decided && !P.revised) || (P.response === "approved" && due > 0) ? `<div class="actions noprint"><div class="row">
+    ${!decided && !P.revised ? `<button class="btn" id="bApprove" style="flex:1">Approve &amp; sign · ${money(t.totalCents)}</button>` : ""}
+    ${P.response === "approved" && due > 0 ? `<button class="btn" id="bPay" style="flex:1">Pay deposit ${money(due)}</button>` : ""}
+  </div></div>` : ""}`;
+
+  const on = (id, fn) => { const el = $(id); if (el) el.onclick = fn; };
+  on("#bApprove", () => panel("approve"));
+  on("#bAsk", () => panel("question"));
+  on("#bChange", () => panel("change_request"));
+  on("#bDecline", () => panel("decline"));
+  on("#bPay", pay);
+}
+
+function panel(mode) {
+  MODE = mode;
+  const el = $("#panel"); el.hidden = false;
+  const e = P.estimate, t = e.totals;
+  if (mode === "approve") {
+    el.innerHTML = `<h2>Approve &amp; sign</h2>
+      <p class="small muted">By signing, you approve the scope and total of ${money(t.totalCents)}${t.depositCents ? ` and agree to a ${money(t.depositCents)} deposit` : ""} under the terms above.</p>
+      <label class="l">Your full name</label><input id="sName" autocomplete="name" value="${esc(P.customer.name || "")}">
+      <label class="l">Sign here</label><canvas class="sig" id="sig"></canvas>
+      <div class="row" style="margin-top:6px"><button class="btn gh" id="sClear" style="height:36px">Clear</button></div>
+      <label class="agree"><input type="checkbox" id="sAgree"><span>I agree to this proposal, its terms, and to signing electronically.</span></label>
+      <div class="row" style="margin-top:12px"><button class="btn" id="sGo">Approve proposal</button><span class="small" id="sMsg"></span></div>`;
+    setupSig();
+    $("#sGo").onclick = async () => {
+      if (!SIG.drawn) return ($("#sMsg").textContent = "Please draw your signature.");
+      $("#sGo").disabled = true;
+      const r = await act("/action", { type: "approve", name: $("#sName").value, agree: $("#sAgree").checked, signature: $("#sig").toDataURL("image/png") });
+      $("#sGo").disabled = false;
+      if (!r.ok) return ($("#sMsg").textContent = r.error);
+      P = r.proposal; render(); window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  } else {
+    const titles = { question: "Ask a question", change_request: "Request changes", decline: "Decline proposal" };
+    const ph = { question: "What would you like to know?", change_request: "What would you like changed?", decline: "Optional: let us know why" };
+    el.innerHTML = `<h2>${titles[mode]}</h2><textarea id="mTxt" placeholder="${ph[mode]}"></textarea>
+      <div class="row" style="margin-top:10px"><button class="btn ${mode === "decline" ? "red" : ""}" id="mGo">${mode === "decline" ? "Decline" : "Send"}</button><button class="btn gh" id="mCancel">Cancel</button><span class="small" id="mMsg"></span></div>`;
+    $("#mCancel").onclick = () => (el.hidden = true);
+    $("#mGo").onclick = async () => {
+      if (mode === "decline" && !confirm("Decline this proposal?")) return;
+      $("#mGo").disabled = true;
+      const r = await act("/action", { type: mode, text: $("#mTxt").value });
+      $("#mGo").disabled = false;
+      if (!r.ok) return ($("#mMsg").textContent = r.error);
+      P = r.proposal; render();
+      const b = document.createElement("div"); b.className = "banner ok"; b.textContent = mode === "question" ? "Sent. The business will get back to you." : mode === "decline" ? "Your response was sent." : "Your change request was sent.";
+      $("#app").prepend(b); window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  }
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+const SIG = { drawn: false };
+function setupSig() {
+  const c = $("#sig"), ctx = c.getContext("2d");
+  const size = () => { const r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#111"; ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, r.width, r.height); SIG.drawn = false; };
+  size();
+  let down = false, last = null;
+  const pt = (e) => { const r = c.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  c.onpointerdown = (e) => { e.preventDefault(); down = true; last = pt(e); c.setPointerCapture(e.pointerId); };
+  c.onpointermove = (e) => { if (!down) return; const p = pt(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; SIG.drawn = true; };
+  c.onpointerup = c.onpointercancel = () => (down = false);
+  $("#sClear").onclick = size;
+}
+
+async function pay() {
+  $("#bPay").disabled = true;
+  const r = await act("/pay", {});
+  $("#bPay").disabled = false;
+  if (r.url) location.href = r.url;
+  else { const b = document.createElement("div"); b.className = "banner warn"; b.textContent = r.error || "Online payment isn't available."; $("#app").prepend(b); window.scrollTo({ top: 0, behavior: "smooth" }); }
+}
+
+load();
+</script>
+</body>
+</html>

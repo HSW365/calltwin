@@ -34,6 +34,7 @@
  *
  * Inbound
  *   POST /inbound/sms                  SignalWire messaging webhook for a CallTwin number
+ *   GET/POST /public/site/:id          estimate requests from a deal business's own website (e.g. /public/site/newark)
  *   POST /inbound/email                SendGrid Inbound Parse (address est+<intakeKey>@...)
  */
 const express = require("express");
@@ -188,7 +189,7 @@ router.get("/me", auth, wrap(async (req, res) => {
 function addonOut(c, s) {
   const p = S.promoFor(c);
   return { status: s.status, active: s.addonActive(), licensed: !!s.licensed, trialEndsAt: s.trialEndsAt, paidThrough: s.paidThrough, priceCents: ADDON_PRICE_CENTS(),
-    trialDays: p ? p.trialDays : Number(process.env.ESTIMATE_TRIAL_DAYS || 14), licenseCents: p && !s.licensed ? p.licenseCents : 0 };
+    trialDays: (p && p.trialDays) || Number(process.env.ESTIMATE_TRIAL_DAYS || 14), licenseCents: p && p.licenseCents && !s.licensed && s.status !== "comp" ? p.licenseCents : 0, free: s.status === "comp" && !s.licensed };
 }
 
 // One-time license: buy the add-on outright (only offered where a deal sets a license price).
@@ -589,6 +590,37 @@ async function settingsByIntake(key) {
   const client = await Client.findById(s.client);
   return client ? { s, client } : null;
 }
+
+// A deal business's own website (e.g. New Ark) posts estimate requests here by deal id, no key to copy around.
+async function settingsBySite(id) {
+  const p = require("../services/promos").PROMOS.find((x) => x.id === String(id || ""));
+  if (!p) return null;
+  let client = await Client.findOne({ promo: p.id }).sort({ createdAt: -1 });
+  if (!client && p.emails.length) client = await Client.findOne({ ownerEmail: { $in: p.emails } }).sort({ createdAt: -1 });
+  if (!client) for (const r of p.names) { client = await Client.findOne({ businessName: r }).sort({ createdAt: -1 }); if (client) break; }
+  if (!client) return null;
+  const s = await S.getSettings(client);
+  return s && s.addonActive() ? { s, client } : null;
+}
+router.get("/public/site/:id", limit(60, 60e3), wrap(async (req, res) => {
+  const hit = await settingsBySite(req.params.id);
+  if (!hit) return bad(res, "Estimate requests aren't open yet.", 404);
+  const { s, client } = hit;
+  res.json({ ok: true, company: { name: s.company.name || client.businessName, phone: s.company.phone || client.businessPhone }, services: s.services.map((x) => x.name) });
+}));
+router.post("/public/site/:id", limit(8, 600e3), upload.array("photos", 8), wrap(async (req, res) => {
+  const hit = await settingsBySite(req.params.id);
+  if (!hit) return bad(res, "Estimate requests aren't open yet. Please call us.", 404);
+  const b = req.body || {};
+  if (b.website) return res.json({ ok: true }); // honeypot
+  if (!clip(b.name) || (!clip(b.phone) && !clip(b.email)) || !clip(b.problem)) return bad(res, "Please add your name, a phone or email, and describe the job.");
+  const { s, client } = hit;
+  const job = await S.createJob(client, s, { ...b, source: "web_form" }, "customer", ip(req));
+  const n = await savePhotos(client, job, req.files, "customer");
+  if (n.length) await S.audit(client._id, job._id, "customer", "photos.uploaded", { count: n.length }, ip(req));
+  res.json({ ok: true, number: job.number });
+  S.runAnalysis(client, s, job, "web_form").then(() => S.notifyOwner(client, s, `New estimate request ${job.number} from ${job.customer.name} (${job.service || "website"}). Draft ready to review: ${S.ownerLink(client, job._id)}`)).catch((e) => console.error("[estimate] site intake analysis:", e.message));
+}));
 
 router.get("/public/intake/:key", limit(60, 60e3), wrap(async (req, res) => {
   const hit = await settingsByIntake(req.params.key);

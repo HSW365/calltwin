@@ -33,6 +33,7 @@ const clientSchema = new mongoose.Schema(
     payMethod: { type: String, enum: ["card", "zelle", "cashapp", "comp"], default: "card" },
     status: { type: String, enum: ["trial", "active", "past_due", "canceled", "comp"], default: "trial" },
     trialEndsAt: { type: Date },
+    promo: { type: String, default: "" }, // custom deal applied (services/promos.js)
     paidThrough: { type: Date, default: null },
     stripeCustomerId: { type: String, default: "" },
     stripeSubscriptionId: { type: String, default: "" },

@@ -249,22 +249,37 @@ test("HSW365 owner email always has free full access", { skip: !MongoMemoryServe
   assert.equal(r.body.addon.active, true);
 });
 
-test("New Ark deal: 30-day free trial auto-starts, $2,000 outright license offered", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
-  const c = await Client.create({ businessName: "New Ark", ownerName: "Joe", ownerEmail: "joehernandez555@msn.com", ownerCell: "+15555550133", portalKey: "portal-newark-key-1234567", hookKey: "hook-newark-1234567", status: "active" });
+test("New Ark deal: AI Estimate free, CallTwin 30 days free then $99; others pay", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+  const c = await Client.create({ businessName: "New Ark", ownerName: "Joe", ownerEmail: "joehernandez555@msn.com", ownerCell: "+15555550133", portalKey: "portal-newark-key-1234567", hookKey: "hook-newark-1234567", status: "trial", trialEndsAt: new Date(Date.now() + 14 * 864e5) });
   const H = { "x-portal-key": c.portalKey };
   const r = await request(app).get("/api/estimates/me").set(H);
   assert.equal(r.status, 200);
-  assert.equal(r.body.addon.status, "trial");
+  assert.equal(r.body.addon.status, "comp");
   assert.equal(r.body.addon.active, true);
-  assert.equal(r.body.addon.trialDays, 30);
-  assert.equal(r.body.addon.licenseCents, 200000);
-  const days = (new Date(r.body.addon.trialEndsAt) - Date.now()) / 864e5;
+  assert.equal(r.body.addon.free, true);
+  assert.equal(r.body.addon.licenseCents, 0);
+  // Features work with no trial or card.
+  const j = await request(app).post("/api/estimates/jobs").set(H).send({ name: "Test customer" });
+  assert.notEqual(j.status, 402);
+  // CallTwin: 30 days free from the deal.
+  const { applyClientPromo, promoFor } = require("../../services/promos");
+  assert.equal(applyClientPromo(c), true);
+  const days = (c.trialEndsAt - Date.now()) / 864e5;
   assert.ok(days > 29.9 && days <= 30);
-  // Applied once: reloading doesn't extend the trial.
-  const r2 = await request(app).get("/api/estimates/me").set(H);
-  assert.equal(r2.body.addon.trialEndsAt, r.body.addon.trialEndsAt);
-  // Other businesses get the normal offer and no license.
+  assert.equal(applyClientPromo(c), false); // once
+  // Other businesses (incl. anything in the city of Newark) pay normally.
+  assert.equal(promoFor({ businessName: "Newark Deli", ownerEmail: "x@y.com" }), null);
   const o = await request(app).get("/api/estimates/me").set({ "x-portal-key": "portal-other-key-123456" });
-  assert.equal(o.body.addon.licenseCents, 0);
+  assert.equal(o.body.addon.free, false);
   assert.equal(o.body.addon.trialDays, 14);
+});
+
+test("New Ark website posts estimate requests by site id", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+  let r = await request(app).get("/api/estimates/public/site/newark");
+  assert.equal(r.status, 200);
+  r = await request(app).post("/api/estimates/public/site/newark").field("name", "Pat Customer").field("phone", "908-555-0100").field("problem", "Water heater leaking in basement").field("address", "10 Main St, Phillipsburg NJ");
+  assert.equal(r.status, 200);
+  assert.ok(r.body.number);
+  r = await request(app).get("/api/estimates/public/site/nope");
+  assert.equal(r.status, 404);
 });

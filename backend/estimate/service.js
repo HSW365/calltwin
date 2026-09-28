@@ -11,20 +11,13 @@ const { analyzeJob } = require("./ai");
 const SITE = () => (process.env.CALLTWIN_SITE || "https://hsw365.github.io/calltwin").replace(/\/$/, "");
 const TRIAL_DAYS = () => Number(process.env.ESTIMATE_TRIAL_DAYS || 14);
 const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];
-// Custom deals for specific businesses: free trial of N days (auto-started), then the normal monthly price,
-// or buy the add-on outright for a one-time license price.
-const PROMOS = [
-  { id: "newark-30", emails: ["joehernandez555@msn.com"], names: [/new\s*ark/i, /\bark plumbing\b/i], trialDays: 30, licenseCents: 200000 },
-];
-function promoFor(client) {
-  const email = String((client && client.ownerEmail) || "").toLowerCase().trim();
-  const name = String((client && client.businessName) || "");
-  return PROMOS.find((p) => (email && p.emails.includes(email)) || p.names.some((r) => r.test(name))) || null;
-}
-/** Apply a business's custom deal once: starts its free trial with the promo length. */
+const { PROMOS, promoFor } = require("../services/promos");
+/** Apply a business's custom deal to the Estimate add-on once. estimate:"comp" = free; else trialDays starts a trial. */
 function applyPromo(client, s) {
   const p = promoFor(client);
-  if (!p || !s || s.promo === p.id || s.status === "comp" || s.licensed) return false;
+  if (!p || !s || s.licensed) return false;
+  if (p.estimate === "comp") { if (s.status === "comp" && s.promo === p.id) return false; s.promo = p.id; s.status = "comp"; return true; }
+  if (!p.trialDays || s.promo === p.id || s.status === "comp") return false;
   s.promo = p.id;
   if (["off", "canceled", "trial"].includes(s.status)) { s.status = "trial"; s.trialEndsAt = new Date(Date.now() + p.trialDays * 864e5); }
   return true;

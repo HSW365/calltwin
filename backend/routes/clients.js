@@ -41,6 +41,13 @@ const token = (n = 24) => crypto.randomBytes(n).toString("base64url");
 const adminOk = (req) => !!process.env.CALLTWIN_ADMIN_KEY && (req.get("x-admin-key") || req.query.admin) === process.env.CALLTWIN_ADMIN_KEY;
 
 function sms() { return require("./newark"); }
+const { promoFor, applyClientPromo } = require("../services/promos");
+/** Look up a client by portal key and apply any custom deal (e.g. New Ark: 30 days free). */
+async function byKey(k) {
+  const c = await Client.findOne({ portalKey: clip(k, 80) });
+  if (c && applyClientPromo(c)) await c.save();
+  return c;
+}
 async function textOwner(c, body) {
   const to = e164(c.ownerCell);
   if (!to || c.alertSms === false || !sms().smsReady()) return false;
@@ -79,7 +86,8 @@ async function createClient(b, { byAdmin = false } = {}) {
     services: clip(b.services, 1500), hours: clip(b.hours, 300), notes: clip(b.notes, 2000),
     payoutZelle: clip(b.payoutZelle, 120), payoutCashapp: clip(b.payoutCashapp, 60), payoutStripeLink: /^https:\/\//.test(b.payoutStripeLink || "") ? clip(b.payoutStripeLink, 300) : "",
     portalKey: token(), hookKey: token(), payMethod: comp ? "comp" : payMethod, status: comp ? "comp" : "trial",
-    trialEndsAt: new Date(Date.now() + TRIAL_DAYS * 864e5),
+    trialEndsAt: new Date(Date.now() + ((promoFor({ ownerEmail: email, businessName: b.businessName }) || {}).calltwinTrialDays || TRIAL_DAYS) * 864e5),
+    promo: (promoFor({ ownerEmail: email, businessName: b.businessName }) || {}).id || "",
     aiNumber: byAdmin && e164(b.useNumber) ? e164(b.useNumber) : "",
     forwardedLines: [e164(b.businessPhone), (b.cellForwarded === true || b.cellForwarded === "on") ? cell : null].filter(Boolean),
   });
@@ -109,7 +117,7 @@ router.post("/signup", async (req, res) => {
 
 // Public info for the one-tap activation page.
 router.get("/on", async (req, res) => {
-  const c = await Client.findOne({ portalKey: clip(req.query.k, 80) });
+  const c = await byKey(req.query.k);
   if (!c) return res.status(404).json({ ok: false, error: "Link not found." });
   res.json({ ok: true, businessName: c.businessName, aiNumber: c.aiNumber, ready: !!(c.aiNumber && c.elPhoneId), portal: `${SITE}/portal.html?k=${c.portalKey}` });
 });
@@ -123,7 +131,7 @@ function getStripe() {
 }
 router.post("/checkout", async (req, res) => {
   try {
-    const c = await Client.findOne({ portalKey: clip(req.body && req.body.k, 80) });
+    const c = await byKey(req.body && req.body.k);
     if (!c) return res.status(404).json({ ok: false, error: "Account not found." });
     const trialLeft = Math.max(1, Math.ceil(((c.trialEndsAt || new Date()) - Date.now()) / 864e5));
     const session = await getStripe().checkout.sessions.create({
@@ -131,7 +139,7 @@ router.post("/checkout", async (req, res) => {
       customer_email: c.ownerEmail,
       line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: PRICE_CENTS, recurring: { interval: "month" },
         product_data: { name: "CallTwin Pro - 24/7 AI receptionist", description: `${c.businessName}: every call answered, jobs texted to you, owner dashboard.` } } }],
-      subscription_data: { trial_period_days: c.status === "trial" ? Math.min(trialLeft, TRIAL_DAYS) : undefined, metadata: { client: "calltwin", client_id: String(c._id) } },
+      subscription_data: { trial_period_days: c.status === "trial" ? Math.min(trialLeft, (promoFor(c) || {}).calltwinTrialDays || TRIAL_DAYS) : undefined, metadata: { client: "calltwin", client_id: String(c._id) } },
       metadata: { client: "calltwin", client_id: String(c._id) },
       success_url: `${SITE}/portal.html?k=${c.portalKey}&paid=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${SITE}/portal.html?k=${c.portalKey}&canceled=1`,
@@ -210,7 +218,7 @@ router.post("/voicemail", async (req, res) => {
 
 // ---------- owner portal ----------
 router.get("/portal", async (req, res) => {
-  const c = await Client.findOne({ portalKey: clip(req.query.k, 80) });
+  const c = await byKey(req.query.k);
   if (!c) return res.status(404).json({ ok: false, error: "Dashboard link not found." });
   const leads = await ClientLead.find({ client: c._id }).sort({ createdAt: -1 }).limit(300);
   res.json({ ok: true, client: publicClient(c), leads, price: PRICE_CENTS / 100, stripe: !!process.env.STRIPE_SECRET_KEY });
@@ -218,7 +226,7 @@ router.get("/portal", async (req, res) => {
 router.post("/portal", async (req, res) => {
   try {
     const b = req.body || {};
-    const c = await Client.findOne({ portalKey: clip(b.k, 80) });
+    const c = await byKey(b.k);
     if (!c) return res.status(404).json({ ok: false, error: "Dashboard link not found." });
     if (b.a === "status") {
       if (!["new", "contacted", "booked", "done", "lost"].includes(b.status)) return res.status(400).json({ ok: false, error: "Bad status." });

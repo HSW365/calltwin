@@ -210,7 +210,9 @@ async function ensureInboundRouting() {
     const rec = owned.find((n) => last10(n.phone_number) === raw);
     if (!rec) {
       const rr = relay.find((n) => last10(n.number) === raw);
-      if (!rr) { results.push({ number: e164, ok: false, error: "not in this SignalWire project" }); continue; }
+      // Not a SignalWire number: it's the client's own carrier line (e.g. New Ark's 908-454-4043),
+      // call-forwarded at their carrier to a CallTwin number. Nothing to point here — not an error.
+      if (!rr) { results.push({ number: e164, ok: true, forwarded: true, note: "external carrier line; forward it to a CallTwin number" }); continue; }
       try {
         if (rr.call_handler === "laml_webhooks" && rr.call_request_url === want) { results.push({ number: e164, ok: true, changed: false, api: "relay" }); continue; }
         await axios.put(`https://${space}/api/relay/rest/phone_numbers/${rr.id}`,
@@ -235,9 +237,10 @@ async function ensureInboundRouting() {
       results.push({ number: e164, ok: false, error: detail });
     }
   }
-  routingState = { owned: owned.map((n) => n.phone_number).concat(relay.map((n) => n.number)) };
-  routingState = { done: results.some((r) => r.ok), at: new Date().toISOString(), voice_url: want, results, owned: routingState.owned };
-  console.log("[inbound] routing:", JSON.stringify(routingState));
+  const ownedList = [...new Set(owned.map((n) => n.phone_number).concat(relay.map((n) => n.number)))];
+  routingState = { done: results.some((r) => r.ok && !r.forwarded), at: new Date().toISOString(), voice_url: want, results, owned: ownedList };
+  const bad = results.filter((r) => !r.ok);
+  (bad.length ? console.error : console.log)("[inbound] routing:", JSON.stringify(routingState));
 }
 
 module.exports = { router, ensureInboundRouting };

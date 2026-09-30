@@ -6,6 +6,7 @@ Run from the repo root:  python marketing/build_pages.py
 import html, json, os, re, sys, datetime
 sys.path.insert(0, os.path.dirname(__file__))
 from industries import INDUSTRIES, CITIES
+import city_pages
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://hsw365.github.io/calltwin"
@@ -45,11 +46,12 @@ HEAD = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 <style>{css}</style>{ld}</head><body><div class="wrap">
 <nav><a class="brand" href="{site}/">CallTwin <b>AI</b></a><a href="{site}/signup.html" style="font-weight:700">Get started</a></nav>"""
 
-def foot(extra=""):
+def foot(extra="", serving=None):
+    serving = serving or CITIES
     return f"""<section><h2>Get CallTwin</h2><div class="price">$500 setup &middot; 14 days free &middot; $99/mo</div>
 <p class="lede">No contract. Pay by card, Zelle or Cash App. Not a computer person? Call and we'll sign you up on the phone.</p>
 <div class="btns"><a class="btn" href="{SITE}/signup.html">Sign up online</a><a class="btn gh" href="tel:{PHONE_TEL}">Call {PHONE}</a></div></section>
-{extra}<footer>CallTwin by HSW365 Media LLC &middot; Serving {e(CITIES)} &middot; <a href="{SITE}/for/">All industries</a> &middot; <a href="{SITE}/blog/">Articles</a> &middot; Client: <a href="{SITE}/newark/">New Ark Plumbing, Heating &amp; Air</a> &middot; hsw365media@gmail.com</footer></div></body></html>"""
+{extra}<footer>CallTwin by HSW365 Media LLC &middot; Serving {e(serving)} &middot; <a href="{SITE}/for/">All industries</a> &middot; <a href="{SITE}/blog/">Articles</a> &middot; Client: <a href="{SITE}/newark/">New Ark Plumbing, Heating &amp; Air</a> &middot; hsw365media@gmail.com</footer></div></body></html>"""
 
 def industry_page(ind):
     url = f"{SITE}/for/{ind['slug']}.html"
@@ -72,7 +74,8 @@ def industry_page(ind):
 <section><h2>What a call sounds like</h2><div class="call">{call}</div></section>
 <section><h2>What you get in every text</h2><ul class="check">{caps}</ul><p class="lede">English and Spanish, 24 hours a day. You keep your number: forward it with *72, turn it off with *73.</p></section>
 {est}<section><h2>Questions {e(ind['name'].lower())} ask</h2>{faq}</section>"""
-    extra = f'<section><h3>CallTwin for other businesses</h3><div class="links">{others}</div></section>'
+    extra = (f'<section><h3>CallTwin for {e(ind["name"].lower())} in your city</h3><p><a href="{SITE}/for/{ind["slug"]}/">See all cities</a></p>'
+             f'<h3>CallTwin for other businesses</h3><div class="links">{others}</div></section>')
     return HEAD.format(title=e(ind["title"]), desc=e(desc), url=url, css=CSS, ld=ldtag, site=SITE) + body + foot(extra)
 
 def hub_page():
@@ -105,18 +108,29 @@ def main():
     for ind in INDUSTRIES:
         open(os.path.join(fdir, f"{ind['slug']}.html"), "w", encoding="utf-8").write(industry_page(ind))
     open(os.path.join(fdir, "index.html"), "w", encoding="utf-8").write(hub_page())
+    H = dict(e=e, SITE=SITE, PHONE=PHONE, PHONE_TEL=PHONE_TEL, CSS=CSS, HEAD=HEAD, foot=foot, INDUSTRIES=INDUSTRIES)
+    pool = city_pages.cities()
+    city_urls = []
+    for ind in INDUSTRIES:
+        d = os.path.join(fdir, ind["slug"]); os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(city_pages.city_hub(ind, pool, H))
+        city_urls.append((f"{SITE}/for/{ind['slug']}/", today, "0.7"))
+        for c in pool:
+            open(os.path.join(d, f"{c['slug']}.html"), "w", encoding="utf-8").write(city_pages.city_page(ind, c, pool, H))
+            city_urls.append((f"{SITE}/for/{ind['slug']}/{c['slug']}.html", today, "0.6"))
     page, posts, dates = blog_index()
     open(os.path.join(ROOT, "blog", "index.html"), "w", encoding="utf-8").write(page)
     urls = [(f"{SITE}/", today, "1.0"), (f"{SITE}/signup.html", today, "0.9"), (f"{SITE}/for/", today, "0.8"), (f"{SITE}/blog/", today, "0.7")]
     urls += [(f"{SITE}/for/{i['slug']}.html", today, "0.8") for i in INDUSTRIES]
     urls += [(f"{SITE}/blog/{p}", dates.get(p, today), "0.6") for p in posts]
+    urls += city_urls
     nk = os.path.join(ROOT, "newark", "sitemap.xml")  # include client sites hosted here (New Ark)
     if os.path.exists(nk):
         for loc, mod in re.findall(r"<loc>([^<]+)</loc><lastmod>([^<]+)</lastmod>", open(nk, encoding="utf-8").read()):
             urls.append((loc, mod, "0.7"))
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod><priority>{p}</priority></url>\n" for u, d, p in urls) + "</urlset>\n"
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write(sm)
-    print(f"built {len(INDUSTRIES)} industry pages, {len(posts)} articles, sitemap with {len(urls)} urls")
+    print(f"built {len(INDUSTRIES)} industry pages, {len(city_urls)} city pages/hubs, {len(posts)} articles, sitemap with {len(urls)} urls")
 
 if __name__ == "__main__":
     main()

@@ -3,19 +3,11 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
+      "businessName": "Northpoint360",
       "pushed": false
     },
     {
-      "businessName": "Allstate",
-      "pushed": false
-    },
-    {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Exton Collision",
+      "businessName": "Volpe Real Estate",
       "pushed": false
     },
     {
@@ -23,27 +15,27 @@
       "pushed": false
     },
     {
-      "businessName": "Deptford Cuts and Color s",
-      "pushed": false
-    },
-    {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
-    },
-    {
       "businessName": "Tri-Point Electric",
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
+      "businessName": "Ritetax FInancial",
       "pushed": false
     },
     {
-      "businessName": "Bill Johnston Landscape Co.",
+      "businessName": "Liberty Tax",
       "pushed": false
     },
     {
-      "businessName": "Bounce U",
+      "businessName": "Gamble's Newark Florist",
+      "pushed": false
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
       "pushed": false
     }
   ]

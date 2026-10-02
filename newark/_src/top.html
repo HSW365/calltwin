@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>New Ark Plumbing, Heating &amp; Air | Phillipsburg, NJ | 24/7 at 908-454-4043</title>
+<meta name="description" content="New Ark Plumbing, Heating and Air Conditioning serves homes and businesses across Warren, Hunterdon, Sussex, Morris and Somerset counties. Plumbing, heating and cooling, geothermal and fire sprinklers. Every call answered, day or night.">
+<meta name="theme-color" content="#0b2a4a">
+<link rel="canonical" href="https://newark-ark.onrender.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="New Ark Plumbing, Heating &amp; Air | Phillipsburg, NJ">
+<meta property="og:description" content="Plumbing, heating and cooling, geothermal and fire sprinklers across Northwest New Jersey. Answered 24/7 at 908-454-4043.">
+<meta property="og:image" content="https://newark-ark.onrender.com/img/hero.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='6' fill='%230b2a4a'/%3E%3Cpath d='M11 30V19a9 9 0 0 1 18 0v11' fill='none' stroke='%23fff' stroke-width='4.5' stroke-linecap='square'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero.webp" fetchpriority="high">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["Plumber","HVACBusiness"],"name":"New Ark Plumbing, Heating & Air Conditioning","telephone":"+19084544043","url":"https://newark-ark.onrender.com/","image":"https://newark-ark.onrender.com/img/hero.webp","address":{"@type":"PostalAddress","streetAddress":"412 Firth St","addressLocality":"Phillipsburg","addressRegion":"NJ","postalCode":"08865","addressCountry":"US"},"areaServed":["Warren County, NJ","Hunterdon County, NJ","Sussex County, NJ","Morris County, NJ","Somerset County, NJ"],"openingHours":"Mo-Su 00:00-23:59","sameAs":["https://arkhvac.com/"]}</script>
+<style>
+/*
+  New Ark: navy, white and one red.
+  Navy carries the brand, white carries the content, red is reserved for the emergency phone call.
+  One typeface, Libre Franklin, the gothic that has been on American trade trucks for a century.
+*/
+:root{
+  --navy:#0b2a4a;
+  --navy-deep:#071d34;
+  --blue:#1c5fb8;
+  --red:#c4161c;
+  --white:#ffffff;
+  --mist:#f3f6fa;
+  --line:#d9e0e8;
+  --line2:#bcc7d3;
+  --text:#16212e;
+  --text2:#3d4b5c;
+  --mut:#5f6d7e;
+  /* names the form and dashboard components already use */
+  --steel:var(--mist); --ink:var(--navy); --ink2:var(--text2); --rule:var(--line); --rule2:var(--line2);
+  --water:var(--blue); --air:var(--blue); --fire:var(--red);
+  --disp:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.22,.8,.2,1);
+  --gut:clamp(20px,4vw,48px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;background:var(--white);scroll-padding-top:96px}
+body{background:var(--white);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--navy);color:#fff}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{width:min(1240px,100% - 2*var(--gut));margin-inline:auto}
+
+h1,h2,h3,h4{font-family:var(--disp);color:var(--navy);font-weight:800;letter-spacing:-.022em;line-height:1.06}
+h1{font-size:clamp(40px,5.6vw,76px);font-weight:900;letter-spacing:-.03em;line-height:1.0}
+h2{font-size:clamp(32px,3.8vw,52px)}
+h3{font-size:clamp(24px,2.3vw,32px);line-height:1.12}
+h4{font-size:18px;letter-spacing:-.005em;line-height:1.25;font-weight:700}
+p{max-width:66ch}
+.lede{font-size:clamp(18px,1.45vw,20px);color:var(--text2);line-height:1.55;max-width:58ch}
+.small{font-size:14px;color:var(--mut)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border-radius:4px;font-weight:700;font-size:16px;border:1.5px solid transparent;cursor:pointer;transition:background .18s,border-color .18s,color .18s;white-space:nowrap}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-ink{background:var(--navy);color:#fff}
+.btn-ink:hover{background:var(--navy-deep)}
+.btn-fire{background:var(--red);color:#fff}
+.btn-fire:hover{background:#a51015}
+.btn-line{background:transparent;border-color:var(--navy);color:var(--navy)}
+.btn-line:hover{background:var(--navy);color:#fff}
+.btn-white{background:#fff;color:var(--navy)}
+.btn-white:hover{background:var(--mist)}
+.btn-ghost{border-color:rgba(255,255,255,.7);color:#fff}
+.btn-ghost:hover{background:#fff;color:var(--navy)}
+.btn-sm{height:42px;padding:0 16px;font-size:14.5px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.tlink{font-weight:600;color:var(--blue);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.tlink:hover{color:var(--navy)}
+
+/* utility bar */
+.util{background:var(--navy-deep);color:#c9d5e3;font-size:14px}
+.util .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:40px}
+.util a{color:#fff;font-weight:600}
+.util a:hover{text-decoration:underline;text-underline-offset:4px}
+.util-r{display:flex;gap:24px;align-items:center;white-space:nowrap}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);transition:box-shadow .25s}
+.nav.solid{box-shadow:0 10px 30px -22px rgba(7,29,52,.55)}
+.nav>.wrap{display:flex;align-items:center;justify-content:space-between;height:84px;gap:24px}
+.logo{display:flex;align-items:center;gap:13px}
+.logo-mark{width:44px;height:44px;flex:none}
+.logo b{display:block;font-weight:900;font-size:23px;letter-spacing:-.03em;line-height:1;color:var(--navy)}
+.logo small{display:block;font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.2;font-weight:500}
+.nav-links{display:flex;gap:4px;font-size:15.5px;font-weight:600;color:var(--text2)}
+.nav-links a{padding:10px 13px;border-radius:4px;position:relative}
+.nav-links a:hover{color:var(--navy);background:var(--mist)}
+.nav-links a.active{color:var(--navy)}
+.nav-links a.active::after{content:"";position:absolute;left:13px;right:13px;bottom:-21px;height:3px;background:var(--navy)}
+.nav-cta{display:flex;align-items:center;gap:18px}
+.nav-phone{display:block;text-align:right;line-height:1.15}
+.nav-phone span{display:block;font-size:12.5px;color:var(--mut);font-weight:500}
+.nav-phone b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--navy)}
+.nav-phone:hover b{color:var(--red)}
+.menu-btn{display:none;width:46px;height:46px;border-radius:4px;border:1.5px solid var(--line2);background:#fff;cursor:pointer;place-items:center}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:18px;height:2px;background:var(--navy);position:relative}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0}
+.menu-btn span::before{top:-6px}.menu-btn span::after{top:6px}
+.mnav{position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 30px 40px -30px rgba(7,29,52,.5);padding:4px var(--gut) 24px;display:none;flex-direction:column}
+.mnav.open{display:flex}
+.mnav a{padding:16px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:19px;color:var(--navy)}
+.mnav .btn{margin-top:18px;border-bottom:0;color:#fff;font-size:17px}
+
+/* hero */
+.hero{position:relative;isolation:isolate;background:var(--navy-deep);color:#fff}
+.hero-img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:70% 50%}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(7,29,52,.96) 0%,rgba(7,29,52,.9) 38%,rgba(7,29,52,.55) 72%,rgba(7,29,52,.45) 100%)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(32px,5vw,88px);align-items:center;padding-block:clamp(64px,8vw,116px)}
+.status{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#dbe5f0;margin-bottom:24px}
+.status i{width:9px;height:9px;border-radius:50%;background:#4ed28a;box-shadow:0 0 0 4px rgba(78,210,138,.22)}
+.hero h1{color:#fff;max-width:15ch}
+.hero .lede{color:#d3deea;margin-top:24px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.hero-ctas .btn{height:60px;font-size:17.5px;padding:0 28px}
+
+/* front desk card (Marcus) */
+.callcard{background:#fff;color:var(--text);border-radius:8px;padding:24px;box-shadow:0 40px 80px -40px rgba(0,0,0,.7)}
+.cc-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.cc-id{display:flex;align-items:center;gap:14px}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;position:relative}
+.avatar::after{content:"";position:absolute;right:0;bottom:0;width:13px;height:13px;border-radius:50%;background:#2fae6a;border:3px solid #fff}
+.cc-id b{display:block;font-size:17px;font-weight:700;color:var(--navy)}
+.cc-id span{font-size:14px;color:var(--mut)}
+.cc-state{font-size:13px;font-weight:700;color:var(--mut);padding:5px 10px;border-radius:99px;background:var(--mist)}
+.cc-state.on{color:#fff;background:var(--blue)}
+.wave{height:72px;display:flex;align-items:center;justify-content:center;gap:4px;margin:18px 0 12px}
+.wave i{width:4px;border-radius:2px;background:var(--navy);height:10%;opacity:.25;transition:height .1s}
+.wave.idle i{animation:idle 2.4s ease-in-out infinite}
+@keyframes idle{50%{height:26%;opacity:.45}}
+.transcript{height:132px;overflow:auto;border-radius:6px;background:var(--mist);padding:14px;font-size:15px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin}
+.transcript p{max-width:88%;padding:8px 12px;border-radius:8px;line-height:1.45}
+.transcript .a{background:#fff;border:1px solid var(--line);align-self:flex-start}
+.transcript .u{background:var(--navy);color:#fff;align-self:flex-end}
+.transcript .sys{color:var(--text2);font-size:14.5px;align-self:flex-start;max-width:100%;padding:0}
+.cc-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}
+.cc-foot{margin-top:12px;font-size:13px;color:var(--mut)}
+
+/* assurances under the hero */
+.assure{border-bottom:1px solid var(--line);background:#fff}
+.assure .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.assure div{padding:28px 28px 28px 0}
+.assure div+div{padding-left:28px;border-left:1px solid var(--line)}
+.assure b{display:block;font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.01em;line-height:1.25}
+.assure span{display:block;font-size:14.5px;color:var(--mut);margin-top:4px;line-height:1.45}
+
+section.block{padding:clamp(72px,8.5vw,128px) 0}
+section.tint{background:var(--mist)}
+.sec-head{max-width:760px;margin-bottom:clamp(36px,4.5vw,60px)}
+.sec-head .lede{margin-top:18px}
+
+/* services */
+.svc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,84px);align-items:center;padding:clamp(28px,3.6vw,52px) 0}
+.svc+.svc{border-top:1px solid var(--line)}
+.svc:nth-of-type(even) .svc-img{order:2}
+.svc-img img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:6px;background:var(--mist)}
+.svc p{color:var(--text2);margin-top:14px}
+.svc ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:11px 24px;font-size:16px;margin-top:24px}
+.svc li{padding-left:28px;position:relative;line-height:1.4}
+.svc li::before{content:"";position:absolute;left:0;top:.2em;width:18px;height:18px;background:var(--blue);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 9.5l3.5 3.5 7.5-8'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 9.5l3.5 3.5 7.5-8'/%3E%3C/svg%3E") center/contain no-repeat}
+.svc-links{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:26px;font-size:15.5px}
+
+/* 24/7 front desk */
+.on-dark{background:var(--navy);color:#fff}
+.on-dark h2,.on-dark h4{color:#fff}
+.on-dark .lede,.on-dark p{color:#c5d2e0}
+.line-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);align-items:start}
+.proof{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #2b4a6c;margin-top:44px}
+.proof div{padding:22px 20px 22px 0;border-bottom:1px solid #2b4a6c}
+.proof div:nth-child(odd){border-right:1px solid #2b4a6c}
+.proof div:nth-child(even){padding-left:20px}
+.proof b{display:block;font-weight:800;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em;line-height:1;color:#fff}
+.proof span{display:block;font-size:15px;color:#9fb3c8;margin-top:6px}
+.steps{list-style:none}
+.steps li{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:22px 0;border-top:1px solid #2b4a6c}
+.steps li:last-child{border-bottom:1px solid #2b4a6c}
+.steps time{font-weight:700;font-size:15px;color:#9fb3c8;padding-top:2px;font-variant-numeric:tabular-nums}
+.steps p{font-size:15.5px;margin-top:4px}
+.text-msg{margin-top:28px;max-width:420px;background:var(--navy-deep);border-radius:18px 18px 18px 4px;padding:16px 18px;font-size:15px;line-height:1.5;color:#e8eef5}
+.text-msg small{display:block;font-size:12.5px;color:#9fb3c8;margin-bottom:6px}
+
+/*OLD_COMPONENTS*/
+
+/* component retuning for this palette */
+.sheet{border-radius:8px;box-shadow:0 30px 60px -48px rgba(7,29,52,.5)}
+.field input,.field select,.field textarea{border-radius:4px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(28,95,184,.18)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%230b2a4a' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E")}
+.chip span{border-radius:4px;font-weight:500}
+.drop{border-radius:6px}
+.drop:hover,.drop.over{border-color:var(--navy);background:#e9eef5}
+.thumbs button{background:rgba(7,29,52,.82)}
+.path i{border-color:var(--navy);color:var(--navy);font-weight:700}
+.path b{color:var(--navy);font-weight:700}
+.contact{border-top-color:var(--navy)}
+.contact dd b{color:var(--navy);font-weight:700}
+.pay-list{border-top-color:var(--navy)}
+.pm .logo-b{background:var(--mist);color:var(--navy);border:1px solid var(--line);border-radius:6px;font-weight:800}
+.pm .tag{background:var(--navy)}
+.handle{border-radius:4px}
+.faq{border-top-color:var(--navy)}
+summary{color:var(--navy);font-weight:700}
+summary::after{border-color:var(--navy)}
+.towns span{border-radius:4px;font-weight:500}
+.first li b{color:var(--navy)}
+.mcall .btn{box-shadow:0 14px 30px -12px rgba(7,29,52,.65)}
+.ov{background:rgba(7,29,52,.62)}
+.portal{border-radius:8px;background:var(--mist)}
+.p-head{border-radius:8px 8px 0 0;background:var(--navy)}
+.p-head h3{color:#fff}
+.p-head .sub{color:#9fb3c8}
+.x{border-color:#49668a;border-radius:4px}
+.tabs{background:#e2e8f0;border-radius:6px}
+.tabs button{border-radius:4px}
+.tabs button.on{color:var(--navy)}
+.step-h{color:var(--navy)}
+.kpis{border-top-color:var(--navy)}
+.kpi b{color:var(--navy)}
+.item,.toggle,.fwd,.plan>div,.po label{border-radius:6px}
+.item h4{color:var(--text)}
+.pill.cu{background:var(--navy)}
+.plan{grid-template-columns:1fr 1fr 1fr}
+.plan b{margin-top:0;color:var(--navy)}
+.plan .amt{display:block;font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--navy);margin:10px 0 6px;line-height:1}
+.ledger{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:6px;font-size:15.5px}
+.ledger div{display:flex;justify-content:space-between;gap:16px;padding:14px 20px}
+.ledger div+div{border-top:1px solid var(--line)}
+.ledger div:last-child{font-weight:700;color:var(--navy)}
+
+footer .foot a.logo{display:flex}
+.field label.drop{display:flex;margin-bottom:0;font-weight:400}
+.towns a{display:inline-flex}
+.towns a span{color:var(--blue);border-color:var(--line2)}
+.towns a:hover span{border-color:var(--navy);color:var(--navy)}
+/* visit: office details + map */
+.map{margin-top:28px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--mist)}
+.map iframe{display:block;width:100%;height:260px;border:0}
+
+/* closing band */
+.band{background:var(--red);color:#fff}
+.band .wrap{display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;padding-block:clamp(44px,5vw,72px)}
+.band h2{color:#fff;max-width:22ch}
+.band p{color:#ffe1e2;margin-top:8px}
+.band .btn{height:64px;padding:0 30px;font-size:20px}
+
+footer{background:var(--navy-deep);color:#c5d2e0;padding:72px 0 40px}
+.foot{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.1fr;gap:40px}
+footer .logo b{color:#fff}
+footer .logo small{color:#9fb3c8}
+.foot h5{font-size:14.5px;font-weight:700;color:#fff;margin-bottom:14px}
+.foot a,.foot p{display:block;font-size:15px;margin-bottom:10px}
+.foot a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.legal{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid #1d3a5a;font-size:14px;color:#9fb3c8}
+.legal a{color:#c5d2e0;text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:1180px){
+  .nav-links{display:none}
+  .menu-btn{display:grid}
+  .nav-cta .hide-m{display:none}
+}
+@media (max-width:1080px){
+  .hero-grid,.line-grid,.book-grid,.est-grid,.faq-grid{grid-template-columns:minmax(0,1fr)}
+  .hero h1{max-width:16ch}
+  .assure .wrap{grid-template-columns:1fr 1fr}
+  .assure div:nth-child(3){padding-left:0;border-left:0}
+  .assure div:nth-child(n+3){border-top:1px solid var(--line)}
+  .foot{grid-template-columns:1fr 1fr 1fr}
+  .plan{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  body{font-size:16px}
+  .util .util-l{display:none}
+  .util .wrap{justify-content:flex-end}
+  .nav>.wrap{height:68px}
+  .logo-mark{width:38px;height:38px}
+  .logo b{font-size:20px}
+  .nav-phone{display:none}
+  .hero-ctas .btn{flex:1 1 100%}
+  .svc{grid-template-columns:1fr}
+  .svc:nth-of-type(even) .svc-img{order:0}
+  .svc ul{grid-template-columns:1fr}
+  .assure .wrap{grid-template-columns:1fr}
+  .assure div,.assure div+div{padding:18px 0;border-left:0}
+  .assure div+div{border-top:1px solid var(--line)}
+  .form,.payout{grid-template-columns:1fr}
+  .proof{grid-template-columns:1fr}
+  .proof div:nth-child(odd){border-right:0}
+  .proof div:nth-child(even){padding-left:0}
+  .pm{grid-template-columns:44px 1fr}
+  .pm .logo-b{width:44px;height:44px}
+  .pm>:last-child{grid-column:1/-1}
+  .contact>*{grid-template-columns:1fr;gap:2px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpi:nth-child(3){padding-left:0;border-left:0}
+  .foot{grid-template-columns:1fr 1fr}
+  .mcall{display:flex}
+  footer{padding-bottom:104px}
+  .p-body{padding:18px}
+  .p-head{padding:18px}
+  .ov{padding:12px 8px}
+  .item{grid-template-columns:1fr}
+  .item .acts{flex-direction:row;align-items:center;flex-wrap:wrap}
+  .band .btn{width:100%}
+  .form-foot .btn{width:100%}
+  .sheet-h{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+    <symbol id="i-mark" viewBox="0 0 40 40"><rect width="40" height="40" rx="6" fill="#0b2a4a"/><path d="M11 30V19a9 9 0 0 1 18 0v11" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="square"/></symbol>
+    <symbol id="i-mark-inv" viewBox="0 0 40 40"><rect width="40" height="40" rx="6" fill="#fff"/><path d="M11 30V19a9 9 0 0 1 18 0v11" fill="none" stroke="#071d34" stroke-width="4.5" stroke-linecap="square"/></symbol>
+  </defs>
+</svg>
+
+<div class="util">
+  <div class="wrap">
+    <span class="util-l">412 Firth St, Phillipsburg, NJ. Serving Warren, Hunterdon, Sussex, Morris and Somerset counties.</span>
+    <span class="util-r"><a href="#pay">Pay a bill</a><a href="#owner" data-owner>Owner login</a></span>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="New Ark Plumbing, Heating and Air home">
+      <svg class="logo-mark" aria-hidden="true"><use href="#i-mark"/></svg>
+      <span><b>New Ark</b><small>Plumbing, Heating &amp; Air</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#answering">24/7 line</a>
+      <a href="#estimate">Estimates</a>
+      <a href="#book">Book a visit</a>
+      <a href="#pay">Pay a bill</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="nav-phone" href="tel:+19084544043" data-tel><span>Answered 24 hours a day</span><b data-phone-txt>908-454-4043</b></a>
+      <a class="btn btn-ink btn-sm hide-m" href="#estimate">Get an estimate</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><span></span></button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="#services">Services</a>
+    <a href="#answering">24/7 line</a>
+    <a href="#estimate">Get an estimate</a>
+    <a href="#book">Book a visit</a>
+    <a href="#pay">Pay a bill</a>
+    <a href="#faq">Questions</a>
+    <a href="#owner" data-owner>Owner login</a>
+    <a class="btn btn-fire" href="tel:+19084544043" data-tel><svg><use href="#i-phone"/></svg>Call <span data-phone-txt>908-454-4043</span></a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <img class="hero-img" src="img/hero.webp" alt="" width="1920" height="1072" fetchpriority="high">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="status"><i aria-hidden="true"></i>Phones answered right now, and every hour of the year</p>
+      <h1>Plumbing, heating and air for Northwest New Jersey.</h1>
+      <p class="lede">New Ark installs and repairs plumbing, heating and cooling, geothermal and fire sprinkler systems for homes and businesses. Call at 2 p.m. or 2 a.m. and someone picks up.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-fire" href="tel:+19084544043" data-tel><svg><use href="#i-phone"/></svg>Call <span data-phone-txt>908-454-4043</span></a>
+        <a class="btn btn-ghost" href="#estimate">Get a written estimate</a>
+      </div>
+    </div>
+
+    <aside class="callcard" aria-label="Talk to the New Ark front desk">
+      <div class="cc-top">
+        <div class="cc-id"><div class="avatar" aria-hidden="true">M</div><div><b>Marcus</b><span>New Ark front desk (AI)</span></div></div>
+        <span class="cc-state" id="ccState">Ready</span>
+      </div>
+      <div class="wave idle" id="wave" aria-hidden="true"></div>
+      <div class="transcript" id="transcript" aria-live="polite">
+        <p class="sys">Tap talk and describe the problem out loud. Marcus takes your details and puts the job on the board, the same way he answers our phone.</p>
+      </div>
+      <div class="cc-actions">
+        <button class="btn btn-ink" id="talkBtn"><svg><use href="#i-mic"/></svg><span>Talk to Marcus</span></button>
+        <a class="btn btn-line" href="tel:+19084544043" data-tel aria-label="Call instead"><svg><use href="#i-phone"/></svg></a>
+      </div>
+      <p class="cc-foot">Your microphone is used only while the conversation is open.</p>
+    </aside>
+  </div>
+</section>
+
+<div class="assure">
+  <div class="wrap">
+    <div><b>Licensed and insured</b><span>New Jersey plumbing and mechanical contractor</span></div>
+    <div><b>Four decades of experience</b><span>Residential and commercial work</span></div>
+    <div><b>Free assessments</b><span>On new systems and replacements</span></div>
+    <div><b>Financing available</b><span>On furnaces, central air and geothermal</span></div>
+  </div>
+</div>
+
+<section class="block" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Four trades, one contractor.</h2>
+      <p class="lede">A boiler swap, a new water line and a sprinkler tie-in usually means three companies and three calendars. With New Ark it is one crew, one schedule and one number.</p>
+    </div>
+
+    <article class="svc" id="t-plumbing">
+      <div class="svc-img"><img src="img/plumbing.webp" alt="Soldered copper water line with a brass valve" width="1200" height="670" loading="lazy"></div>
+      <div>
+        <h3>Plumbing</h3>
+        <p>From a dripping trap to a full repipe, done clean, done to code and left the way we found it.</p>
+        <ul><li>Leaks, clogs and burst pipes</li><li>Tank and tankless water heaters</li><li>Repipes and fixture installs</li><li>Sewer and drain lines</li><li>Well pumps and pressure tanks</li><li>Backflow preventers</li></ul>
+        <div class="svc-links"><a class="tlink" href="plumbing.html">Plumbing</a><a class="tlink" href="emergency-plumber.html">Emergency plumber</a><a class="tlink" href="water-heater-repair-replacement.html">Water heaters</a><a class="tlink" href="drain-sewer.html">Drain and sewer</a></div>
+      </div>
+    </article>
+
+    <article class="svc" id="t-hvac">
+      <div class="svc-img"><img src="img/hvac.webp" alt="Furnace and air handler installed in a finished basement" width="1200" height="896" loading="lazy"></div>
+      <div>
+        <h3>Heating and cooling</h3>
+        <p>Heat that holds through January and cooling that keeps up in July, sized properly for the house it is in.</p>
+        <ul><li>Furnaces and boilers</li><li>Central air and heat pumps</li><li>Ductless mini-splits</li><li>Radiant and baseboard heat</li><li>Seasonal tune-ups</li><li>Thermostats and zoning</li></ul>
+        <div class="svc-links"><a class="tlink" href="heating-furnace-boiler.html">Furnaces and boilers</a><a class="tlink" href="air-conditioning.html">Air conditioning</a></div>
+      </div>
+    </article>
+
+    <article class="svc" id="t-geo">
+      <div class="svc-img"><img src="img/geo.webp" alt="Geothermal ground loop trench beside a farmhouse" width="1200" height="670" loading="lazy"></div>
+      <div>
+        <h3>Geothermal</h3>
+        <p>Ground-source systems that cut heating and cooling bills for decades, and qualify for the federal tax credit.</p>
+        <ul><li>Ground-source heat pumps</li><li>Loop design and installation</li><li>Retrofits from oil or propane</li><li>Service and diagnostics</li></ul>
+        <div class="svc-links"><a class="tlink" href="geothermal.html">Geothermal systems</a></div>
+      </div>
+    </article>
+
+    <article class="svc" id="t-fire">
+      <div class="svc-img"><img src="img/fire.webp" alt="Fire sprinkler head on a red supply pipe" width="1200" height="670" loading="lazy"></div>
+      <div>
+        <h3>Fire sprinklers</h3>
+        <p>Sprinkler systems for homes and commercial buildings, kept ready for the inspector and for the day you need them.</p>
+        <ul><li>Sprinkler system installs</li><li>Inspections and testing</li><li>Backflow testing and certification</li><li>Repairs, relocations and tie-ins</li></ul>
+        <div class="svc-links"><a class="tlink" href="fire-sprinklers.html">Fire sprinkler systems</a></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="block on-dark" id="answering">
+  <div class="wrap line-grid">
+    <div>
+      <h2>Every call gets answered. Even at 2&nbsp;a.m.</h2>
+      <p class="lede" style="margin-top:24px">Our front desk, Marcus, picks up every call on the first ring. He walks you through shutting off water or gas if you need to, writes up the job while you talk, and texts it straight to the owner.</p>
+      <div class="proof">
+        <div><b>First ring</b><span>Every call, every hour</span></div>
+        <div><b>No voicemail</b><span>You always reach the front desk</span></div>
+        <div><b>365 days</b><span>Nights, weekends and holidays</span></div>
+        <div><b>English, Español</b><span>Both languages on the same line</span></div>
+      </div>
+    </div>
+    <div>
+      <ol class="steps">
+        <li><time>0:00</time><div><h4>You call</h4><p>The main line, any hour, any day.</p></div></li>
+        <li><time>0:01</time><div><h4>Marcus answers</h4><p>If water is running or you smell gas, you get the safety steps first.</p></div></li>
+        <li><time>1:30</time><div><h4>Your job is written up</h4><p>Name, address, the problem and how urgent, read back to you to confirm.</p></div></li>
+        <li><time>1:31</time><div><h4>The owner has it</h4><p>It lands on his phone as a text and he calls you back.</p></div></li>
+      </ol>
+      <div class="text-msg"><small>Text to the owner, 2:14 a.m.</small>Emergency: Dana R., (908) 555-0142. Pipe burst in the basement on Easton Ave, Phillipsburg. Main is shut off. Needs a tech tonight.</div>
+    </div>
+  </div>
+</section>
+
+<section class="block tint" id="estimate">
+  <div class="wrap est-grid">
+    <div>
+      <h2>A written estimate, without the wait.</h2>
+      <p class="lede" style="margin-top:20px">Send a few photos and tell us what is going on. You get a clear, itemized proposal you can approve and sign from your phone.</p>
+      <ol class="path">
+        <li><i>1</i><div><b>Send photos and details</b><span>The equipment, the leak, the label on the unit. Whatever you have.</span></div></li>
+        <li><i>2</i><div><b>The owner prices it</b><span>Every line is priced by New Ark, never guessed. If we need a look in person, we will say so.</span></div></li>
+        <li><i>3</i><div><b>Review and sign online</b><span>Ask a question, request a change, or approve with your signature.</span></div></li>
+        <li><i>4</i><div><b>Lock in your date</b><span>Pay the deposit and we put you on the schedule.</span></div></li>
+      </ol>
+    </div>
+    <div class="sheet">
+      <div class="sheet-h"><h3>Request an estimate</h3><span class="small">About 2 minutes</span></div>
+<!--EST_FORM-->
+    </div>
+  </div>
+</section>
+
+<section class="block" id="book">
+  <div class="wrap book-grid">
+    <div>
+      <h2>Book a visit.</h2>
+      <p class="lede" style="margin-top:20px">Tell us what is going on and the owner calls you back to set a time.</p>
+      <dl class="contact">
+        <a href="tel:+19084544043" data-tel><dt>Phone</dt><dd><b data-phone-txt>908-454-4043</b><br><span class="small">Answered 24/7, emergencies first</span></dd></a>
+        <div><dt>Office</dt><dd><b>412 Firth St, Phillipsburg, NJ 08865</b><br><a class="tlink small" href="https://www.google.com/maps/dir/?api=1&destination=412+Firth+St,+Phillipsburg,+NJ+08865" target="_blank" rel="noopener">Get directions</a></dd></div>
+        <div><dt>Hours</dt><dd><b>Open 24 hours for emergencies</b><br><span class="small">Scheduled work Monday to Saturday</span></dd></div>
+      </dl>
+      <div class="map"><iframe title="Map of New Ark, 412 Firth St, Phillipsburg NJ" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=412+Firth+St,+Phillipsburg,+NJ+08865&z=13&output=embed"></iframe></div>
+    </div>
+    <div class="sheet">
+      <div class="sheet-h"><h3>Request a visit</h3><span class="small">We call you back to confirm</span></div>
+<!--LEAD_FORM-->
+    </div>
+  </div>
+</section>
+
+<section class="block tint" id="pay">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Pay a bill.</h2>
+      <p class="lede">Zelle, Cash App or card. Once you have sent it, let us know below so we can match it to your invoice.</p>
+    </div>
+    <div class="pay-list">
+      <article class="pm" data-pm="zelle"><div class="logo-b" aria-hidden="true">Z</div><div><h3>Zelle <span class="tag">Preferred</span></h3><p>From your bank's app. No fees, arrives the same day.</p></div><div data-slot></div></article>
+      <article class="pm" data-pm="cashapp"><div class="logo-b" aria-hidden="true">$</div><div><h3>Cash App <span class="tag">Preferred</span></h3><p>Opens Cash App with the amount filled in.</p></div><div data-slot></div></article>
+      <article class="pm" data-pm="stripe"><div class="logo-b" aria-hidden="true">C</div><div><h3>Card <span class="tag">Preferred</span></h3><p>Visa, Mastercard, Amex, Apple Pay and Google Pay.</p></div><div data-slot></div></article>
+    </div>
+    <div class="sheet notice">
+      <div class="sheet-h"><h3>I've sent a payment</h3><span class="small">This only notifies us. It doesn't move money.</span></div>
+<!--PAY_FORM-->
+    </div>
+  </div>
+</section>
+
+<section class="block" id="faq">
+  <div class="wrap faq-grid">
+    <div class="area">
+      <h2>Questions.</h2>
+      <h4>Where we work</h4>
+      <div class="towns"><a href="phillipsburg-nj.html"><span>Phillipsburg</span></a><a href="washington-nj.html"><span>Washington</span></a><a href="hackettstown-nj.html"><span>Hackettstown</span></a><a href="clinton-nj.html"><span>Clinton</span></a><a href="flemington-nj.html"><span>Flemington</span></a><span>Warren County</span><span>Hunterdon County</span><span>Sussex County</span><span>Morris County</span><span>Somerset County</span></div>
+      <h4>Before we get there</h4>
+      <ul class="first">
+        <li><b>Water running:</b> shut the main valve where the line comes into the house.</li>
+        <li><b>Gas smell:</b> leave now, don't touch switches, call 911 and your utility.</li>
+        <li><b>No heat:</b> check the thermostat, the breaker and the furnace switch, then call.</li>
+        <li><b>Sprinkler going off:</b> close the system control valve if it is safe, then call.</li>
+      </ul>
+    </div>
+    <div class="faq">
+      <details open><summary>Is someone really answering at 2 a.m.?</summary><p>Yes. Marcus, our AI front desk, answers every call. He takes your details, walks you through emergency steps, and texts the job to the owner right away. The owner calls you back to confirm.</p></details>
+      <details><summary>Do you charge for estimates?</summary><p>No. Assessments for new installs and replacements are free, and you can request a written estimate online with photos. Repairs are priced once we have seen the problem.</p></details>
+      <details><summary>How does the online estimate work?</summary><p>Send photos and a description. The owner prices every line himself and sends you a proposal by text or email. You can ask questions, request changes, or sign and pay a deposit online.</p></details>
+      <details><summary>Can one company really do plumbing, HVAC, geothermal and sprinklers?</summary><p>That is why New Ark exists. One contractor coordinates all four, so the work happens on one schedule without three companies pointing at each other.</p></details>
+      <details><summary>Do you do commercial work?</summary><p>Yes. New Ark serves commercial and residential customers, including new construction.</p></details>
+      <details><summary>How do I pay?</summary><p>Zelle, Cash App or card. Use the Pay a bill section, then send the payment notice so we can match it to your invoice.</p></details>
+      <details><summary>Do you offer financing?</summary><p>Yes, on new systems such as furnaces, central air, water heaters and geothermal. Ask during your assessment.</p></details>
+      <details><summary>What area do you cover?</summary><p>Northwest New Jersey, from our office in Phillipsburg: Warren, Hunterdon, Sussex, Morris and Somerset counties. If you are close to the edge, call and we will confirm.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div><h2>Something leaking right now?</h2><p>Shut the main valve, then call. We answer on the first ring.</p></div>
+    <a class="btn btn-white" href="tel:+19084544043" data-tel><svg><use href="#i-phone"/></svg>Call <span data-phone-txt>908-454-4043</span></a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><a href="#top" class="logo" style="margin-bottom:18px"><svg class="logo-mark" aria-hidden="true"><use href="#i-mark-inv"/></svg><span><b>New Ark</b><small>Plumbing, Heating &amp; Air</small></span></a>
+        <p style="max-width:32ch">Plumbing, heating and cooling, geothermal and fire protection. Licensed and insured in New Jersey.</p></div>
+      <div><h5>Services</h5><a href="plumbing.html">Plumbing</a><a href="emergency-plumber.html">Emergency plumber</a><a href="water-heater-repair-replacement.html">Water heaters</a><a href="drain-sewer.html">Drain and sewer</a><a href="heating-furnace-boiler.html">Furnaces and boilers</a><a href="air-conditioning.html">Air conditioning</a><a href="geothermal.html">Geothermal</a><a href="fire-sprinklers.html">Fire sprinklers</a></div>
+      <div><h5>Service areas</h5><a href="phillipsburg-nj.html">Phillipsburg</a><a href="washington-nj.html">Washington</a><a href="hackettstown-nj.html">Hackettstown</a><a href="clinton-nj.html">Clinton</a><a href="flemington-nj.html">Flemington</a></div>
+      <div><h5>Customers</h5><a href="#estimate">Get an estimate</a><a href="#book">Book a visit</a><a href="#pay">Pay a bill</a><a href="#faq">Questions</a><a href="blog/">Homeowner tips</a></div>
+      <div><h5>Contact</h5><a href="tel:+19084544043" data-tel data-phone-txt>908-454-4043</a><p>412 Firth St<br>Phillipsburg, NJ 08865</p><p>Open 24 hours for emergencies</p><a href="#owner" data-owner>Owner login</a></div>
+    </div>
+    <div class="legal"><span>&copy; <span id="yr"></span> New Ark Plumbing, Heating &amp; Air Conditioning. All rights reserved.</span><span>Phones and estimates run on <a href="https://hsw365.github.io/calltwin/" target="_blank" rel="noopener">CallTwin</a> by HSW365 Media</span></div>
+  </div>
+</footer>
+
+<div class="mcall"><a class="btn btn-fire" href="tel:+19084544043" data-tel><svg><use href="#i-phone"/></svg>Call now</a><a class="btn btn-line" href="#estimate">Estimate</a></div>
+
+<!--PORTAL-->
+
+<!--SCRIPT-->
+</body>
+</html>

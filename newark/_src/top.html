@@ -92,17 +92,17 @@ p{max-width:66ch}
 .nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);transition:box-shadow .25s}
 .nav.solid{box-shadow:0 10px 30px -22px rgba(7,29,52,.55)}
 .nav>.wrap{display:flex;align-items:center;justify-content:space-between;height:84px;gap:24px}
-.logo{display:flex;align-items:center;gap:13px}
+.logo{display:flex;align-items:center;gap:13px;white-space:nowrap}
 .logo-mark{width:44px;height:44px;flex:none}
 .logo b{display:block;font-weight:900;font-size:23px;letter-spacing:-.03em;line-height:1;color:var(--navy)}
 .logo small{display:block;font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.2;font-weight:500}
 .nav-links{display:flex;gap:4px;font-size:15.5px;font-weight:600;color:var(--text2)}
-.nav-links a{padding:10px 13px;border-radius:4px;position:relative}
+.nav-links a{white-space:nowrap;padding:10px 11px;border-radius:4px;position:relative}
 .nav-links a:hover{color:var(--navy);background:var(--mist)}
 .nav-links a.active{color:var(--navy)}
-.nav-links a.active::after{content:"";position:absolute;left:13px;right:13px;bottom:-21px;height:3px;background:var(--navy)}
+.nav-links a.active::after{content:"";position:absolute;left:11px;right:11px;bottom:-21px;height:3px;background:var(--navy)}
 .nav-cta{display:flex;align-items:center;gap:18px}
-.nav-phone{display:block;text-align:right;line-height:1.15}
+.nav-phone{display:block;text-align:right;line-height:1.15;white-space:nowrap}
 .nav-phone span{display:block;font-size:12.5px;color:var(--mut);font-weight:500}
 .nav-phone b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--navy)}
 .nav-phone:hover b{color:var(--red)}
@@ -122,7 +122,7 @@ p{max-width:66ch}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(32px,5vw,88px);align-items:center;padding-block:clamp(64px,8vw,116px)}
 .status{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#dbe5f0;margin-bottom:24px}
 .status i{width:9px;height:9px;border-radius:50%;background:#4ed28a;box-shadow:0 0 0 4px rgba(78,210,138,.22)}
-.hero h1{color:#fff;max-width:15ch}
+.hero h1{color:#fff;max-width:14ch}
 .hero .lede{color:#d3deea;margin-top:24px}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
 .hero-ctas .btn{height:60px;font-size:17.5px;padding:0 28px}
@@ -240,11 +240,38 @@ summary::after{border-color:var(--navy)}
 .ledger div+div{border-top:1px solid var(--line)}
 .ledger div:last-child{font-weight:700;color:var(--navy)}
 
-footer .foot a.logo{display:flex}
+footer .foot a.logo{display:flex;white-space:normal}
 .field label.drop{display:flex;margin-bottom:0;font-weight:400}
 .towns a{display:inline-flex}
 .towns a span{color:var(--blue);border-color:var(--line2)}
 .towns a:hover span{border-color:var(--navy);color:var(--navy)}
+/* about */
+.about-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,6vw,96px);align-items:start}
+.about-logo{width:min(300px,100%);border-radius:6px;border:1px solid var(--line)}
+.motto{margin-top:28px;padding-left:20px;border-left:4px solid var(--navy);font-size:clamp(20px,1.9vw,25px);font-weight:700;color:var(--navy);line-height:1.3;letter-spacing:-.01em;max-width:22ch}
+.motto cite{display:block;margin-top:10px;font-size:14.5px;font-weight:500;font-style:normal;color:var(--mut);letter-spacing:0}
+.about-body p{color:var(--text2);margin-top:16px}
+.about-body p:first-of-type{margin-top:20px}
+.creds{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:32px;border-top:1px solid var(--navy)}
+.creds div{padding:16px 16px 16px 0;border-bottom:1px solid var(--line)}
+.creds b{display:block;color:var(--navy);font-weight:700;font-size:16.5px}
+.creds span{font-size:14.5px;color:var(--mut)}
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.proj img{width:100%;height:auto;aspect-ratio:29/22;object-fit:cover;border-radius:6px;background:var(--mist)}
+.proj h4{margin-top:16px}
+.proj .loc{font-size:14.5px;color:var(--mut);margin-top:2px}
+.proj p{font-size:15.5px;color:var(--text2);margin-top:10px}
+.exp{margin-top:clamp(40px,5vw,64px);padding-top:32px;border-top:1px solid var(--navy)}
+.exp ul{list-style:none;columns:4;column-gap:32px;margin-top:20px;font-size:15.5px;color:var(--text2)}
+.exp li{padding:5px 0;break-inside:avoid}
+.review{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:clamp(36px,4vw,56px);padding:24px 28px;background:var(--mist);border-radius:6px}
+.review b{color:var(--navy);font-size:18px}
+.review span{display:block;font-size:15px;color:var(--mut)}
+.area-list{list-style:none;columns:2;column-gap:24px;font-size:15.5px;color:var(--text2);margin-top:4px}
+.area-list li{padding:4px 0;break-inside:avoid}
+.area-list a{color:var(--blue);font-weight:600}
+.logo img{width:52px;height:52px;border-radius:6px;flex:none}
 /* visit: office details + map */
 .map{margin-top:28px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--mist)}
 .map iframe{display:block;width:100%;height:260px;border:0}
@@ -266,7 +293,7 @@ footer .logo small{color:#9fb3c8}
 .legal{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid #1d3a5a;font-size:14px;color:#9fb3c8}
 .legal a{color:#c5d2e0;text-decoration:underline;text-underline-offset:3px}
 
-@media (max-width:1180px){
+@media (max-width:1300px){
   .nav-links{display:none}
   .menu-btn{display:grid}
   .nav-cta .hide-m{display:none}
@@ -279,6 +306,9 @@ footer .logo small{color:#9fb3c8}
   .assure div:nth-child(n+3){border-top:1px solid var(--line)}
   .foot{grid-template-columns:1fr 1fr 1fr}
   .plan{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:minmax(0,1fr)}
+  .projects{grid-template-columns:1fr 1fr}
+  .exp ul{columns:3}
 }
 @media (max-width:760px){
   body{font-size:16px}
@@ -315,6 +345,10 @@ footer .logo small{color:#9fb3c8}
   .item .acts{flex-direction:row;align-items:center;flex-wrap:wrap}
   .band .btn{width:100%}
   .form-foot .btn{width:100%}
+  .projects{grid-template-columns:1fr}
+  .exp ul{columns:2}
+  .creds{grid-template-columns:1fr}
+  .logo img{width:44px;height:44px}
   .sheet-h{flex-wrap:wrap}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
@@ -333,7 +367,7 @@ footer .logo small{color:#9fb3c8}
 
 <div class="util">
   <div class="wrap">
-    <span class="util-l">412 Firth St, Phillipsburg, NJ. Serving Warren, Hunterdon, Sussex, Morris and Somerset counties.</span>
+    <span class="util-l">Master Plumber License #4646. HVAC Contractor License #1783. 412 Firth St, Phillipsburg, NJ.</span>
     <span class="util-r"><a href="#pay">Pay a bill</a><a href="#owner" data-owner>Owner login</a></span>
   </div>
 </div>
@@ -341,30 +375,33 @@ footer .logo small{color:#9fb3c8}
 <header class="nav" id="nav">
   <div class="wrap">
     <a href="#top" class="logo" aria-label="New Ark Plumbing, Heating and Air home">
-      <svg class="logo-mark" aria-hidden="true"><use href="#i-mark"/></svg>
+      <img src="img/logo.webp" alt="" width="52" height="52">
       <span><b>New Ark</b><small>Plumbing, Heating &amp; Air</small></span>
     </a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#projects">Our work</a>
       <a href="#answering">24/7 line</a>
       <a href="#estimate">Estimates</a>
-      <a href="#book">Book a visit</a>
-      <a href="#pay">Pay a bill</a>
-      <a href="#faq">Questions</a>
+      <a href="#book">Contact</a>
+      <a href="#faq">Areas</a>
     </nav>
     <div class="nav-cta">
       <a class="nav-phone" href="tel:+19084544043" data-tel><span>Answered 24 hours a day</span><b data-phone-txt>908-454-4043</b></a>
-      <a class="btn btn-ink btn-sm hide-m" href="#estimate">Get an estimate</a>
+      <a class="btn btn-ink btn-sm hide-m" href="#estimate">Get a free estimate</a>
       <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><span></span></button>
     </div>
   </div>
   <div class="mnav" id="mnav">
     <a href="#services">Services</a>
+    <a href="#about">About us</a>
+    <a href="#projects">Our work</a>
     <a href="#answering">24/7 line</a>
-    <a href="#estimate">Get an estimate</a>
-    <a href="#book">Book a visit</a>
+    <a href="#estimate">Get a free estimate</a>
+    <a href="#book">Contact us</a>
     <a href="#pay">Pay a bill</a>
-    <a href="#faq">Questions</a>
+    <a href="#faq">Areas served and questions</a>
     <a href="#owner" data-owner>Owner login</a>
     <a class="btn btn-fire" href="tel:+19084544043" data-tel><svg><use href="#i-phone"/></svg>Call <span data-phone-txt>908-454-4043</span></a>
   </div>
@@ -375,12 +412,12 @@ footer .logo small{color:#9fb3c8}
   <img class="hero-img" src="img/hero.webp" alt="" width="1920" height="1072" fetchpriority="high">
   <div class="wrap hero-grid">
     <div>
-      <p class="status"><i aria-hidden="true"></i>Phones answered right now, and every hour of the year</p>
-      <h1>Plumbing, heating and air for Northwest New Jersey.</h1>
-      <p class="lede">New Ark installs and repairs plumbing, heating and cooling, geothermal and fire sprinkler systems for homes and businesses. Call at 2 p.m. or 2 a.m. and someone picks up.</p>
+      <p class="status"><i aria-hidden="true"></i>Reliable. Professional. Experienced.</p>
+      <h1>Plumbing, HVAC, geothermal and fire protection.</h1>
+      <p class="lede">New Ark Plumbing, Heating &amp; Air Conditioning LLC has served New Jersey communities for nearly 40 years, for commercial and residential clients. On time, on budget and on spec.</p>
       <div class="hero-ctas">
         <a class="btn btn-fire" href="tel:+19084544043" data-tel><svg><use href="#i-phone"/></svg>Call <span data-phone-txt>908-454-4043</span></a>
-        <a class="btn btn-ghost" href="#estimate">Get a written estimate</a>
+        <a class="btn btn-ghost" href="#estimate">Get a free estimate</a>
       </div>
     </div>
 
@@ -404,26 +441,26 @@ footer .logo small{color:#9fb3c8}
 
 <div class="assure">
   <div class="wrap">
-    <div><b>Licensed and insured</b><span>New Jersey plumbing and mechanical contractor</span></div>
-    <div><b>Four decades of experience</b><span>Residential and commercial work</span></div>
-    <div><b>Free assessments</b><span>On new systems and replacements</span></div>
-    <div><b>Financing available</b><span>On furnaces, central air and geothermal</span></div>
+    <div><b>Master Plumber License #4646</b><span>HVAC Contractor License #1783. Licensed and insured.</span></div>
+    <div><b>Four decades of experience</b><span>Staff trained on the latest technology in the industry</span></div>
+    <div><b>Commercial and residential</b><span>Large projects for public and private sector clients</span></div>
+    <div><b>Free estimates</b><span>Call 908-454-4043 or request one online</span></div>
   </div>
 </div>
 
 <section class="block" id="services">
   <div class="wrap">
     <div class="sec-head">
-      <h2>Four trades, one contractor.</h2>
-      <p class="lede">A boiler swap, a new water line and a sprinkler tie-in usually means three companies and three calendars. With New Ark it is one crew, one schedule and one number.</p>
+      <h2>What we do.</h2>
+      <p class="lede">Our primary objective is to provide on-time, on-budget and on-spec plumbing, heating, air conditioning, geothermal and fire protection systems.</p>
     </div>
 
     <article class="svc" id="t-plumbing">
       <div class="svc-img"><img src="img/plumbing.webp" alt="Soldered copper water line with a brass valve" width="1200" height="670" loading="lazy"></div>
       <div>
         <h3>Plumbing</h3>
-        <p>From a dripping trap to a full repipe, done clean, done to code and left the way we found it.</p>
-        <ul><li>Leaks, clogs and burst pipes</li><li>Tank and tankless water heaters</li><li>Repipes and fixture installs</li><li>Sewer and drain lines</li><li>Well pumps and pressure tanks</li><li>Backflow preventers</li></ul>
+        <p>We specialize in commercial and residential installations of complete plumbing systems, with a focus on quality and reliability and strong attention to detail. The number of repeat clients and positive client references attests to our commitment to quality workmanship and client satisfaction.</p>
+        <ul><li>Plumbing systems</li><li>Kitchens</li><li>Bathrooms</li><li>Common areas and exteriors</li><li>Water heaters</li><li>Drain and sewer lines</li></ul>
         <div class="svc-links"><a class="tlink" href="plumbing.html">Plumbing</a><a class="tlink" href="emergency-plumber.html">Emergency plumber</a><a class="tlink" href="water-heater-repair-replacement.html">Water heaters</a><a class="tlink" href="drain-sewer.html">Drain and sewer</a></div>
       </div>
     </article>
@@ -431,9 +468,9 @@ footer .logo small{color:#9fb3c8}
     <article class="svc" id="t-hvac">
       <div class="svc-img"><img src="img/hvac.webp" alt="Furnace and air handler installed in a finished basement" width="1200" height="896" loading="lazy"></div>
       <div>
-        <h3>Heating and cooling</h3>
-        <p>Heat that holds through January and cooling that keeps up in July, sized properly for the house it is in.</p>
-        <ul><li>Furnaces and boilers</li><li>Central air and heat pumps</li><li>Ductless mini-splits</li><li>Radiant and baseboard heat</li><li>Seasonal tune-ups</li><li>Thermostats and zoning</li></ul>
+        <h3>Heating and air conditioning</h3>
+        <p>Our firm designs and installs HVAC systems, including all duct work and equipment. We have an extensive record of HVAC installations in sensitive settings such as medical facilities, restaurants and high-rise facilities.</p>
+        <ul><li>Heating</li><li>Cooling</li><li>Duct systems</li><li>Sensitive settings installation</li><li>Large buildings, schools and offices</li><li>Installation and maintenance</li></ul>
         <div class="svc-links"><a class="tlink" href="heating-furnace-boiler.html">Furnaces and boilers</a><a class="tlink" href="air-conditioning.html">Air conditioning</a></div>
       </div>
     </article>
@@ -441,9 +478,9 @@ footer .logo small{color:#9fb3c8}
     <article class="svc" id="t-geo">
       <div class="svc-img"><img src="img/geo.webp" alt="Geothermal ground loop trench beside a farmhouse" width="1200" height="670" loading="lazy"></div>
       <div>
-        <h3>Geothermal</h3>
-        <p>Ground-source systems that cut heating and cooling bills for decades, and qualify for the federal tax credit.</p>
-        <ul><li>Ground-source heat pumps</li><li>Loop design and installation</li><li>Retrofits from oil or propane</li><li>Service and diagnostics</li></ul>
+        <h3>Geothermal systems</h3>
+        <p>We install and maintain geothermal heating and cooling systems. These systems pump energy from the earth to heat and cool buildings. They are environmentally friendly, cost-efficient and use clean energy instead of fossil fuels. Our work includes new construction for auxiliary heating and duct systems, and the add-on or retrofitting of furnace and duct systems.</p>
+        <ul><li>Energy efficient</li><li>Environmentally clean</li><li>Cost-effective</li><li>Solar and wind power systems</li></ul>
         <div class="svc-links"><a class="tlink" href="geothermal.html">Geothermal systems</a></div>
       </div>
     </article>
@@ -451,12 +488,55 @@ footer .logo small{color:#9fb3c8}
     <article class="svc" id="t-fire">
       <div class="svc-img"><img src="img/fire.webp" alt="Fire sprinkler head on a red supply pipe" width="1200" height="670" loading="lazy"></div>
       <div>
-        <h3>Fire sprinklers</h3>
-        <p>Sprinkler systems for homes and commercial buildings, kept ready for the inspector and for the day you need them.</p>
-        <ul><li>Sprinkler system installs</li><li>Inspections and testing</li><li>Backflow testing and certification</li><li>Repairs, relocations and tie-ins</li></ul>
-        <div class="svc-links"><a class="tlink" href="fire-sprinklers.html">Fire sprinkler systems</a></div>
+        <h3>Fire protection</h3>
+        <p>Don't let your home or office be vulnerable to fire damage. Our firm designs and installs fire sprinkler systems in residential and commercial settings. We provide free estimates so our experts can assess your needs and design a plan for protecting your property.</p>
+        <ul><li>Fire sprinkler systems</li><li>Design and installation</li><li>Commercial and residential</li><li>Regular inspections</li></ul>
+        <div class="svc-links"><a class="tlink" href="fire-sprinklers.html">Fire sprinkler systems</a><a class="tlink" href="https://arkfps.com/" target="_blank" rel="noopener">New Ark Fire Protection Services</a></div>
       </div>
     </article>
+  </div>
+</section>
+
+<section class="block tint" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <img class="about-logo" src="img/logo.webp" alt="New Ark Plumbing logo: When in need we do the deed" width="320" height="320" loading="lazy">
+      <blockquote class="motto">Customer satisfaction first: if it doesn't work for you, it doesn't work for us.<cite>Our motto</cite></blockquote>
+    </div>
+    <div class="about-body">
+      <h2>About New Ark.</h2>
+      <p class="lede">New Ark Plumbing, Heating &amp; Air Conditioning LLC provides high quality plumbing, HVAC and fire protection services to both public and private sector clients.</p>
+      <p>During his long career, with over 40 years in the business, the company's owner has made it his personal mission to put client satisfaction first, often telling his clients that the firm's intent is to make the company's name synonymous with "reliability."</p>
+      <p>We stay abreast of changes in the technology of the trade by participating in industry training programs and seminars, and have added geothermal system installation and maintenance to our list of services. Our mission: always be on time, on budget and on spec.</p>
+      <div class="creds">
+        <div><b>Master Plumber License #4646</b><span>State of New Jersey</span></div>
+        <div><b>HVAC Contractor License #1783</b><span>State of New Jersey</span></div>
+        <div><b>Small and minority business</b><span>Certified</span></div>
+        <div><b>Open and union shop</b><span>Operations for public and private work</span></div>
+        <div><b>Well established and reputable</b><span>Many successful projects and satisfied clients</span></div>
+        <div><b>Licensed and insured</b><span>Over 40 years in the industry</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Our work.</h2>
+      <p class="lede">40 years of industry experience with a full spectrum of projects, both commercial and residential.</p>
+    </div>
+    <div class="projects">
+      <article class="proj"><img src="img/p-benihana.jpg" alt="Benihana Restaurant, Short Hills NJ" width="290" height="260"><h4>Benihana Restaurant</h4><div class="loc">Short Hills, NJ</div><p>Installation of the complete plumbing system and the fire sprinkler system, completed on time, within budget and within all specifications and regulations.</p></article>
+      <article class="proj"><img src="img/p-colas.jpg" alt="Colas tenant project, Morristown NJ" width="290" height="260"><h4>Colas Tenant Project</h4><div class="loc">Morristown, NJ</div><p>We designed and installed the HVAC system for this project, including all duct work and equipment, compliant with local codes and regulations.</p></article>
+      <article class="proj"><img src="img/p-jointmeeting.jpg" alt="Joint Meeting of Essex and Union Counties sewage treatment facility, Elizabeth NJ" width="383" height="248"><h4>Joint Meeting of Essex &amp; Union Counties</h4><div class="loc">Sewage treatment, Elizabeth, NJ</div><p>We designed and installed the plumbing system and the fire sprinkler system. Both projects were completed on time and within budget.</p></article>
+      <article class="proj"><img src="img/p-access.jpg" alt="Newark Access Station, Newark NJ" width="700" height="500"><h4>Newark Access Station</h4><div class="loc">Newark, NJ</div><p>The vendor of choice: design and installation of the plumbing system, the HVAC system and the fire sprinkler system.</p></article>
+    </div>
+    <div class="exp">
+      <h3>Project experience</h3>
+      <ul><li>Schools, colleges and universities</li><li>Education (K-12)</li><li>Hospitals and nursing homes</li><li>Medical offices</li><li>Assisted living facilities</li><li>Restaurants</li><li>Office buildings</li><li>Banks</li><li>Retail and grocery stores</li><li>Hotels and motels</li><li>Apartments and condominiums</li><li>Single family residential</li><li>Tract housing</li><li>Mixed use</li><li>Government buildings</li><li>City and town halls</li><li>Court houses</li><li>Fire and police stations</li><li>Jails and prisons</li><li>Post offices</li><li>Military</li><li>Libraries and museums</li><li>Churches and synagogues</li><li>Theaters</li><li>Arenas and stadiums</li><li>Casinos</li><li>Fitness centers</li><li>Club houses and community centers</li><li>Manufacturing plants</li><li>Industrial maintenance</li><li>Storage facilities and warehouses</li><li>Laboratories</li><li>Data centers, mission critical</li><li>Secure and shielded facilities</li><li>Power generation and distribution</li><li>Utilities</li><li>Sewage and water treatment plants</li><li>Renewable energy</li><li>Airport, bus and railroad terminals</li><li>Parking garages</li><li>Gas stations</li><li>Auto dealerships and service</li><li>Animal hospitals and kennels</li><li>Swimming pools</li><li>Historic preservation</li><li>Design builds</li></ul>
+    </div>
+    <div class="review"><div><b>Worked with New Ark?</b><span>Leave a review on our Google Business Profile.</span></div><a class="btn btn-line" href="https://g.page/r/CaFa1WvcZmm_EAI/review" target="_blank" rel="noopener">Review us on Google</a></div>
   </div>
 </section>
 
@@ -487,7 +567,7 @@ footer .logo small{color:#9fb3c8}
 <section class="block tint" id="estimate">
   <div class="wrap est-grid">
     <div>
-      <h2>A written estimate, without the wait.</h2>
+      <h2>Get a free estimate.</h2>
       <p class="lede" style="margin-top:20px">Send a few photos and tell us what is going on. You get a clear, itemized proposal you can approve and sign from your phone.</p>
       <ol class="path">
         <li><i>1</i><div><b>Send photos and details</b><span>The equipment, the leak, the label on the unit. Whatever you have.</span></div></li>
@@ -506,11 +586,11 @@ footer .logo small{color:#9fb3c8}
 <section class="block" id="book">
   <div class="wrap book-grid">
     <div>
-      <h2>Book a visit.</h2>
-      <p class="lede" style="margin-top:20px">Tell us what is going on and the owner calls you back to set a time.</p>
+      <h2>Contact us.</h2>
+      <p class="lede" style="margin-top:20px">Give us a call or fill out the form to request information about our services or to discuss your next project. We offer free estimates.</p>
       <dl class="contact">
         <a href="tel:+19084544043" data-tel><dt>Phone</dt><dd><b data-phone-txt>908-454-4043</b><br><span class="small">Answered 24/7, emergencies first</span></dd></a>
-        <div><dt>Office</dt><dd><b>412 Firth St, Phillipsburg, NJ 08865</b><br><a class="tlink small" href="https://www.google.com/maps/dir/?api=1&destination=412+Firth+St,+Phillipsburg,+NJ+08865" target="_blank" rel="noopener">Get directions</a></dd></div>
+        <div><dt>Office</dt><dd><b>New Ark Plumbing, Heating &amp; Air Conditioning, LLC</b><br>412 Firth St., Phillipsburg, NJ 08865<br><a class="tlink small" href="https://www.google.com/maps/dir/?api=1&destination=412+Firth+St,+Phillipsburg,+NJ+08865" target="_blank" rel="noopener">Get directions</a></dd></div>
         <div><dt>Hours</dt><dd><b>Open 24 hours for emergencies</b><br><span class="small">Scheduled work Monday to Saturday</span></dd></div>
       </dl>
       <div class="map"><iframe title="Map of New Ark, 412 Firth St, Phillipsburg NJ" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=412+Firth+St,+Phillipsburg,+NJ+08865&z=13&output=embed"></iframe></div>
@@ -543,9 +623,10 @@ footer .logo small{color:#9fb3c8}
 <section class="block" id="faq">
   <div class="wrap faq-grid">
     <div class="area">
-      <h2>Questions.</h2>
+      <h2>Areas served.</h2>
       <h4>Where we work</h4>
-      <div class="towns"><a href="phillipsburg-nj.html"><span>Phillipsburg</span></a><a href="washington-nj.html"><span>Washington</span></a><a href="hackettstown-nj.html"><span>Hackettstown</span></a><a href="clinton-nj.html"><span>Clinton</span></a><a href="flemington-nj.html"><span>Flemington</span></a><span>Warren County</span><span>Hunterdon County</span><span>Sussex County</span><span>Morris County</span><span>Somerset County</span></div>
+      <p class="small" style="margin-bottom:10px">Located in Phillipsburg, NJ, serving commercial and residential customers throughout the Northern New Jersey area, including but not limited to:</p>
+      <ul class="area-list"><li>Asbury</li><li>Bayonne</li><li>Belvidere</li><li>Bloomsbury</li><li>Broadway</li><li>Buttzville</li><li>Changewater</li><li>Columbia</li><li>Edgewater</li><li>Elizabeth</li><li>Franklin Township (Hunterdon County)</li><li>Great Meadows</li><li>Greenwich Township</li><li>Hackensack Township</li><li>Hampton</li><li>High Bridge</li><li>Hoboken</li><li>Jersey City</li><li>Lebanon Township</li><li>Long Hill Township</li><li>Milford</li><li>Oxford</li><li><a href="phillipsburg-nj.html">Phillipsburg</a></li><li>Plainfield Township</li><li>Pohatcong Township</li><li>Port Murray</li><li>Readington Township</li><li>Stewartsville</li><li>Tewksbury Township</li><li>Upper Mount Bethel Township</li><li>Vienna</li><li><a href="washington-nj.html">Washington</a></li><li>Washington Township</li><li>Warren County</li><li>Weehawken</li><li><a href="hackettstown-nj.html">Hackettstown</a></li><li><a href="clinton-nj.html">Clinton</a></li><li><a href="flemington-nj.html">Flemington</a></li></ul>
       <h4>Before we get there</h4>
       <ul class="first">
         <li><b>Water running:</b> shut the main valve where the line comes into the house.</li>
@@ -556,13 +637,13 @@ footer .logo small{color:#9fb3c8}
     </div>
     <div class="faq">
       <details open><summary>Is someone really answering at 2 a.m.?</summary><p>Yes. Marcus, our AI front desk, answers every call. He takes your details, walks you through emergency steps, and texts the job to the owner right away. The owner calls you back to confirm.</p></details>
-      <details><summary>Do you charge for estimates?</summary><p>No. Assessments for new installs and replacements are free, and you can request a written estimate online with photos. Repairs are priced once we have seen the problem.</p></details>
+      <details><summary>Do you charge for estimates?</summary><p>No. We offer free estimates. Call 908-454-4043 or request one online with photos.</p></details>
       <details><summary>How does the online estimate work?</summary><p>Send photos and a description. The owner prices every line himself and sends you a proposal by text or email. You can ask questions, request changes, or sign and pay a deposit online.</p></details>
       <details><summary>Can one company really do plumbing, HVAC, geothermal and sprinklers?</summary><p>That is why New Ark exists. One contractor coordinates all four, so the work happens on one schedule without three companies pointing at each other.</p></details>
-      <details><summary>Do you do commercial work?</summary><p>Yes. New Ark serves commercial and residential customers, including new construction.</p></details>
+      <details><summary>Do you do commercial work?</summary><p>Yes. We have a wide range of experience with large commercial projects as well as residential clients, for both public and private sector clients.</p></details>
       <details><summary>How do I pay?</summary><p>Zelle, Cash App or card. Use the Pay a bill section, then send the payment notice so we can match it to your invoice.</p></details>
-      <details><summary>Do you offer financing?</summary><p>Yes, on new systems such as furnaces, central air, water heaters and geothermal. Ask during your assessment.</p></details>
-      <details><summary>What area do you cover?</summary><p>Northwest New Jersey, from our office in Phillipsburg: Warren, Hunterdon, Sussex, Morris and Somerset counties. If you are close to the edge, call and we will confirm.</p></details>
+      <details><summary>Are you licensed?</summary><p>Yes. Master Plumber License #4646 and HVAC Contractor License #1783. We are licensed and insured, with over 40 years in the industry.</p></details>
+      <details><summary>What area do you cover?</summary><p>We are located in Phillipsburg, NJ and serve clients throughout the Northern New Jersey area. See the list of areas on this page, and call if you are not sure.</p></details>
     </div>
   </div>
 </section>
@@ -578,14 +659,14 @@ footer .logo small{color:#9fb3c8}
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div><a href="#top" class="logo" style="margin-bottom:18px"><svg class="logo-mark" aria-hidden="true"><use href="#i-mark-inv"/></svg><span><b>New Ark</b><small>Plumbing, Heating &amp; Air</small></span></a>
-        <p style="max-width:32ch">Plumbing, heating and cooling, geothermal and fire protection. Licensed and insured in New Jersey.</p></div>
-      <div><h5>Services</h5><a href="plumbing.html">Plumbing</a><a href="emergency-plumber.html">Emergency plumber</a><a href="water-heater-repair-replacement.html">Water heaters</a><a href="drain-sewer.html">Drain and sewer</a><a href="heating-furnace-boiler.html">Furnaces and boilers</a><a href="air-conditioning.html">Air conditioning</a><a href="geothermal.html">Geothermal</a><a href="fire-sprinklers.html">Fire sprinklers</a></div>
+      <div><a href="#top" class="logo" style="margin-bottom:18px"><img src="img/logo.webp" alt="" width="52" height="52" loading="lazy"><span><b>New Ark</b><small>Plumbing, Heating &amp; Air Conditioning, LLC</small></span></a>
+        <p style="max-width:32ch">Plumbing, HVAC, geothermal systems and fire protection services contractor. Serving New Jersey communities for nearly 40 years.</p><p>Master Plumber License #4646<br>HVAC Contractor License #1783</p></div>
+      <div><h5>Services</h5><a href="plumbing.html">Plumbing</a><a href="emergency-plumber.html">Emergency plumber</a><a href="water-heater-repair-replacement.html">Water heaters</a><a href="drain-sewer.html">Drain and sewer</a><a href="heating-furnace-boiler.html">Furnaces and boilers</a><a href="air-conditioning.html">Air conditioning</a><a href="geothermal.html">Geothermal</a><a href="fire-sprinklers.html">Fire sprinklers</a><a href="https://arkfps.com/" target="_blank" rel="noopener">New Ark Fire Protection Services</a></div>
       <div><h5>Service areas</h5><a href="phillipsburg-nj.html">Phillipsburg</a><a href="washington-nj.html">Washington</a><a href="hackettstown-nj.html">Hackettstown</a><a href="clinton-nj.html">Clinton</a><a href="flemington-nj.html">Flemington</a></div>
-      <div><h5>Customers</h5><a href="#estimate">Get an estimate</a><a href="#book">Book a visit</a><a href="#pay">Pay a bill</a><a href="#faq">Questions</a><a href="blog/">Homeowner tips</a></div>
+      <div><h5>Customers</h5><a href="#about">About us</a><a href="#projects">Our work</a><a href="#estimate">Get a free estimate</a><a href="#book">Contact us</a><a href="#pay">Pay a bill</a><a href="#faq">Areas served</a><a href="blog/">Homeowner tips</a><a href="https://g.page/r/CaFa1WvcZmm_EAI/review" target="_blank" rel="noopener">Review us on Google</a></div>
       <div><h5>Contact</h5><a href="tel:+19084544043" data-tel data-phone-txt>908-454-4043</a><p>412 Firth St<br>Phillipsburg, NJ 08865</p><p>Open 24 hours for emergencies</p><a href="#owner" data-owner>Owner login</a></div>
     </div>
-    <div class="legal"><span>&copy; <span id="yr"></span> New Ark Plumbing, Heating &amp; Air Conditioning. All rights reserved.</span><span>Phones and estimates run on <a href="https://hsw365.github.io/calltwin/" target="_blank" rel="noopener">CallTwin</a> by HSW365 Media</span></div>
+    <div class="legal"><span>&copy; <span id="yr"></span> New Ark Plumbing, Heating &amp; Air Conditioning LLC. All rights reserved.</span><span>Phones and estimates run on <a href="https://hsw365.github.io/calltwin/" target="_blank" rel="noopener">CallTwin</a> by HSW365 Media</span></div>
   </div>
 </footer>
 

@@ -3,6 +3,14 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
+      "businessName": "State Farm Insurance: Ann Lin",
+      "pushed": false
+    },
+    {
+      "businessName": "Allstate",
+      "pushed": false
+    },
+    {
       "businessName": "Northpoint360",
       "pushed": false
     },
@@ -11,11 +19,35 @@
       "pushed": false
     },
     {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
       "businessName": "King Street Hair",
       "pushed": false
     },
     {
-      "businessName": "Tri-Point Electric",
+      "businessName": "Deptford Cuts and Color s",
+      "pushed": false
+    },
+    {
+      "businessName": "Surfs Up Salon",
+      "pushed": false
+    },
+    {
+      "businessName": "John's Tree Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Bill Johnston Landscape Co.",
       "pushed": false
     },
     {
@@ -27,15 +59,19 @@
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
+      "businessName": "The UPS Store",
       "pushed": false
     },
     {
-      "businessName": "Alleva Funeral Home",
+      "businessName": "Italo's Tailor Shop",
       "pushed": false
     },
     {
-      "businessName": "Cohen Funeral Services",
+      "businessName": "Sunsilk Tailor",
+      "pushed": false
+    },
+    {
+      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
       "pushed": false
     }
   ]

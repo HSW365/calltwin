@@ -28,6 +28,8 @@ const e164 = (n) => {
 };
 const xml = (s) => String(s).replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c]));
 
+let lastSmsError = null;
+
 function smsReady() {
   return !!(process.env.SIGNALWIRE_PROJECT_ID && process.env.SIGNALWIRE_API_TOKEN && space() && process.env.SIGNALWIRE_PHONE_NUMBER);
 }
@@ -37,12 +39,22 @@ async function sendSms(to, body) {
   const pid = process.env.SIGNALWIRE_PROJECT_ID;
   const url = `https://${space()}/api/laml/2010-04-01/Accounts/${pid}/Messages.json`;
   const form = new URLSearchParams({ From: e164(process.env.SIGNALWIRE_PHONE_NUMBER), To: to, Body: body });
-  const r = await axios.post(url, form.toString(), {
-    auth: { username: pid, password: process.env.SIGNALWIRE_API_TOKEN },
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    timeout: 10000,
-  });
-  return r.data && r.data.sid;
+  try {
+    const r = await axios.post(url, form.toString(), {
+      auth: { username: pid, password: process.env.SIGNALWIRE_API_TOKEN },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      timeout: 10000,
+    });
+    return r.data && r.data.sid;
+  } catch (e) {
+    // Surface SignalWire's own reason (e.g. number not on an approved campaign) instead of a bare status code.
+    if (!e.response) throw e;
+    const detail = `SignalWire ${e.response.status}: ${JSON.stringify(e.response.data).slice(0, 400)}`;
+    lastSmsError = { at: new Date().toISOString(), status: e.response.status, code: e.response.data && e.response.data.code, message: String((e.response.data && e.response.data.message) || "").replace(/\+?\d{10,}/g, "[number]").slice(0, 300) };
+    const err = new Error(detail);
+    err.response = e.response;
+    throw err;
+  }
 }
 
 // Owner's cell + whether the AI is switched on, from the client portal. Cached 60s.
@@ -178,6 +190,8 @@ router.get("/status", async (req, res) => {
   res.json({
     hook_key: !!hookKey(),
     sms_ready: smsReady(),
+    last_sms_error: lastSmsError,
+    email_ready: !!(process.env.SENDGRID_API_KEY && process.env.ESTIMATE_FROM_EMAIL),
     elevenlabs_key: !!process.env.ELEVENLABS_API_KEY,
     owner_on_file: !!(oc && oc.owner_cell),
     ai_enabled: oc ? oc.ai_enabled : null,

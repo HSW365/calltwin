@@ -52,7 +52,15 @@ async function byKey(k) {
 async function textOwner(c, body) {
   const to = e164(c.ownerCell);
   if (!to || c.alertSms === false || !sms().smsReady()) return false;
-  try { await sms().sendSms(to, body.slice(0, 1400)); return true; } catch (e) { console.error("[clients] sms:", e.message); return false; }
+  try { await sms().sendSms(to, body.slice(0, 1400)); return true; } catch (e) {
+    console.error("[clients] sms:", e.message);
+    // Text didn't go out: fall back to email so the owner still gets the alert.
+    try {
+      const sent = await require("../estimate/service").sendEmail(c.ownerEmail, `${c.businessName || "CallTwin"} alert`, body);
+      if (sent) console.log("[clients] alert emailed to owner instead of text");
+    } catch (_) { /* best effort */ }
+    return false;
+  }
 }
 async function textAdmin(body) {
   const to = e164(process.env.CALLTWIN_ADMIN_CELL || "8567968081");

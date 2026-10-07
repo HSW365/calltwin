@@ -2896,5 +2896,266 @@
       "error": "To must send to a verified caller id"
     },
     "sent_at": "2026-10-06 19:37:19"
+  },
+  {
+    "businessName": "John C. Ciervo & Son",
+    "phone": "+12154834283",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:46"
+  },
+  {
+    "businessName": "Murphy Roofing",
+    "phone": "+12154877000",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:48"
+  },
+  {
+    "businessName": "Jefferson Roofing and Exterior",
+    "phone": "+14844972141",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:49"
+  },
+  {
+    "businessName": "Bill Johnston Landscape Co.",
+    "phone": "+12157840488",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:50"
+  },
+  {
+    "businessName": "Bounce U",
+    "phone": "+12157529728",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:52"
+  },
+  {
+    "businessName": "John's Tree Service",
+    "phone": "+12154991344",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:53"
+  },
+  {
+    "businessName": "Exton Collision",
+    "phone": "+16103633555",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:54"
+  },
+  {
+    "businessName": "Pete's Auto Service",
+    "phone": "+16102963655",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:56"
+  },
+  {
+    "businessName": "The UPS Store",
+    "phone": "+12152222840",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:57"
+  },
+  {
+    "businessName": "Joseph Hart, Inc. Plumbing",
+    "phone": "+18566244173",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:01:58"
+  },
+  {
+    "businessName": "Garcia Family Roofing",
+    "phone": "+18626401440",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:00"
+  },
+  {
+    "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+    "phone": "+16104495585",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:01"
+  },
+  {
+    "businessName": "Sunsilk Tailor",
+    "phone": "+12152516925",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:02"
+  },
+  {
+    "businessName": "Italo's Tailor Shop",
+    "phone": "+13023668031",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:03"
+  },
+  {
+    "businessName": "Gamble's Newark Florist",
+    "phone": "+13023661211",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:05"
+  },
+  {
+    "businessName": "Liberty Tax",
+    "phone": "+12672824690",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:06"
+  },
+  {
+    "businessName": "Ritetax FInancial",
+    "phone": "+12679696871",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:07"
+  },
+  {
+    "businessName": "King Street Hair",
+    "phone": "+14843288962",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:09"
+  },
+  {
+    "businessName": "Cohen Funeral Services",
+    "phone": "+12152711610",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:10"
+  },
+  {
+    "businessName": "Alleva Funeral Home",
+    "phone": "+16106443540",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:11"
+  },
+  {
+    "businessName": "Tri-Point Electric",
+    "phone": "+12158175030",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:13"
+  },
+  {
+    "businessName": "Surfs Up Salon",
+    "phone": "+18562457094",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:14"
+  },
+  {
+    "businessName": "Deptford Cuts and Color s",
+    "phone": "+18562272331",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:15"
+  },
+  {
+    "businessName": "Franklinville Family Dentistry",
+    "phone": "+18566945555",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:16"
+  },
+  {
+    "businessName": "Bear-Glasgow Dental",
+    "phone": "+13028863750",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:18"
+  },
+  {
+    "businessName": "Ufberg Dental P.C.",
+    "phone": "+16102512227",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:19"
+  },
+  {
+    "businessName": "Volpe Real Estate",
+    "phone": "+12155455414",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:20"
+  },
+  {
+    "businessName": "Allstate",
+    "phone": "+12153603700",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:22"
+  },
+  {
+    "businessName": "State Farm Insurance: Ann Lin",
+    "phone": "+16107225577",
+    "status_code": 500,
+    "result": {
+      "error": "To must send to a verified caller id"
+    },
+    "sent_at": "2026-10-07 20:02:23"
   }
 ]

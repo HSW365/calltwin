@@ -57,6 +57,40 @@ async function sendSms(to, body) {
   }
 }
 
+// ---- Voice alert: when a text can't be delivered, call the owner and read the alert out loud. ----
+const voiceAlerts = new Map(); // token -> { speech, at }  (in-memory; a call fetches its script within seconds)
+const sayDigits = (n) => {
+  const d = String(n || "").replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "");
+  return d.length === 10 ? `${d.slice(0, 3).split("").join(" ")}, ${d.slice(3, 6).split("").join(" ")}, ${d.slice(6).split("").join(" ")}` : d.split("").join(" ");
+};
+async function callAlert(to, speech) {
+  if (!smsReady()) throw new Error("SignalWire not configured");
+  const num = e164(to);
+  if (!num || !speech) throw new Error("callAlert: number and speech required");
+  for (const [k, v] of voiceAlerts) if (Date.now() - v.at > 15 * 60000) voiceAlerts.delete(k);
+  const t = require("crypto").randomBytes(18).toString("base64url");
+  voiceAlerts.set(t, { speech: String(speech).slice(0, 900), at: Date.now() });
+  const pid = process.env.SIGNALWIRE_PROJECT_ID;
+  const base = (process.env.PUBLIC_BASE_URL || "https://calltwin.onrender.com").replace(/\/$/, "");
+  const form = new URLSearchParams({ From: e164(process.env.SIGNALWIRE_PHONE_NUMBER), To: num, Url: `${base}/api/newark/alert-call/${t}`, Method: "POST", Timeout: "30" });
+  try {
+    const r = await axios.post(`https://${space()}/api/laml/2010-04-01/Accounts/${pid}/Calls.json`, form.toString(), {
+      auth: { username: pid, password: process.env.SIGNALWIRE_API_TOKEN },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      timeout: 10000,
+    });
+    return r.data && r.data.sid;
+  } catch (e) {
+    voiceAlerts.delete(t);
+    throw new Error(e.response ? `SignalWire ${e.response.status}: ${JSON.stringify(e.response.data).slice(0, 300)}` : e.message);
+  }
+}
+router.all("/alert-call/:t", (req, res) => {
+  const a = voiceAlerts.get(req.params.t);
+  const speech = a ? a.speech : "You have a new job waiting. Please check your Call Twin portal.";
+  res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Pause length="1"/><Say voice="Polly.Matthew">${xml(speech)}</Say><Pause length="1"/><Say voice="Polly.Matthew">Here it is one more time. ${xml(speech)}</Say><Pause length="1"/><Say voice="Polly.Matthew">The job is also saved in your portal. Goodbye.</Say><Hangup/></Response>`);
+});
+
 // Owner's cell + whether the AI is switched on, from the client portal. Cached 60s.
 let cache = { at: 0, data: null };
 async function ownerContact() {
@@ -201,4 +235,4 @@ router.get("/status", async (req, res) => {
   });
 });
 
-module.exports = { router, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady };
+module.exports = { router, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady, callAlert, sayDigits };

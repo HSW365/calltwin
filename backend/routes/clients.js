@@ -49,11 +49,22 @@ async function byKey(k) {
   if (c && applyClientPromo(c)) await c.save();
   return c;
 }
-async function textOwner(c, body) {
+/** Non-emergency voice alerts only ring the owner 7am-9pm (business timezone, default Eastern). */
+function okToRing(urgent) {
+  if (urgent) return true;
+  const h = Number(new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: process.env.CALLTWIN_TZ || "America/New_York" }).format(new Date())) % 24;
+  return h >= 7 && h < 21;
+}
+/** Text the owner. If the text can't go out and `voice` is given, call them and read the alert aloud instead. */
+async function textOwner(c, body, voice) {
   const to = e164(c.ownerCell);
   if (!to || c.alertSms === false || !sms().smsReady()) return false;
   try { await sms().sendSms(to, body.slice(0, 1400)); return true; } catch (e) {
     console.error("[clients] sms:", e.message);
+    if (voice && voice.speech && okToRing(voice.urgent)) {
+      try { await sms().callAlert(to, voice.speech); console.log("[clients] text failed, owner called with voice alert"); return true; }
+      catch (ce) { console.error("[clients] voice alert:", ce.message); }
+    }
     // Text didn't go out: fall back to email so the owner still gets the alert.
     try {
       const sent = await require("../estimate/service").sendEmail(c.ownerEmail, `${c.businessName || "CallTwin"} alert`, body);
@@ -296,7 +307,10 @@ router.post("/lead", async (req, res) => {
     require("../estimate/service").fromCallTwinLead(c, lead, { measurements: clip(b.measurements, 1000), equipment: clip(b.equipment, 500), access: clip(b.access_notes, 500) });
     const d = String(lead.phone || "").replace(/\D/g, "");
     lead.notified = await textOwner(c, [`${lead.urgency === "Emergency" ? "EMERGENCY " : ""}New call for ${c.businessName}: ${lead.name || "Caller"} ${lead.phone || ""}`,
-      [lead.service, lead.urgency].filter(Boolean).join(" / "), lead.address, lead.summary || lead.details, d ? `Call back: tel:${d}` : ""].filter(Boolean).join("\n"));
+      [lead.service, lead.urgency].filter(Boolean).join(" / "), lead.address, lead.summary || lead.details, d ? `Call back: tel:${d}` : ""].filter(Boolean).join("\n"),
+      { urgent: lead.urgency === "Emergency", speech: [`This is Call Twin with a new ${lead.urgency === "Emergency" ? "emergency " : ""}job for ${c.businessName}.`,
+        `The caller is ${lead.name || "a customer"}.`, d ? `Their phone number is ${sms().sayDigits(d)}.` : "", lead.service ? `They need: ${lead.service}.` : "",
+        lead.address ? `Address: ${lead.address}.` : "", clip(lead.summary || lead.details, 300)].filter(Boolean).join(" ") });
     await lead.save();
     res.json({ ok: true, message: "Saved. The owner has been texted and will call the customer back." });
   } catch (e) {
@@ -312,7 +326,8 @@ router.post("/voicemail", async (req, res) => {
   const c = await Client.findById(p.c).catch(() => null);
   if (!c) return;
   const lead = await ClientLead.create({ client: c._id, source: "voicemail", name: "Voicemail caller", phone: p.From || "", summary: `Voicemail (${p.RecordingDuration || "?"}s): ${p.RecordingUrl}.mp3` });
-  lead.notified = await textOwner(c, `New voicemail for ${c.businessName} from ${p.From || "unknown"}. Listen: ${p.RecordingUrl}.mp3`);
+  lead.notified = await textOwner(c, `New voicemail for ${c.businessName} from ${p.From || "unknown"}. Listen: ${p.RecordingUrl}.mp3`,
+    { speech: `This is Call Twin. ${c.businessName} has a new voicemail${p.From ? ` from ${sms().sayDigits(p.From)}` : ""}. You can listen to it in your portal.` });
   await lead.save();
   require("../estimate/service").fromCallTwinLead(c, lead);
 });

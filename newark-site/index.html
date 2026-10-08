@@ -1057,7 +1057,7 @@ function renderPay() {
     card.classList.toggle("pref", p.preferred === m);
     card.style.order = p.preferred === m ? -1 : 0;
     if (!slot) return;
-    if (m === "zelle" && p.zelle) slot.outerHTML = `<div class="handle"><span>${esc(p.zelle)}${p.zelle_name ? `<br><span class="small">Name: ${esc(p.zelle_name)}</span>` : ""}</span><button class="copy" data-copy="${esc(p.zelle)}">Copy</button></div>`;
+    if (m === "zelle" && p.zelle) { const hs = String(p.zelle).split(/\s*(?:,|;|\bor\b)\s*/i).filter(Boolean); slot.outerHTML = `<div style="display:grid;gap:8px">${hs.map((h, i) => `<div class="handle"><span>${esc(h)}${p.zelle_name && i === hs.length - 1 ? `<br><span class="small">Name: ${esc(p.zelle_name)}</span>` : ""}</span><button class="copy" data-copy="${esc(h)}">Copy</button></div>`).join("")}</div>`; }
     else if (m === "cashapp" && p.cashapp) slot.outerHTML = `<a class="btn btn-line" data-cash="${esc(p.cashapp.replace(/^\$/, ""))}" href="https://cash.app/${esc(p.cashapp)}" target="_blank" rel="noopener">Open ${esc(p.cashapp)}</a>`;
     else if (m === "stripe" && p.stripe) slot.outerHTML = `<a class="btn btn-line" href="${esc(p.stripe)}" target="_blank" rel="noopener">Pay by card</a>`;
     else slot.outerHTML = `<p class="off">Call the office for ${m === "stripe" ? "a card payment link" : m === "cashapp" ? "our $cashtag" : "Zelle details"}: <a href="tel:+1${digits(pub?.business_phone) || "9084544043"}">${esc(fmtPhone(pub?.business_phone) || "908-454-4043")}</a></p>`;

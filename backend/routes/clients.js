@@ -49,22 +49,12 @@ async function byKey(k) {
   if (c && applyClientPromo(c)) await c.save();
   return c;
 }
-/** Non-emergency voice alerts only ring the owner 7am-9pm (business timezone, default Eastern). */
-function okToRing(urgent) {
-  if (urgent) return true;
-  const h = Number(new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: process.env.CALLTWIN_TZ || "America/New_York" }).format(new Date())) % 24;
-  return h >= 7 && h < 21;
-}
-/** Text the owner. If the text can't go out and `voice` is given, call them and read the alert aloud instead. */
-async function textOwner(c, body, voice) {
+/** Text the owner. Text only: the owner is never phoned with an alert (the `voice` argument is ignored). */
+async function textOwner(c, body, voice) { // eslint-disable-line no-unused-vars
   const to = e164(c.ownerCell);
   if (!to || c.alertSms === false || !sms().smsReady()) return false;
   try { await sms().sendSms(to, body.slice(0, 1400)); return true; } catch (e) {
     console.error("[clients] sms:", e.message);
-    if (voice && voice.speech && okToRing(voice.urgent)) {
-      try { await sms().callAlert(to, voice.speech); console.log("[clients] text failed, owner called with voice alert"); return true; }
-      catch (ce) { console.error("[clients] voice alert:", ce.message); }
-    }
     // Text didn't go out: fall back to email so the owner still gets the alert.
     try {
       const sent = await require("../estimate/service").sendEmail(c.ownerEmail, `${c.businessName || "CallTwin"} alert`, body);

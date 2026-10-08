@@ -196,18 +196,7 @@ router.post("/notify", async (req, res) => {
   } catch (e) {
     const detail = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message;
     console.error("[newark] sms failed:", detail);
-    // Text couldn't go out: call the owner and read the alert aloud (7am-9pm Eastern, emergencies any time).
-    const urgent = /^\s*EMERGENCY/i.test(body);
-    const h = Number(new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: process.env.CALLTWIN_TZ || "America/New_York" }).format(new Date())) % 24;
-    if (urgent || (h >= 7 && h < 21)) {
-      try {
-        const speech = "This is Call Twin with a message for your business. " + body.split("\n").filter((l) => !/^Call back:/i.test(l)).join(". ")
-          .replace(/https?:\/\/\S+/g, "").replace(/\+?1?[\s().-]*\d{3}[\s().-]*\d{3}[\s.-]*\d{4}/g, (m) => " " + sayDigits(m) + " ");
-        const csid = await callAlert(to, speech);
-        console.log("[newark] text failed, owner called with voice alert");
-        return res.json({ ok: true, sid: csid, via: "call" });
-      } catch (ce) { console.error("[newark] voice alert:", ce.message); }
-    }
+    // Text only: the owner is never phoned with an alert. The job stays saved in the portal.
     res.status(502).json({ ok: false, error: detail });
   }
 });

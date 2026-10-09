@@ -96,14 +96,23 @@ let cache = { at: 0, data: null };
 async function ownerContact() {
   if (!hookKey()) return null;
   if (cache.data && Date.now() - cache.at < 60000) return cache.data;
+  // Backup so a caller can still be put through to the owner when the portal lookup fails.
+  const backupCell = e164(process.env.NEWARK_OWNER_CELL);
+  const backup = backupCell ? { ok: true, owner_cell: backupCell, ai_enabled: true, business_name: "New Ark", backup: true } : null;
   try {
-    const r = await axios.post(NEWARK_API, { a: "owner_contact" }, { headers: { "x-newark-key": hookKey() }, timeout: 5000 });
-    cache = { at: Date.now(), data: r.data };
-    return r.data;
+    const r = await axios.post(NEWARK_API, JSON.stringify({ a: "owner_contact", action: "owner_contact" }), {
+      headers: { "x-newark-key": hookKey(), "Content-Type": "application/json" }, timeout: 5000,
+    });
+    // Only a real answer is kept. Anything else (e.g. a "saved" reply) must never be cached as the owner's contact.
+    if (r.data && r.data.owner_cell !== undefined) {
+      cache = { at: Date.now(), data: r.data };
+      return r.data;
+    }
+    console.error("[newark] owner_contact unexpected reply:", JSON.stringify(r.data).slice(0, 200));
   } catch (e) {
-    console.error("[newark] owner_contact failed:", e.message);
-    return cache.data;
+    console.error("[newark] owner_contact failed:", e.message, e.response ? JSON.stringify(e.response.data).slice(0, 200) : "");
   }
+  return (cache.data && cache.data.owner_cell !== undefined ? cache.data : null) || backup;
 }
 
 function baseUrl() {

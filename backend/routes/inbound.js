@@ -51,6 +51,29 @@ function clientFallbackXml(c, callerId) {
   return `<?xml version="1.0" encoding="UTF-8"?><Response>${dial}${vm}</Response>`;
 }
 
+// When each call was handed to the AI, so after-dial can tell a real conversation from an instant drop.
+const aiHandoffs = new Map(); // CallSid -> ms timestamp
+function markHandoff(sid) {
+  if (!sid) return;
+  for (const [k, t] of aiHandoffs) if (Date.now() - t > 2 * 3600e3) aiHandoffs.delete(k);
+  aiHandoffs.set(sid, Date.now());
+}
+/**
+ * True when the AI leg "completed" without ever talking to the caller: it picked up and dropped the
+ * call at once (e.g. the voice provider is out of credits or down). Those calls must NOT be hung up;
+ * they go on to ring the owner and take a voicemail.
+ */
+function aiDroppedCall(p) {
+  const st = String(p.DialCallStatus || "").toLowerCase();
+  if (st !== "completed" && st !== "answered") return false;
+  const dur = p.DialCallDuration === undefined || p.DialCallDuration === "" ? NaN : Number(p.DialCallDuration);
+  const t0 = aiHandoffs.get(p.CallSid);
+  const elapsed = t0 ? Date.now() - t0 : NaN;
+  if (!Number.isNaN(elapsed)) return elapsed < 3000;   // handed off, rang, "answered" and ended in under 3s
+  if (!Number.isNaN(dur)) return dur <= 1;             // no timestamp (server restarted mid-call): trust the carrier's duration
+  return false;
+}
+
 async function handleClientCall(c, from, to, res) {
   if (!c.inService() || !c.aiEnabled || !c.elPhoneId) {
     console.log(`[inbound] client ${c.businessName}: ring owner (inService=${c.inService()} ai=${c.aiEnabled} sip=${!!c.elPhoneId})`);
@@ -67,6 +90,9 @@ async function handleInbound(req, res) {
   const p = { ...req.query, ...req.body };
   const from = p.From || "";
   const to = p.To || process.env.SIGNALWIRE_PHONE_NUMBER || "";
+  // A call that has already ended is a status ping, not a new call: nothing to route.
+  if (/^(completed|busy|failed|no-answer|canceled)$/i.test(String(p.CallStatus || ""))) return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response/>`);
+  markHandoff(p.CallSid);
   // CallTwin Sign-Up Line: hand to the sign-up agent; if it can't connect, ring HSW365, then voicemail.
   try {
     if (await require("../services/signupLine").isSignupLine(to)) {
@@ -122,8 +148,10 @@ router.post("/voice", handleInbound);
 router.post("/after-dial", async (req, res) => {
   const p = { ...req.query, ...req.body };
   const st = String(p.DialCallStatus || "").toLowerCase();
-  console.log(`[inbound] after-dial ${p.CallSid || "?"}: ${st}`);
-  if (st === "completed" || st === "answered") return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>`);
+  const dropped = aiDroppedCall(p);
+  aiHandoffs.delete(p.CallSid);
+  console.log(`[inbound] after-dial ${p.CallSid || "?"}: ${st}${dropped ? " (AI dropped the call at once -> ringing the owner, then voicemail)" : ""}`);
+  if (!dropped && (st === "completed" || st === "answered")) return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>`);
   if (p.s) { // sign-up line: AI couldn't connect -> ring HSW365, then take a voicemail
     const admin = "+1" + String(process.env.CALLTWIN_ADMIN_CELL || "8567968081").replace(/\D/g, "").slice(-10);
     return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="25" callerId="${xml(p.To || "")}">${xml(admin)}</Dial><Say voice="Polly.Matthew">Thanks for calling CallTwin. Leave your name, business and number after the tone and we will call you right back.</Say><Record maxLength="120" playBeep="true" action="${xml(BASE() + "/api/inbound/signup-voicemail")}" method="POST" /><Hangup/></Response>`);
@@ -132,7 +160,7 @@ router.post("/after-dial", async (req, res) => {
     const c = await require("../models/Client").findById(p.c).catch(() => null);
     if (c) return res.type("text/xml").send(clientFallbackXml(c, p.To || ""));
   }
-  await fallback(res, "SIP leg " + (st || "failed"), p.To || "");
+  await fallback(res, "SIP leg " + (dropped ? "dropped at once" : st || "failed"), p.To || "");
 });
 router.get("/voice", handleInbound);
 router.post("/signup-voicemail", async (req, res) => {
@@ -243,4 +271,4 @@ async function ensureInboundRouting() {
   (bad.length ? console.error : console.log)("[inbound] routing:", JSON.stringify(routingState));
 }
 
-module.exports = { router, ensureInboundRouting };
+module.exports = { router, ensureInboundRouting, aiDroppedCall, markHandoff };

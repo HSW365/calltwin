@@ -1,0 +1,51 @@
+/* New Ark service, town and article pages. Same brand as the home page. */
+@font-face{font-family:"Big Shoulders";src:url("fonts/big-shoulders.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Libre Franklin";src:url("fonts/libre-franklin.woff2") format("woff2");font-weight:100 900;font-display:swap}
+:root{--steel:#f2f5f9;--white:#fff;--ink:#0b2a4a;--deep:#06182b;--ink2:#3d4b5c;--mut:#5f6d7e;--rule:#d9e0e8;--rule2:#bcc7d3;--b:#1c5fb8;--r:#c4161c;--disp:"Big Shoulders","Arial Narrow","Roboto Condensed",Impact,sans-serif}
+*{box-sizing:border-box}
+html,body{background:#fff}
+body{margin:0;color:#16212e;font:17px/1.62 "Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;border-top:6px solid var(--deep)}
+a{color:var(--b);text-underline-offset:3px}
+a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--b);outline-offset:3px}
+.wrap{max-width:1040px;margin:auto;padding:0 clamp(18px,4vw,32px)}
+h1,h2{font-family:var(--disp);color:var(--ink);font-weight:900;line-height:.96;margin:0;letter-spacing:.003em}
+h1{font-size:clamp(46px,7.4vw,92px);line-height:.9;margin:14px 0 22px;max-width:17ch}
+h2{font-size:clamp(30px,3.4vw,42px);margin:0 0 16px}
+h3{font-size:19px;font-weight:800;color:var(--ink);line-height:1.25;margin:0 0 8px;letter-spacing:-.01em}
+p{max-width:70ch}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:84px;border-bottom:1px solid var(--rule)}
+.logo{display:flex;gap:12px;align-items:center;color:var(--ink);text-decoration:none;font:900 31px/.9 var(--disp);letter-spacing:.005em}
+.logo img{width:54px;height:54px;border-radius:4px;flex:none}
+.logo small{display:block;font:500 12.5px/1.2 "Libre Franklin",sans-serif;color:var(--mut);margin-top:5px;letter-spacing:0}
+.call{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:60px;padding:0 26px;border-radius:3px;background:var(--r);color:#fff;font:800 27px/1 var(--disp);letter-spacing:.01em;text-decoration:none;white-space:nowrap}
+.call:hover{background:#a51015;color:#fff}
+.call.sm{height:46px;font-size:22px;padding:0 16px}
+.alt{display:inline-flex;align-items:center;height:60px;padding:0 24px;border-radius:3px;border:1.5px solid var(--ink);color:var(--ink);font-weight:700;font-size:16px;text-decoration:none}
+.alt:hover{background:var(--ink);color:#fff}
+.tag{display:inline-block;margin-top:clamp(36px,5vw,64px);padding:0 0 0 14px;border-left:5px solid var(--r);background:none!important;color:var(--ink);font:700 15px/1.2 "Libre Franklin",sans-serif;border-radius:0}
+.lede{font-size:clamp(18px,1.6vw,21px);line-height:1.55;color:var(--ink2);max-width:60ch}
+section{padding:clamp(36px,4.5vw,56px) 0;border-top:1px solid var(--rule)}
+.card{background:var(--steel);border-radius:6px;padding:clamp(22px,2.6vw,32px)}
+a.card{border:1px solid var(--rule);background:#fff;transition:border-color .15s}
+a.card:hover{border-color:var(--ink)}
+a.card small{display:block;margin-top:10px;color:var(--mut);font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-top:0;padding-top:clamp(20px,3vw,36px)}
+ol,ul{padding-left:22px;margin:0}
+li{margin:8px 0}
+li::marker{color:var(--b);font-weight:700}
+details{border-bottom:1px solid var(--rule);padding:18px 0;margin:0}
+details:first-of-type{border-top:2px solid var(--ink)}
+summary{font-weight:700;font-size:18px;color:var(--ink);cursor:pointer}
+details p{color:var(--ink2);margin:10px 0 0}
+.band{background:var(--ink);color:#fff;border-radius:6px;padding:clamp(26px,3.4vw,44px);margin:clamp(30px,4vw,48px) 0;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.band h2{color:#fff;margin:0 0 6px;font-size:clamp(34px,4vw,52px)}
+.band div div{color:#c5d2e0}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{display:inline-flex;align-items:center;min-height:42px;padding:6px 14px;border:1px solid var(--rule2);border-radius:3px;font-weight:600;font-size:15px;color:var(--ink);text-decoration:none}
+.links a:hover{border-color:var(--ink);background:var(--steel)}
+.sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;background:rgba(6,24,43,.97);display:none;z-index:9}
+.sticky .call{width:100%}
+footer{padding:28px 0 96px;color:var(--mut);font-size:14.5px;border-top:1px solid var(--rule)}
+article p,article li{color:var(--ink2)}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.sticky{display:block}.logo small{display:none}.logo{font-size:27px}.logo img{width:44px;height:44px}.top{min-height:68px}.call.sm{font-size:19px;padding:0 12px}}

@@ -1,0 +1,30 @@
+# Keeps the live New Ark site (ark-hvac.com, served from the newark-site branch) in step with newark/ on main.
+# New articles land in newark/blog on main; this restyles them and publishes them to the live site.
+name: Sync New Ark site
+on:
+  push:
+    branches: [main]
+    paths: ["newark/**", "tools/restyle_newark.py"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: sync-newark-site
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: main }
+      - uses: actions/checkout@v4
+        with: { ref: newark-site, path: site }
+      - name: Copy and restyle
+        run: |
+          cp -a main/newark/. site/newark-site/
+          python3 main/tools/restyle_newark.py site/newark-site
+      - name: Publish
+        working-directory: site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A newark-site
+          git diff --cached --quiet || (git commit -m "New Ark site: sync from main" && git push)

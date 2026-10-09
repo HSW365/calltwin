@@ -1,13 +1,14 @@
 /* New Ark "Ask Marcus" chat box.
  * One script for every page: adds an "ask a question" button to each section of the site and a
- * chat pop-up that answers in text through the New Ark website-chat agent (ElevenLabs, text only).
- * No dependencies. The chat engine is only downloaded when a visitor sends their first question.
+ * chat pop-up. Marcus answers in writing only: no microphone, no voice, no phone call.
+ * Answers come from New Ark's own server (/api/newark/chat). No dependencies.
  */
 (function () {
   "use strict";
   if (window.__nqLoaded) return; window.__nqLoaded = true;
 
-  var AGENT_ID = "agent_5001m4cdabg0etg98t3v928qp45m";
+  var CHAT_API = "https://calltwin.onrender.com/api/newark/chat";
+  var AGENT_ID = "agent_5001m4cdabg0etg98t3v928qp45m"; // backup text engine, used only if the server chat is not set up
   var SDK = "https://cdn.jsdelivr.net/npm/@elevenlabs/client@0.7/+esm";
   var PHONE = "908-454-4043", TEL = "tel:+19084544043";
 
@@ -124,7 +125,7 @@
     root.appendChild(fab); root.appendChild(panel); document.body.appendChild(root);
 
     // ---- chat state ----
-    var convo = null, connecting = null, history = [], waiting = false, waitTimer = 0, dots = null, chipsBox = null, greeted = {}, lastFocus = null;
+    var convo = null, connecting = null, turns = [], serverOff = false, history = [], waiting = false, waitTimer = 0, dots = null, chipsBox = null, greeted = {}, lastFocus = null;
 
     function scroll() { log.scrollTop = log.scrollHeight; }
     function bubble(text, kind) { var p = el("div", "nq-m nq-" + kind, text); log.insertBefore(p, dots && dots.parentNode === log ? dots : null); scroll(); return p; }
@@ -156,7 +157,7 @@
 
     function onMessage(m) {
       if (!m || !m.message || m.source !== "ai") return;
-      setWaiting(false); history.push("Marcus: " + m.message); bubble(m.message, "a");
+      setWaiting(false); turns.push({ role: "assistant", content: m.message }); history.push("Marcus: " + m.message); bubble(m.message, "a");
     }
     function connect() {
       if (convo) return Promise.resolve(convo);
@@ -181,9 +182,22 @@
     function ask(text) {
       text = String(text || "").trim().slice(0, 600);
       if (!text || waiting) return;
-      dropChips(); bubble(text, "u"); history.push("Visitor: " + text);
+      dropChips(); bubble(text, "u"); history.push("Visitor: " + text); turns.push({ role: "user", content: text });
       input.value = ""; grow(); setWaiting(true);
-      connect().then(function (c) { c.sendUserMessage(text); }).catch(function (e) { console.error("[ask marcus]", e); fail(); });
+      serverAsk().catch(function (e) {
+        if (!serverOff) throw e;
+        return connect().then(function (c) { c.sendUserMessage(text); });
+      }).catch(function (e) { console.error("[ask marcus]", e); if (waiting) fail(); });
+    }
+    function serverAsk() {
+      if (serverOff) return Promise.reject(new Error("server chat off"));
+      return fetch(CHAT_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: turns.slice(-24), section: ctx.prompt }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { r: r, j: j }; }); })
+        .then(function (o) {
+          if (o.r.status === 503) serverOff = true;
+          if (!o.r.ok || !o.j.ok || !o.j.reply) throw new Error(o.j.error || "chat failed");
+          setWaiting(false); turns.push({ role: "assistant", content: o.j.reply }); history.push("Marcus: " + o.j.reply); bubble(o.j.reply, "a");
+        });
     }
     function grow() { input.style.height = "auto"; input.style.height = Math.min(120, input.scrollHeight + 2) + "px"; send.disabled = waiting || !input.value.trim(); }
 
@@ -201,6 +215,7 @@
     }
 
     fab.addEventListener("click", function () { open(nearest() || general); });
+    window.NewArkChat = { open: function () { open(general); }, ask: function (t) { open(general); ask(t); } };
     x.addEventListener("click", close);
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && root.classList.contains("nq-open")) close(); });
     form.addEventListener("submit", function (e) { e.preventDefault(); ask(input.value); });
@@ -226,7 +241,7 @@
       var row = el("div", "nq-row"); row.appendChild(b);
       var lede = s.node.querySelector(".lede"), h2 = s.node.querySelector("h2"), wrap = s.node.querySelector(".wrap");
       var anchor = lede || h2;
-      if (s.key === "about" || !anchor) { var col = wrap && wrap.lastElementChild; (col || s.node).appendChild(row); }
+      if (s.key === "about" || !anchor) { var col = s.node.querySelector(".about-body") || (wrap && wrap.lastElementChild); (col || s.node).appendChild(row); }
       else if (s.key === "faq") { var last = wrap && wrap.lastElementChild; (last || s.node).appendChild(row); }
       else anchor.insertAdjacentElement("afterend", row);
     });

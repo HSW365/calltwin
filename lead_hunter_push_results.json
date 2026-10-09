@@ -3,31 +3,47 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
+      "businessName": "Northpoint360",
       "pushed": false
     },
     {
-      "businessName": "Allstate",
+      "businessName": "Volpe Real Estate",
       "pushed": false
     },
     {
-      "businessName": "King Street Hair",
+      "businessName": "Ufberg Dental P.C.",
       "pushed": false
     },
     {
-      "businessName": "Tri-Point Electric",
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
+      "businessName": "Pete's Auto Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Exton Collision",
+      "pushed": false
+    },
+    {
+      "businessName": "Bounce U",
+      "pushed": false
+    },
+    {
+      "businessName": "Ritetax FInancial",
+      "pushed": false
+    },
+    {
+      "businessName": "Liberty Tax",
       "pushed": false
     },
     {
       "businessName": "Gamble's Newark Florist",
-      "pushed": false
-    },
-    {
-      "businessName": "Alleva Funeral Home",
-      "pushed": false
-    },
-    {
-      "businessName": "Cohen Funeral Services",
       "pushed": false
     },
     {

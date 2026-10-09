@@ -220,6 +220,9 @@ router.post("/voicemail", async (req, res) => {
   }
 });
 
+// Website chat (text only). Has its own JSON + CORS handling.
+router.use("/chat", require("./newarkChat"));
+
 router.get("/status", async (req, res) => {
   const oc = await ownerContact();
   res.json({
@@ -228,6 +231,7 @@ router.get("/status", async (req, res) => {
     last_sms_error: lastSmsError,
     email_ready: !!(process.env.SENDGRID_API_KEY && process.env.ESTIMATE_FROM_EMAIL),
     elevenlabs_key: !!process.env.ELEVENLABS_API_KEY,
+    chat_ai: process.env.ANTHROPIC_API_KEY ? "anthropic" : process.env.OPENAI_API_KEY ? "openai" : null,
     owner_on_file: !!(oc && oc.owner_cell),
     ai_enabled: oc ? oc.ai_enabled : null,
     stripe_key: !!process.env.STRIPE_SECRET_KEY,

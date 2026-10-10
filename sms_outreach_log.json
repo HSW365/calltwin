@@ -3679,5 +3679,266 @@
       "error": "From must belong to an active campaign."
     },
     "sent_at": "2026-10-09 19:35:53"
+  },
+  {
+    "businessName": "John C. Ciervo & Son",
+    "phone": "+12154834283",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:28"
+  },
+  {
+    "businessName": "Murphy Roofing",
+    "phone": "+12154877000",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:30"
+  },
+  {
+    "businessName": "Jefferson Roofing and Exterior",
+    "phone": "+14844972141",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:31"
+  },
+  {
+    "businessName": "Bill Johnston Landscape Co.",
+    "phone": "+12157840488",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:32"
+  },
+  {
+    "businessName": "Bounce U",
+    "phone": "+12157529728",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:33"
+  },
+  {
+    "businessName": "John's Tree Service",
+    "phone": "+12154991344",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:35"
+  },
+  {
+    "businessName": "Exton Collision",
+    "phone": "+16103633555",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:36"
+  },
+  {
+    "businessName": "Pete's Auto Service",
+    "phone": "+16102963655",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:37"
+  },
+  {
+    "businessName": "The UPS Store",
+    "phone": "+12152222840",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:39"
+  },
+  {
+    "businessName": "Joseph Hart, Inc. Plumbing",
+    "phone": "+18566244173",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:40"
+  },
+  {
+    "businessName": "Garcia Family Roofing",
+    "phone": "+18626401440",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:41"
+  },
+  {
+    "businessName": "Tino's Custom Tailoring & Dry Cleaning",
+    "phone": "+16104495585",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:42"
+  },
+  {
+    "businessName": "Sunsilk Tailor",
+    "phone": "+12152516925",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:44"
+  },
+  {
+    "businessName": "Italo's Tailor Shop",
+    "phone": "+13023668031",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:45"
+  },
+  {
+    "businessName": "Gamble's Newark Florist",
+    "phone": "+13023661211",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:46"
+  },
+  {
+    "businessName": "Liberty Tax",
+    "phone": "+12672824690",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:47"
+  },
+  {
+    "businessName": "Ritetax FInancial",
+    "phone": "+12679696871",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:49"
+  },
+  {
+    "businessName": "King Street Hair",
+    "phone": "+14843288962",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:50"
+  },
+  {
+    "businessName": "Cohen Funeral Services",
+    "phone": "+12152711610",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:51"
+  },
+  {
+    "businessName": "Alleva Funeral Home",
+    "phone": "+16106443540",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:53"
+  },
+  {
+    "businessName": "Tri-Point Electric",
+    "phone": "+12158175030",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:54"
+  },
+  {
+    "businessName": "Surfs Up Salon",
+    "phone": "+18562457094",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:55"
+  },
+  {
+    "businessName": "Deptford Cuts and Color s",
+    "phone": "+18562272331",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:56"
+  },
+  {
+    "businessName": "Franklinville Family Dentistry",
+    "phone": "+18566945555",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:58"
+  },
+  {
+    "businessName": "Bear-Glasgow Dental",
+    "phone": "+13028863750",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:43:59"
+  },
+  {
+    "businessName": "Ufberg Dental P.C.",
+    "phone": "+16102512227",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:44:00"
+  },
+  {
+    "businessName": "Volpe Real Estate",
+    "phone": "+12155455414",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:44:02"
+  },
+  {
+    "businessName": "Allstate",
+    "phone": "+12153603700",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:44:03"
+  },
+  {
+    "businessName": "State Farm Insurance: Ann Lin",
+    "phone": "+16107225577",
+    "status_code": 500,
+    "result": {
+      "error": "From must belong to an active campaign."
+    },
+    "sent_at": "2026-10-10 18:44:04"
   }
 ]

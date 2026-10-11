@@ -149,7 +149,7 @@ async function saveTicket(a) {
       "Details: " + String(a.summary || "").slice(0, 1500),
       "Call back: tel:" + digits.slice(-10),
       "Saved in the CallTwin job system."
-    ].join("\\n");
+    ].join("\n");
     const emailed = ownerEmail ? await mailer.alertEmail(ownerEmail, "New Ark Website Request", emailBody) : false;
     if (!emailed) console.error("[newark chat] ticket saved, but owner email notification was not sent; check NEWARK_OWNER_EMAIL and mail settings.");
     return { ok: true, ticket: r.data.ticket, emailed };

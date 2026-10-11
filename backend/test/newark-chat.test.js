@@ -166,6 +166,42 @@ test("your own model server is used first when set, and the built-in answers cov
   delete process.env.CHAT_BASE_URL; delete process.env.CHAT_MODEL; llm = null;
 });
 
+test("several models are tried in order, and a model cannot save a ticket with a phone number the visitor never typed", async () => {
+  process.env.CHAT_BASE_URL = "http://llm.test/v1"; process.env.CHAT_MODEL = "big-model, small-model";
+  posts.length = 0;
+  llm = async (url, body) => { if (body.model === "big-model") throw new Error("429"); return { data: { choices: [{ message: { content: "From the second model." } }] } }; };
+  let r = await say([{ role: "user", content: "Do you install geothermal systems?" }]);
+  assert.strictEqual(r.body.engine, "own-2");
+  assert.strictEqual(r.body.reply, "From the second model.");
+
+  const before = leads().length;
+  const call = (phone) => ({ data: { choices: [{ message: { content: "", tool_calls: [{ id: "c1", function: { name: "save_job_ticket", arguments: JSON.stringify({ name: "Pat", phone, summary: "Leak" }) } }] } }] } });
+  let toolResult = null;
+  llm = async (url, body) => {
+    if (body.model === "big-model") throw new Error("429");
+    const last = body.messages[body.messages.length - 1];
+    if (last.role === "tool") { toolResult = JSON.parse(last.content); return { data: { choices: [{ message: { content: "What is the best number to reach you?" } }] } }; }
+    return call("9085550199");
+  };
+  r = await say([{ role: "user", content: "my sink is leaking" }]);
+  assert.strictEqual(toolResult.ok, false);
+  assert.strictEqual(leads().length, before);
+  assert.strictEqual(r.body.saved, null);
+
+  toolResult = null;
+  r = await say([{ role: "user", content: "my sink is leaking, I'm Pat, (908) 555-0199" }]);
+  assert.strictEqual(toolResult.ok, true);
+  assert.strictEqual(leads().length, before + 1);
+
+  // The model saves the ticket, then dies before it can answer: the visitor still gets the confirmation, once.
+  llm = async (url, body) => { if (body.messages[body.messages.length - 1].role === "tool") throw new Error("429"); return call("9085550177"); };
+  r = await say([{ role: "user", content: "boiler is out. Sam 908-555-0177" }]);
+  assert.strictEqual(leads().length, before + 2);
+  assert.match(r.body.reply, /owner has your details/);
+  assert.ok(r.body.saved);
+  delete process.env.CHAT_BASE_URL; delete process.env.CHAT_MODEL; llm = null;
+});
+
 test("stage is read from Marcus's own wording in both languages", () => {
   for (const l of ["en", "es"]) {
     const t = marcus.T[l];

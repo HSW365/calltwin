@@ -12,8 +12,12 @@
  * the model calls save_job_ticket and the job lands in the owner portal like any other web request.
  *
  * Env (all optional):
- *   CHAT_BASE_URL + CHAT_MODEL (+ CHAT_API_KEY)  your own OpenAI-compatible server, e.g. the HSW365 Open Stack's
- *                                                Ollama: CHAT_BASE_URL=https://llm.example.com/v1 CHAT_MODEL=llama3.1:8b
+ *   CHAT_BASE_URL + CHAT_MODEL (+ CHAT_API_KEY)  any OpenAI-compatible server: the HSW365 Open Stack's Ollama
+ *                                                (CHAT_BASE_URL=https://llm.example.com/v1 CHAT_MODEL=llama3.1:8b) or a hosted
+ *                                                open-model service such as Groq. CHAT_MODEL may list several models,
+ *                                                comma separated; each is tried in order, so one model's rate limit
+ *                                                falls through to the next instead of to the built-in answers.
+ *   CHAT_REASONING_EFFORT                        optional, e.g. "low", for reasoning models
  *   ANTHROPIC_API_KEY (NEWARK_CHAT_MODEL)        or  OPENAI_API_KEY (NEWARK_CHAT_OPENAI_MODEL)
  */
 const express = require("express");
@@ -44,6 +48,7 @@ You are Marcus, the front desk for New Ark Plumbing, Heating & Air Conditioning 
 - Say the company name as "New Ark".
 - Reply in the visitor's language. You can chat in English or Spanish.
 - If you don't know, say so and offer to have the owner call them back. Never guess.
+- A general how-to or "what could be wrong" question about plumbing, heating or cooling: give a short, useful, plain-English answer, then offer a visit. Do not diagnose with certainty.
 
 # Business facts
 - New Ark Plumbing, Heating & Air Conditioning LLC. Nearly 40 years serving New Jersey. Commercial and residential, public and private sector work.
@@ -57,6 +62,7 @@ You are Marcus, the front desk for New Ark Plumbing, Heating & Air Conditioning 
 - Fire protection: designs and installs fire sprinkler systems, residential and commercial, with regular inspections.
 - Past projects include Benihana in Short Hills, the Colas tenant project in Morristown, the Joint Meeting of Essex & Union Counties in Elizabeth, and Newark Access Station.
 - Motto: on time, on budget and on spec. Customer satisfaction first.
+- Shutting off water: the main shutoff valve is usually where the water line comes into the building, near the water meter. Turn it clockwise (to the right) until it stops. A lever handle is off when it sits across the pipe.
 
 # How things work on this website
 - Free estimates. In the "Get a free estimate" section the visitor sends photos and details, the owner prices every line, and they get an itemized proposal to review, sign online and pay a deposit to lock in a date. It takes about 2 minutes to send.
@@ -74,6 +80,9 @@ If the visitor wants service, a callback, or has a concern that needs the owner,
 - Never quote a price or a price range. Say pricing depends on the job and point to the free estimate.
 - Never promise an arrival time or a specific technician.
 - Never invent facts about licenses, warranties, financing terms or past work beyond what is listed here.
+- If asked whether New Ark does a specific job that is not named in the business facts (for example a sump pump or a garbage disposal), do not answer yes or no. Say it sounds like the kind of work New Ark handles and the owner will confirm, then offer a callback.
+- If asked about financing, payment plans, warranties, guarantees, discounts or anything else not listed here, do not answer yes or no. Say the owner will go over that, and offer a callback.
+- Only use a name, phone number or address the visitor actually typed in this chat. Never make one up, never use a placeholder, and never call save_job_ticket before the visitor has given their own name and phone number.
 - Never promise the visitor a text message. The owner calls them back.
 - If asked whether you are a person: say you are New Ark's AI front desk and that you pass everything straight to the owner.
 - Stay on New Ark and its services. For anything unrelated, say politely that you can only help with New Ark questions.`;
@@ -95,6 +104,25 @@ const TICKET = {
   },
 };
 
+// A ticket texts the owner, so the phone number must be one the visitor typed. A model that fills in a
+// number on its own gets told to ask for it instead.
+const ticketSaver = (messages) => {
+  const typed = messages.filter((m) => m.role === "user").map((m) => String(m.content).replace(/\D/g, "")).join(" ");
+  // One ticket per message: a second call, or a second model taking over, gets the same ticket back.
+  const save = async (a) => {
+    if (save.done) return save.done;
+    const d = String((a && a.phone) || "").replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "");
+    if (d.length < 10 || !typed.includes(d)) return { ok: false, error: "The visitor has not given a phone number yet. Ask for their name and the best phone number, then save." };
+    const out = await saveTicket(a);
+    if (out.ok) save.done = out;
+    return out;
+  };
+  return save;
+};
+const SAVED_REPLY = (messages) => /[¿¡ñ]|\b(hola|gracias|necesito|tengo|fuga|por favor)\b/i.test(messages.filter((m) => m.role === "user").map((m) => m.content).join(" "))
+  ? "Gracias. El dueño tiene sus datos y le va a llamar. Si es urgente, llame al 908-454-4043."
+  : "Thank you. The owner has your details and will call you back. If it's urgent, call 908-454-4043.";
+
 async function saveTicket(a) {
   const digits = String(a.phone || "").replace(/\D/g, "");
   if (!String(a.name || "").trim() || digits.length < 10) return { ok: false, error: "A name and a 10-digit phone number are needed before this can be saved." };
@@ -110,7 +138,7 @@ async function saveTicket(a) {
   }
 }
 
-async function viaAnthropic(system, messages) {
+async function viaAnthropic(system, messages, save) {
   const msgs = messages.map((m) => ({ role: m.role, content: m.content }));
   let saved = null;
   for (let turn = 0; turn < 3; turn++) {
@@ -123,19 +151,19 @@ async function viaAnthropic(system, messages) {
     if (!calls.length) return { reply: blocks.filter((b) => b.type === "text").map((b) => b.text).join("").trim(), saved };
     msgs.push({ role: "assistant", content: blocks });
     const results = [];
-    for (const c of calls) { const out = await saveTicket(c.input || {}); if (out.ok) saved = out.ticket; results.push({ type: "tool_result", tool_use_id: c.id, content: JSON.stringify(out) }); }
+    for (const c of calls) { const out = await save(c.input || {}); if (out.ok) saved = out.ticket; results.push({ type: "tool_result", tool_use_id: c.id, content: JSON.stringify(out) }); }
     msgs.push({ role: "user", content: results });
   }
   return { reply: "", saved };
 }
 
 // Any OpenAI-compatible chat endpoint: OpenAI itself, or a self-hosted model server (Ollama, vLLM, LM Studio).
-const openAICompatible = ({ baseUrl, apiKey, model }) => async function (system, messages) {
+const openAICompatible = ({ baseUrl, apiKey, model, effort }) => async function (system, messages, save) {
   const msgs = [{ role: "system", content: system }, ...messages.map((m) => ({ role: m.role, content: m.content }))];
   let saved = null;
   for (let turn = 0; turn < 3; turn++) {
     const r = await axios.post(`${baseUrl.replace(/\/+$/, "")}/chat/completions`, {
-      model, max_tokens: 400, messages: msgs,
+      model, max_tokens: effort ? 900 : 400, messages: msgs, ...(effort ? { reasoning_effort: effort } : {}),
       tools: [{ type: "function", function: { name: TICKET.name, description: TICKET.description, parameters: TICKET.schema } }],
     }, { headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, timeout: 30000 });
     const m = r.data.choices[0].message;
@@ -143,7 +171,7 @@ const openAICompatible = ({ baseUrl, apiKey, model }) => async function (system,
     msgs.push(m);
     for (const c of m.tool_calls) {
       let args = {}; try { args = typeof c.function.arguments === "string" ? JSON.parse(c.function.arguments || "{}") : (c.function.arguments || {}); } catch (e) {}
-      const out = await saveTicket(args); if (out.ok) saved = out.ticket;
+      const out = await save(args); if (out.ok) saved = out.ticket;
       msgs.push({ role: "tool", tool_call_id: c.id, content: JSON.stringify(out) });
     }
   }
@@ -151,7 +179,8 @@ const openAICompatible = ({ baseUrl, apiKey, model }) => async function (system,
 };
 
 const providers = () => [
-  process.env.CHAT_BASE_URL && process.env.CHAT_MODEL && { name: "own", run: openAICompatible({ baseUrl: process.env.CHAT_BASE_URL, apiKey: process.env.CHAT_API_KEY, model: process.env.CHAT_MODEL }) },
+  ...(process.env.CHAT_BASE_URL ? String(process.env.CHAT_MODEL || "").split(",").map((m) => m.trim()).filter(Boolean) : []).map((model, i) => (
+    { name: i ? `own-${i + 1}` : "own", run: openAICompatible({ baseUrl: process.env.CHAT_BASE_URL, apiKey: process.env.CHAT_API_KEY, model, effort: process.env.CHAT_REASONING_EFFORT }) })),
   process.env.ANTHROPIC_API_KEY && { name: "anthropic", run: viaAnthropic },
   process.env.OPENAI_API_KEY && { name: "openai", run: openAICompatible({ baseUrl: "https://api.openai.com/v1", apiKey: process.env.OPENAI_API_KEY, model: process.env.NEWARK_CHAT_OPENAI_MODEL || "gpt-4.1-mini" }) },
 ].filter(Boolean);
@@ -178,16 +207,19 @@ router.post("/", async (req, res) => {
   while (messages.length && messages[0].role !== "user") messages.shift();
   if (!messages.length || messages[messages.length - 1].role !== "user") return res.status(400).json({ ok: false, error: "A question is required." });
   const section = String((req.body && req.body.section) || "the website").replace(/[\r\n]+/g, " ").slice(0, 160);
+  const save = ticketSaver(messages);
   for (const p of list) {
     try {
-      const out = await p.run(SYSTEM(section), messages);
+      const out = await p.run(SYSTEM(section), messages, save);
       if (out.reply) return res.json({ ok: true, reply: out.reply, saved: out.saved, engine: p.name });
     } catch (e) {
       console.error(`[newark chat] ${p.name} failed:`, e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message);
     }
+    // The job is already with the owner: confirm it, whatever happened to the model after the save.
+    if (save.done) return res.json({ ok: true, reply: SAVED_REPLY(messages), saved: save.done.ticket || true, engine: p.name });
   }
   try {
-    const out = await marcusLocal.reply(messages, saveTicket);
+    const out = await marcusLocal.reply(messages, save);
     return res.json({ ok: true, reply: out.reply, saved: out.saved, engine: "built-in" });
   } catch (e) {
     console.error("[newark chat] built-in failed:", e.message);

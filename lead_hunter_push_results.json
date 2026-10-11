@@ -3,15 +3,11 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Ufberg Dental P.C.",
+      "businessName": "Northpoint360",
       "pushed": false
     },
     {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
+      "businessName": "Volpe Real Estate",
       "pushed": false
     },
     {
@@ -23,7 +19,11 @@
       "pushed": false
     },
     {
-      "businessName": "King Street Hair",
+      "businessName": "Deptford Cuts and Color s",
+      "pushed": false
+    },
+    {
+      "businessName": "Surfs Up Salon",
       "pushed": false
     },
     {
@@ -35,23 +35,7 @@
       "pushed": false
     },
     {
-      "businessName": "John's Tree Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Bill Johnston Landscape Co.",
-      "pushed": false
-    },
-    {
-      "businessName": "Ritetax FInancial",
-      "pushed": false
-    },
-    {
-      "businessName": "Liberty Tax",
-      "pushed": false
-    },
-    {
-      "businessName": "Gamble's Newark Florist",
+      "businessName": "Bounce U",
       "pushed": false
     }
   ]

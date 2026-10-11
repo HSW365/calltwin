@@ -51,3 +51,18 @@ test("drop detection edge cases", () => {
   assert.strictEqual(aiDroppedCall({ CallSid: "none", DialCallStatus: "completed", DialCallDuration: "45" }), false);
   assert.strictEqual(aiDroppedCall({ CallSid: "none", DialCallStatus: "busy", DialCallDuration: "0" }), false); // busy already falls back
 });
+
+test("New Ark's line never dials the AI: owner's cell, then voicemail", async () => {
+  const clients = require("../routes/clients");
+  const real = clients.clientForNumber;
+  clients.clientForNumber = async () => ({ ...fake, aiEnabled: true, elPhoneId: "ph1", inService: () => true });
+  const srv = express().use(express.urlencoded({ extended: false })).use("/api/inbound", router).listen(0);
+  try {
+    const off = await post(srv.address().port, "/api/inbound/voice", { CallSid: "CA-na", From: "+19085550100", To: "+18565943303" });
+    assert.doesNotMatch(off, /<Sip>/);
+    assert.match(off, /<Dial[^>]*>\+12015550111<\/Dial>/);
+    assert.match(off, /<Record /);
+    const on = await post(srv.address().port, "/api/inbound/voice", { CallSid: "CA-other", From: "+19085550100", To: "+18565550133" });
+    assert.match(on, /<Sip>/);
+  } finally { clients.clientForNumber = real; srv.close(); }
+});

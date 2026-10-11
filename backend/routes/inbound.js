@@ -74,8 +74,13 @@ function aiDroppedCall(p) {
   return false;
 }
 
+// Lines with no AI on the phone: the call rings the owner's cell, then takes a voicemail.
+// New Ark's line is text-only (no AI receptionist on calls). VOICE_AI_OFF_NUMBERS overrides the list.
+const voiceAiOff = (to) => String(process.env.VOICE_AI_OFF_NUMBERS === undefined ? "8565943303" : process.env.VOICE_AI_OFF_NUMBERS)
+  .split(",").map((n) => n.replace(/\D/g, "").slice(-10)).filter(Boolean).includes(String(to || "").replace(/\D/g, "").slice(-10));
+
 async function handleClientCall(c, from, to, res) {
-  if (!c.inService() || !c.aiEnabled || !c.elPhoneId) {
+  if (voiceAiOff(to) || !c.inService() || !c.aiEnabled || !c.elPhoneId) {
     console.log(`[inbound] client ${c.businessName}: ring owner (inService=${c.inService()} ai=${c.aiEnabled} sip=${!!c.elPhoneId})`);
     return res.type("text/xml").send(clientFallbackXml(c, to));
   }
@@ -105,6 +110,7 @@ async function handleInbound(req, res) {
     const c = await require("./clients").clientForNumber(to);
     if (c) return handleClientCall(c, from, to, res);
   } catch (e) { console.error("[inbound] client lookup:", e.message); }
+  if (voiceAiOff(to)) return fallback(res, "no AI on this line: ring the owner, then voicemail", to);
   const agentId = agentFor(to);
   const apiKey = process.env.ELEVENLABS_API_KEY;
   console.log(`[inbound] call ${p.CallSid || "?"} from ${from} to ${to} -> ${agentId}`);

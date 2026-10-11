@@ -84,11 +84,12 @@ label.l{display:block;font-size:13px;font-weight:750;margin-bottom:5px}
           <div><label class="l">City / area</label><input name="city"></div>
           <div><label class="l">Your name</label><input name="ownerName"></div>
           <div><label class="l">Your cell</label><input name="ownerCell" type="tel"></div>
+          <div><label class="l">Your email (jobs are emailed here too)</label><input name="ownerEmail" type="email" autocomplete="email"></div>
           <div><label class="l">Business phone</label><input name="businessPhone" type="tel"></div>
           <div><label class="l">Hours</label><input name="hours"></div>
           <div class="full"><label class="l">What you do (the AI tells callers this)</label><textarea name="services"></textarea></div>
           <div class="full"><label class="l">Anything else the AI should know</label><textarea name="notes"></textarea></div>
-          <div class="full" style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap"><button class="btn gh" type="button" id="testText">Send me a test text</button><button class="btn" type="submit">Save</button></div>
+          <div class="full" style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap"><button class="btn gh" type="button" id="testText">Send me a test alert</button><button class="btn" type="submit">Save</button></div>
           <div class="full msg" id="sMsg"></div>
         </div>
       </form>
@@ -167,18 +168,18 @@ function render(leads) {
 
   const f = $("#sf");
   for (const k of ["businessName", "city", "ownerName", "hours", "services", "notes"]) f.elements[k].value = C[k] || "";
-  f.elements.ownerCell.value = fmt(C.ownerCell); f.elements.businessPhone.value = fmt(C.businessPhone);
+  f.elements.ownerCell.value = fmt(C.ownerCell); f.elements.ownerEmail.value = C.ownerEmail || ""; f.elements.businessPhone.value = fmt(C.businessPhone);
   f.elements.aiEnabled.checked = C.aiEnabled; f.elements.alertSms.checked = C.alertSms;
 }
 $("#sf").addEventListener("submit", async (e) => {
   e.preventDefault(); const f = e.target, s = {};
-  for (const k of ["businessName", "city", "ownerName", "ownerCell", "businessPhone", "hours", "services", "notes"]) s[k] = f.elements[k].value;
+  for (const k of ["businessName", "city", "ownerName", "ownerCell", "ownerEmail", "businessPhone", "hours", "services", "notes"]) s[k] = f.elements[k].value;
   s.aiEnabled = f.elements.aiEnabled.checked; s.alertSms = f.elements.alertSms.checked;
   const j = await post({ a: "update", settings: s });
   $("#sMsg").textContent = j.ok ? "Saved. Your AI receptionist is updated." : j.error; $("#sMsg").style.color = j.ok ? "var(--ok)" : "var(--bad)";
   if (j.ok) { C = j.client; }
 });
-$("#testText").onclick = async () => { const j = await post({ a: "test_text" }); $("#sMsg").textContent = j.ok ? "Test text sent." : j.error; };
+$("#testText").onclick = async () => { const j = await post({ a: "test_text" }); $("#sMsg").textContent = j.ok ? (j.message || "Test sent.") : j.error; };
 $("#refresh").onclick = load;
 if (q.get("paid") && q.get("session_id")) fetch(API + "/confirm?session_id=" + encodeURIComponent(q.get("session_id"))).then(load);
 load();

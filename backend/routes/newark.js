@@ -1,7 +1,7 @@
 /**
  * New Ark (first CallTwin client) glue between the phone line and the client portal.
  *
- *   POST /api/newark/notify     text the owner (SignalWire SMS). Auth: x-newark-key header.
+ *   POST /api/newark/notify     alert the owner by text (SignalWire SMS) and email together. Auth: x-newark-key header.
  *   POST /api/newark/voicemail  SignalWire <Record> callback -> saves a job ticket in the portal.
  *   helpers used by routes/inbound.js: ownerContact(), fallbackXml()
  *
@@ -194,20 +194,23 @@ router.get("/confirm", async (req, res) => {
   }
 });
 
+// Owner alert: text AND email at the same time. Either one landing counts as delivered, so the job reaches
+// the owner right away even while the text line is waiting on carrier approval.
 router.post("/notify", async (req, res) => {
   if (!hookKey() || req.get("x-newark-key") !== hookKey()) return res.status(401).json({ ok: false, error: "unauthorized" });
   const to = e164(req.body && req.body.to);
+  const email = String((req.body && req.body.email) || process.env.NEWARK_OWNER_EMAIL || "").trim();
   const body = String((req.body && req.body.body) || "").slice(0, 1400);
-  if (!to || !body) return res.status(400).json({ ok: false, error: "to and body required" });
-  try {
-    const sid = await sendSms(to, body);
-    res.json({ ok: true, sid });
-  } catch (e) {
-    const detail = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message;
-    console.error("[newark] sms failed:", detail);
-    // Text only: the owner is never phoned with an alert. The job stays saved in the portal.
-    res.status(502).json({ ok: false, error: detail });
-  }
+  if ((!to && !email) || !body) return res.status(400).json({ ok: false, error: "to and body required" });
+  let smsError = to ? null : "no cell number";
+  const [sid, emailed] = await Promise.all([
+    to ? sendSms(to, body).catch((e) => { smsError = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message; return null; }) : null,
+    require("../services/mailer").alertEmail(email, (req.body && req.body.business) || "New Ark", body).catch(() => false),
+  ]);
+  if (smsError && to) console.error("[newark] sms failed:", smsError);
+  // Text and email only: the owner is never phoned with an alert. The job stays saved in the portal.
+  if (!sid && !emailed) return res.status(502).json({ ok: false, error: smsError || "not delivered" });
+  res.json({ ok: true, sid: sid || undefined, texted: !!sid, emailed });
 });
 
 router.post("/voicemail", async (req, res) => {
@@ -238,14 +241,16 @@ router.get("/status", async (req, res) => {
     hook_key: !!hookKey(),
     sms_ready: smsReady(),
     last_sms_error: lastSmsError,
-    email_ready: !!(process.env.SENDGRID_API_KEY && process.env.ESTIMATE_FROM_EMAIL),
+    email_ready: require("../services/mailer").emailReady(),
+    email: require("../services/mailer").status(),
+    newark_owner_email_on_file: !!process.env.NEWARK_OWNER_EMAIL,
     elevenlabs_key: !!process.env.ELEVENLABS_API_KEY,
     chat_ai: process.env.CHAT_BASE_URL && process.env.CHAT_MODEL ? "own" : process.env.ANTHROPIC_API_KEY ? "anthropic" : process.env.OPENAI_API_KEY ? "openai" : "built-in",
     owner_on_file: !!(oc && oc.owner_cell),
     ai_enabled: oc ? oc.ai_enabled : null,
     stripe_key: !!process.env.STRIPE_SECRET_KEY,
     // names only, never values: helps spot a secret saved under an unexpected name
-    env_names: Object.keys(process.env).filter((k) => /SIGNAL|^SW_|STRIPE|ELEVEN/i.test(k)).sort(),
+    env_names: Object.keys(process.env).filter((k) => /SIGNAL|^SW_|STRIPE|ELEVEN|GMAIL|SMTP|SENDGRID|ALERT_FROM|ESTIMATE_FROM/i.test(k)).sort(),
   });
 });
 

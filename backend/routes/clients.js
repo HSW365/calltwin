@@ -3,7 +3,7 @@
  *   POST /api/clients/signup          public: business signs up (14-day free trial, then $99/mo)
  *   POST /api/clients/checkout        public: Stripe card subscription with the trial (needs STRIPE_SECRET_KEY)
  *   GET  /api/clients/confirm         public: confirm Stripe checkout
- *   POST /api/clients/lead            AI agent tool (x-client-key) -> saves job, texts owner
+ *   POST /api/clients/lead            AI agent tool (x-client-key) -> saves job, texts AND emails owner
  *   POST /api/clients/voicemail       SignalWire <Record> callback for a client line
  *   GET  /api/clients/portal?k=       owner dashboard data
  *   POST /api/clients/portal          owner actions (update settings, lead status, test text)
@@ -49,24 +49,30 @@ async function byKey(k) {
   if (c && applyClientPromo(c)) await c.save();
   return c;
 }
-/** Text the owner. Text only: the owner is never phoned with an alert (the `voice` argument is ignored). */
-async function textOwner(c, body, voice) { // eslint-disable-line no-unused-vars
+const mailer = () => require("../services/mailer");
+/**
+ * Alert the owner by text AND email at the same time, so the job arrives right away even when one of the two
+ * is not working yet (for example while the text line waits on carrier approval). The owner is never phoned.
+ * Returns { texted, emailed }.
+ */
+async function alertOwner(c, body) {
   const to = e164(c.ownerCell);
-  if (!to || c.alertSms === false || !sms().smsReady()) return false;
-  try { await sms().sendSms(to, body.slice(0, 1400)); return true; } catch (e) {
-    console.error("[clients] sms:", e.message);
-    // Text didn't go out: fall back to email so the owner still gets the alert.
-    try {
-      const sent = await require("../estimate/service").sendEmail(c.ownerEmail, `${c.businessName || "CallTwin"} alert`, body);
-      if (sent) console.log("[clients] alert emailed to owner instead of text");
-    } catch (_) { /* best effort */ }
-    return false;
-  }
+  const text = (to && c.alertSms !== false && sms().smsReady())
+    ? sms().sendSms(to, body.slice(0, 1400)).then(() => true, (e) => { console.error("[clients] sms:", e.message); return false; })
+    : Promise.resolve(false);
+  const email = mailer().alertEmail(c.ownerEmail, c.businessName, body).catch(() => false);
+  const [texted, emailed] = await Promise.all([text, email]);
+  if (!texted && !emailed) console.error(`[clients] alert not delivered for ${c.businessName || c._id}: no text, no email`);
+  return { texted, emailed };
 }
+/** Same alert; resolves true only when the TEXT went out (callers that tell someone "a text was sent" rely on this). */
+async function textOwner(c, body) { return (await alertOwner(c, body)).texted; }
+const ADMIN_EMAIL = () => process.env.CALLTWIN_ADMIN_EMAIL || process.env.CALLTWIN_OWNER_EMAIL || "hsw365media@gmail.com";
 async function textAdmin(body) {
   const to = e164(process.env.CALLTWIN_ADMIN_CELL || "8567968081");
-  if (!to || !sms().smsReady()) return;
-  try { await sms().sendSms(to, body.slice(0, 1400)); } catch (e) { console.error("[clients] admin sms:", e.message); }
+  const email = mailer().alertEmail(ADMIN_EMAIL(), "CallTwin admin", body).catch(() => false);
+  if (to && sms().smsReady()) { try { await sms().sendSms(to, body.slice(0, 1400)); } catch (e) { console.error("[clients] admin sms:", e.message); } }
+  await email;
 }
 function publicClient(c) {
   return {
@@ -296,13 +302,11 @@ router.post("/lead", async (req, res) => {
     // HSW365 AI Estimate add-on: turn the call into a draft estimate for the owner to review (no-op when the add-on is off).
     require("../estimate/service").fromCallTwinLead(c, lead, { measurements: clip(b.measurements, 1000), equipment: clip(b.equipment, 500), access: clip(b.access_notes, 500) });
     const d = String(lead.phone || "").replace(/\D/g, "");
-    lead.notified = await textOwner(c, [`${lead.urgency === "Emergency" ? "EMERGENCY " : ""}New call for ${c.businessName}: ${lead.name || "Caller"} ${lead.phone || ""}`,
-      [lead.service, lead.urgency].filter(Boolean).join(" / "), lead.address, lead.summary || lead.details, d ? `Call back: tel:${d}` : ""].filter(Boolean).join("\n"),
-      { urgent: lead.urgency === "Emergency", speech: [`This is Call Twin with a new ${lead.urgency === "Emergency" ? "emergency " : ""}job for ${c.businessName}.`,
-        `The caller is ${lead.name || "a customer"}.`, d ? `Their phone number is ${sms().sayDigits(d)}.` : "", lead.service ? `They need: ${lead.service}.` : "",
-        lead.address ? `Address: ${lead.address}.` : "", clip(lead.summary || lead.details, 300)].filter(Boolean).join(" ") });
+    const sent = await alertOwner(c, [`${lead.urgency === "Emergency" ? "EMERGENCY " : ""}New call for ${c.businessName}: ${lead.name || "Caller"} ${lead.phone || ""}`,
+      [lead.service, lead.urgency].filter(Boolean).join(" / "), lead.address, lead.summary || lead.details, d ? `Call back: tel:${d}` : ""].filter(Boolean).join("\n"));
+    lead.notified = sent.texted || sent.emailed;
     await lead.save();
-    res.json({ ok: true, message: "Saved. The owner has been texted and will call the customer back." });
+    res.json({ ok: true, message: "Saved. The owner has been alerted and will call the customer back." });
   } catch (e) {
     console.error("[clients] lead:", e);
     res.status(500).json({ ok: false, error: "Could not save." });
@@ -316,8 +320,8 @@ router.post("/voicemail", async (req, res) => {
   const c = await Client.findById(p.c).catch(() => null);
   if (!c) return;
   const lead = await ClientLead.create({ client: c._id, source: "voicemail", name: "Voicemail caller", phone: p.From || "", summary: `Voicemail (${p.RecordingDuration || "?"}s): ${p.RecordingUrl}.mp3` });
-  lead.notified = await textOwner(c, `New voicemail for ${c.businessName} from ${p.From || "unknown"}. Listen: ${p.RecordingUrl}.mp3`,
-    { speech: `This is Call Twin. ${c.businessName} has a new voicemail${p.From ? ` from ${sms().sayDigits(p.From)}` : ""}. You can listen to it in your portal.` });
+  const sent = await alertOwner(c, `New voicemail for ${c.businessName} from ${p.From || "unknown"}. Listen: ${p.RecordingUrl}.mp3`);
+  lead.notified = sent.texted || sent.emailed;
   await lead.save();
   require("../estimate/service").fromCallTwinLead(c, lead);
 });
@@ -340,8 +344,9 @@ router.post("/portal", async (req, res) => {
       return res.json({ ok: true });
     }
     if (b.a === "test_text") {
-      const ok = await textOwner({ ...c.toObject(), alertSms: true }, `CallTwin test for ${c.businessName}: job alerts will arrive at this number.`);
-      return res.json({ ok, error: ok ? undefined : "Text alerts aren't connected yet. Jobs still show on this dashboard." });
+      const sent = await alertOwner({ ...c.toObject(), alertSms: true }, `CallTwin test for ${c.businessName}: job alerts will arrive by text at this number and by email at ${c.ownerEmail || "the email on file"}.`);
+      const how = [sent.texted && "text", sent.emailed && "email"].filter(Boolean).join(" and ");
+      return res.json({ ok: !!how, texted: sent.texted, emailed: sent.emailed, message: how ? `Test sent by ${how}.` : undefined, error: how ? undefined : "Alerts aren't connected yet. Jobs still show on this dashboard." });
     }
     if (b.a === "paid_notice") {
       await textAdmin(`CallTwin payment notice: ${c.businessName} (${c.ownerName}) says they sent $${(c.setupDue ? SETUP_CENTS : PRICE_CENTS) / 100}${c.setupDue ? " setup fee" : ""} by ${clip(b.method, 20) || c.payMethod}. Confirm in admin.`);
@@ -351,6 +356,7 @@ router.post("/portal", async (req, res) => {
       const s = b.settings || {};
       for (const k of ["businessName", "ownerName", "city", "services", "hours", "notes", "payoutZelle", "payoutCashapp"]) if (k in s) c[k] = clip(s[k], k === "notes" ? 2000 : 1500);
       if ("ownerCell" in s) { const cell = e164(s.ownerCell); if (!cell) return res.status(400).json({ ok: false, error: "Enter a 10-digit cell." }); c.ownerCell = cell; }
+      if ("ownerEmail" in s) { const em = clip(s.ownerEmail, 160).toLowerCase(); if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return res.status(400).json({ ok: false, error: "Enter a valid email." }); if (!c.isOwnerComp()) c.ownerEmail = em; }
       if ("businessPhone" in s) c.businessPhone = e164(s.businessPhone) || clip(s.businessPhone, 30);
       if ("payoutStripeLink" in s) c.payoutStripeLink = /^https:\/\//.test(s.payoutStripeLink || "") ? clip(s.payoutStripeLink, 300) : "";
       if (typeof s.aiEnabled === "boolean") c.aiEnabled = s.aiEnabled;
@@ -392,7 +398,7 @@ router.post("/admin", async (req, res) => {
   else if (b.a === "cancel") c.status = "canceled";
   else if (b.a === "set_number") { const n = e164(b.number); if (!n) return res.status(400).json({ ok: false, error: "Bad number." }); c.aiNumber = n; c.elPhoneId = ""; }
   else if (b.a === "reprovision") { /* fall through to provision */ }
-  else if (b.a === "resend") { const ok = await textOwner({ ...c.toObject(), alertSms: true }, welcomeText(c)); return res.json({ ok, error: ok ? undefined : "Text failed." }); }
+  else if (b.a === "resend") { const sent = await alertOwner({ ...c.toObject(), alertSms: true }, welcomeText(c)); const ok = sent.texted || sent.emailed; return res.json({ ok, ...sent, error: ok ? undefined : "Text and email both failed." }); }
   else return res.status(400).json({ ok: false, error: "Unknown action." });
   await c.save();
   if (b.a === "set_number" || b.a === "reprovision") await provision(c);
@@ -421,4 +427,4 @@ async function clientForNumber(to) {
   return Client.findOne({ aiNumber: "+1" + d });
 }
 
-module.exports = { router, clientForNumber, stripeEvent };
+module.exports = { router, clientForNumber, stripeEvent, alertOwner };

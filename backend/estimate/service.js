@@ -203,19 +203,10 @@ async function sendSms(to, body) {
   if (!num || !sms().smsReady()) return false;
   try { await sms().sendSms(num, String(body).slice(0, 1400)); return true; } catch (e) { console.error("[estimate] sms:", e.message); return false; }
 }
-function emailReady() { return !!(process.env.SENDGRID_API_KEY && process.env.ESTIMATE_FROM_EMAIL); }
+// Email goes through services/mailer.js (Gmail / SMTP / SendGrid, whichever is set up).
+function emailReady() { return require("../services/mailer").emailReady(); }
 async function sendEmail(to, subject, text, replyTo) {
-  if (!emailReady() || !/@/.test(to || "")) return false;
-  try {
-    await axios.post("https://api.sendgrid.com/v3/mail/send", {
-      personalizations: [{ to: [{ email: to }] }],
-      from: { email: process.env.ESTIMATE_FROM_EMAIL, name: process.env.ESTIMATE_FROM_NAME || "Estimates" },
-      reply_to: replyTo && /@/.test(replyTo) ? { email: replyTo } : undefined,
-      subject: String(subject).slice(0, 200),
-      content: [{ type: "text/plain", value: String(text).slice(0, 20000) }],
-    }, { headers: { Authorization: `Bearer ${process.env.SENDGRID_API_KEY}` }, timeout: 15000 });
-    return true;
-  } catch (e) { console.error("[estimate] email:", e.response ? e.response.status : e.message); return false; }
+  return require("../services/mailer").sendEmail(to, subject, text, { replyTo, fromName: process.env.ESTIMATE_FROM_NAME || "Estimates" });
 }
 
 function fill(tpl, vars) {

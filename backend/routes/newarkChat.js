@@ -25,6 +25,8 @@ const axios = require("axios");
 const marcusLocal = require("../services/marcusLocal");
 
 const router = express.Router();
+// Always say JSON out loud: the SignalWire library switches axios's default POST type to form-encoded once it loads.
+const JSON_TYPE = { "Content-Type": "application/json" };
 const NEWARK_API = process.env.NEWARK_API || "https://lsxdlmrjrcivxwgfkpop.supabase.co/functions/v1/newark";
 
 const ALLOWED = [/^https:\/\/(www\.)?ark-hvac\.com$/, /^https:\/\/newark-ark\.onrender\.com$/, /^https:\/\/hsw365\.github\.io$/, /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/];
@@ -130,7 +132,7 @@ async function saveTicket(a) {
     const r = await axios.post(NEWARK_API, {
       a: "lead", name: String(a.name).slice(0, 120), phone: String(a.phone).slice(0, 40), address: String(a.address || "").slice(0, 300),
       service: a.service || "Other", urgency: a.urgency || "Within 48 hours", details: ("Website chat: " + String(a.summary || "")).slice(0, 2000),
-    }, { timeout: 10000 });
+    }, { headers: JSON_TYPE, timeout: 10000 });
     return r.data && r.data.ok ? { ok: true, ticket: r.data.ticket } : { ok: false, error: (r.data && r.data.error) || "Not saved." };
   } catch (e) {
     console.error("[newark chat] ticket save failed:", e.message);
@@ -145,7 +147,7 @@ async function viaAnthropic(system, messages, save) {
     const r = await axios.post("https://api.anthropic.com/v1/messages", {
       model: process.env.NEWARK_CHAT_MODEL || "claude-haiku-4-5", max_tokens: 400, system, messages: msgs,
       tools: [{ name: TICKET.name, description: TICKET.description, input_schema: TICKET.schema }],
-    }, { headers: { "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }, timeout: 30000 });
+    }, { headers: { ...JSON_TYPE, "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }, timeout: 30000 });
     const blocks = r.data.content || [];
     const calls = blocks.filter((b) => b.type === "tool_use");
     if (!calls.length) return { reply: blocks.filter((b) => b.type === "text").map((b) => b.text).join("").trim(), saved };
@@ -165,7 +167,7 @@ const openAICompatible = ({ baseUrl, apiKey, model, effort }) => async function 
     const r = await axios.post(`${baseUrl.replace(/\/+$/, "")}/chat/completions`, {
       model, max_tokens: effort ? 900 : 400, messages: msgs, ...(effort ? { reasoning_effort: effort } : {}),
       tools: [{ type: "function", function: { name: TICKET.name, description: TICKET.description, parameters: TICKET.schema } }],
-    }, { headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, timeout: 30000 });
+    }, { headers: apiKey ? { ...JSON_TYPE, Authorization: `Bearer ${apiKey}` } : JSON_TYPE, timeout: 30000 });
     const m = r.data.choices[0].message;
     if (!m.tool_calls || !m.tool_calls.length) return { reply: String(m.content || "").trim(), saved };
     msgs.push(m);

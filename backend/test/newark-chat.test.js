@@ -53,6 +53,15 @@ test("every starter question on the site gets a real answer", async () => {
   assert.strictEqual(leads().length, 0, "questions alone never create a job");
 });
 
+test("payment answers are Zelle only", async () => {
+  for (const q of ["How do I pay with Zelle?", "Can I pay with a credit card?", "Do you take Cash App?", "How do I pay my bill?"]) {
+    const r = await say([{ role: "user", content: q }]);
+    assert.match(r.body.reply, /Zelle/, q);
+    assert.ok(!/Zelle, Cash App/.test(r.body.reply), q);
+  }
+  assert.match((await say([{ role: "user", content: "Do you take Cash App?" }])).body.reply, /does not take Cash App or cards/);
+});
+
 test("a problem becomes a saved job: need, name, phone, town", async () => {
   posts.length = 0;
   const { res, messages } = await talk(["My kitchen sink is leaking under the cabinet", "my name is Maria Lopez", "(908) 555-0142", "Washington NJ"]);

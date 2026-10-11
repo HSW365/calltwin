@@ -69,8 +69,10 @@ const PROBLEM = /leak|clog|broke|burst|not working|doesn'?t work|won'?t (turn|st
 const FAQ = [
   [/are you (a )?(real|human|person|robot|bot|ai)|am i (talking|chatting) (to|with) a/i, "I'm New Ark's AI front desk. I pass everything straight to the owner."],
   [/i (already |just )?(paid|sent (a |the |my )?payment)|paid\.? what/i, "Thank you. Please fill in the short \"I've sent a payment\" form in the Pay a bill section so your payment is matched to your invoice."],
+  [/how (do|can|should) i pay|pay (my|a|the|this|our) (bill|invoice)|ways? to pay/i, "New Ark takes payment by Zelle, from your bank's app. The Pay a bill section shows where to send it. After you pay, fill in the short \"I've sent a payment\" form there so it's matched to your invoice."],
   [/invoice|balance|status of|my (job|account|bill)\b/i, "I can't see invoices, balances or job status here, but the owner can. Would you like the owner to call you back?"],
-  [/zelle|cash ?app|\bpay\b|payment|credit card|debit/i, "The Pay a bill section shows how to pay by Zelle, Cash App or card. After you pay, fill in the short \"I've sent a payment\" form there so it's matched to your invoice."],
+  [/cash ?app|credit card|debit|\bcards?\b|venmo|paypal|apple pay/i, "New Ark takes payment by Zelle. It does not take Cash App or cards. The Pay a bill section shows where to send it."],
+  [/zelle|\bpay\b|payment/i, "New Ark takes payment by Zelle, from your bank's app. The Pay a bill section shows where to send it. After you pay, fill in the short \"I've sent a payment\" form there so it's matched to your invoice."],
   [/what photos|which photos|photos? should/i, "Send clear photos of the problem and of the space or equipment around it. You can add them right in the Get a free estimate form."],
   [/how (soon|long|fast|quick).*(estimate|proposal|quote)|when will i (get|hear)/i, "The owner prices every estimate himself, so I can't promise a time. You'll get an itemized proposal to review and sign online."],
   [/(estimate|quote).*(free|charge|cost)|(free|charge|cost).*(estimate|quote)/i, "Estimates are free. Send photos and details in the Get a free estimate section. It takes about 2 minutes."],

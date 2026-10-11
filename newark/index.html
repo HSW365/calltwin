@@ -836,12 +836,10 @@ footer .logo small{color:#9fb3c8}
   <div class="wrap">
     <div class="sec-head">
       <h2>Pay a bill.</h2>
-      <p class="lede">Zelle, Cash App or card. Once you have sent it, let us know below so we can match it to your invoice.</p>
+      <p class="lede">Pay by Zelle. Once you have sent it, let us know below so we can match it to your invoice.</p>
     </div>
     <div class="pay-list">
-      <article class="pm" data-pm="zelle"><div class="logo-b" aria-hidden="true">Z</div><div><h3>Zelle <span class="tag">Preferred</span></h3><p>From your bank's app. No fees, arrives the same day.</p></div><div data-slot></div></article>
-      <article class="pm" data-pm="cashapp"><div class="logo-b" aria-hidden="true">$</div><div><h3>Cash App <span class="tag">Preferred</span></h3><p>Opens Cash App with the amount filled in.</p></div><div data-slot></div></article>
-      <article class="pm" data-pm="stripe"><div class="logo-b" aria-hidden="true">C</div><div><h3>Card <span class="tag">Preferred</span></h3><p>Visa, Mastercard, Amex, Apple Pay and Google Pay.</p></div><div data-slot></div></article>
+      <article class="pm" data-pm="zelle"><div class="logo-b" aria-hidden="true">Z</div><div><h3>Zelle</h3><p>From your bank's app. No fees, arrives the same day.</p></div><div data-slot></div></article>
     </div>
     <div class="sheet notice">
       <div class="sheet-h"><h3>I've sent a payment</h3><span class="small">This only notifies us. It doesn't move money.</span></div>
@@ -850,12 +848,7 @@ footer .logo small{color:#9fb3c8}
         <div class="field"><label for="pAmt">Amount in dollars</label><input id="pAmt" name="amount" type="number" inputmode="decimal" min="1" step="0.01" required placeholder="0.00"></div>
         <div class="field"><label for="pPhone">Phone</label><input id="pPhone" name="customer_phone" type="tel" autocomplete="tel"></div>
         <div class="field"><label for="pInv">Invoice or job number <em>(optional)</em></label><input id="pInv" name="invoice_ref"></div>
-        <div class="field full"><span class="lab" id="pMethL">Paid with</span>
-          <div class="chips" role="radiogroup" aria-labelledby="pMethL">
-            <label class="chip"><input type="radio" name="method" value="zelle" checked><span>Zelle</span></label>
-            <label class="chip"><input type="radio" name="method" value="cashapp"><span>Cash App</span></label>
-            <label class="chip"><input type="radio" name="method" value="stripe"><span>Card</span></label>
-          </div></div>
+        <input type="hidden" name="method" value="zelle">
         <div class="full msg" id="payMsg" role="status"></div>
         <div class="full form-foot"><span></span><button class="btn btn-ink" type="submit">Send payment notice</button></div>
       </form>
@@ -884,7 +877,7 @@ footer .logo small{color:#9fb3c8}
       <details><summary>How does the online estimate work?</summary><p>Send photos and a description. The owner prices every line himself and sends you a proposal by text or email. You can ask questions, request changes, or sign and pay a deposit online.</p></details>
       <details><summary>Can one company really do plumbing, HVAC, geothermal and sprinklers?</summary><p>That is why New Ark exists. One contractor coordinates all four, so the work happens on one schedule without three companies pointing at each other.</p></details>
       <details><summary>Do you do commercial work?</summary><p>Yes. We have a wide range of experience with large commercial projects as well as residential clients, for both public and private sector clients.</p></details>
-      <details><summary>How do I pay?</summary><p>Zelle, Cash App or card. Use the Pay a bill section, then send the payment notice so we can match it to your invoice.</p></details>
+      <details><summary>How do I pay?</summary><p>By Zelle. Use the Pay a bill section, then send the payment notice so we can match it to your invoice.</p></details>
       <details><summary>Are you licensed?</summary><p>Yes. Master Plumber License #4646 and HVAC Contractor License #1783. We are licensed and insured, with over 40 years in the industry.</p></details>
       <details><summary>What area do you cover?</summary><p>We are located in Phillipsburg, NJ and serve clients throughout the Northern New Jersey area. See the list of areas on this page, and call if you are not sure.</p></details>
     </div>
@@ -942,17 +935,11 @@ footer .logo small{color:#9fb3c8}
             </div>
             <div class="sep"></div>
             <div class="step-h"><i>2</i>How you get paid</div>
-            <div class="payout">
-              <div class="po"><input type="radio" name="payout_method" id="poZ" value="zelle" checked><label for="poZ"><b>Zelle</b><span>Customers send to your bank</span></label></div>
-              <div class="po"><input type="radio" name="payout_method" id="poC" value="cashapp"><label for="poC"><b>Cash App</b><span>Paid to your $cashtag</span></label></div>
-              <div class="po"><input type="radio" name="payout_method" id="poS" value="stripe"><label for="poS"><b>Stripe</b><span>Cards through your link</span></label></div>
+            <div class="form">
+              <input type="hidden" name="payout_method" value="zelle"><input type="hidden" name="cashapp_tag" value=""><input type="hidden" name="stripe_link" value="">
+              <div class="field full"><label for="sZelle">Zelle email or phone</label><input id="sZelle" name="zelle_handle" placeholder="Email or phone registered with Zelle"></div>
             </div>
-            <div class="form" style="margin-top:16px">
-              <div class="field full po-f on" data-po="zelle"><label for="sZelle">Zelle email or phone</label><input id="sZelle" name="zelle_handle" placeholder="Email or phone registered with Zelle"></div>
-              <div class="field full po-f" data-po="cashapp"><label for="sCash">Cash App $cashtag</label><input id="sCash" name="cashapp_tag" placeholder="$yourtag"></div>
-              <div class="field full po-f" data-po="stripe"><label for="sStripe">Stripe payment link</label><input id="sStripe" name="stripe_link" type="url" placeholder="https://buy.stripe.com/..."></div>
-            </div>
-            <p class="small" style="margin-top:10px">You can add all three later in Settings. Customers see every method you fill in.</p>
+            <p class="small" style="margin-top:10px">Customers pay you by Zelle. This is where they send it.</p>
             <div class="sep"></div>
             <div class="step-h"><i>3</i>Your PIN</div>
             <div class="form">
@@ -1017,10 +1004,8 @@ footer .logo small{color:#9fb3c8}
               <div class="field"><label>Email</label><input name="owner_email" type="email"></div>
               <div class="field"><label>Cell</label><input name="owner_cell" type="tel"></div>
               <div class="field full"><label>Business line</label><input name="business_phone" type="tel"></div>
-              <div class="field full"><label>Preferred payout</label><select name="payout_method"><option value="zelle">Zelle</option><option value="cashapp">Cash App</option><option value="stripe">Stripe</option></select></div>
-              <div class="field"><label>Zelle email or phone</label><input name="zelle_handle"></div>
-              <div class="field"><label>Cash App $cashtag</label><input name="cashapp_tag"></div>
-              <div class="field full"><label>Stripe payment link</label><input name="stripe_link" type="url" placeholder="https://buy.stripe.com/..."></div>
+              <input type="hidden" name="payout_method" value="zelle"><input type="hidden" name="cashapp_tag" value=""><input type="hidden" name="stripe_link" value="">
+              <div class="field full"><label>Zelle email or phone <em>(where customers pay you)</em></label><input name="zelle_handle"></div>
               <div class="full msg" id="setMsg" role="status"></div>
               <div class="full form-foot"><button class="btn btn-line" type="button" id="testSms">Send me a test text</button><button class="btn btn-ink" type="submit">Save settings</button></div>
             </div>
@@ -1037,7 +1022,7 @@ footer .logo small{color:#9fb3c8}
             <div><span>Paid so far</span><span>$500</span></div>
             <div><span>Balance, paid $500 a month</span><span>$1,000</span></div>
           </div>
-          <p class="small" style="margin-top:14px">Pay HSW365 Media by Zelle to (856) 796-8081 or Cash App $hsw365. Questions about your plan: text (856) 796-8081.</p>
+          <p class="small" style="margin-top:14px">Pay HSW365 Media by Zelle to (856) 796-8081. Questions about your plan: text (856) 796-8081.</p>
         </div>
       </div>
     </div>
@@ -1288,7 +1273,7 @@ function renderDash(leads, pays) {
 function fillSettings() {
   const f = $("#setForm");
   for (const k of ["business_name", "owner_name", "owner_email", "owner_cell", "business_phone", "zelle_handle", "cashapp_tag", "stripe_link"]) f.elements[k].value = S[k] || "";
-  f.elements.payout_method.value = S.payout_method || "zelle";
+  f.elements.payout_method.value = "zelle"; f.elements.cashapp_tag.value = ""; f.elements.stripe_link.value = "";
   f.elements.alert_sms.checked = S.alert_sms !== false;
 }
 $("#setForm").addEventListener("submit", async (e) => {

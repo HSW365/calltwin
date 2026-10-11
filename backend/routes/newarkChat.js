@@ -2,16 +2,23 @@
  * New Ark website chat: Marcus answers in writing, on the site, with no voice and no ElevenLabs.
  *
  *   POST /api/newark/chat   { messages: [{ role: "user"|"assistant", content }], section }
- *                        -> { ok, reply, saved }
- *   GET  /api/newark/chat   { ok, ready }   (does the server have an AI key for the chat)
+ *                        -> { ok, reply, saved, engine }
+ *   GET  /api/newark/chat   { ok, ready, engines }
+ *
+ * The chat always answers. AI engines are tried in order, then Marcus's built-in answers
+ * (services/marcusLocal.js) take over, so a missing key or an empty credit balance never breaks the site.
  *
  * Stateless: the page sends the conversation so far. When the visitor wants service or a callback,
  * the model calls save_job_ticket and the job lands in the owner portal like any other web request.
  *
- * Env: ANTHROPIC_API_KEY (preferred) or OPENAI_API_KEY. NEWARK_CHAT_MODEL / NEWARK_CHAT_OPENAI_MODEL to override.
+ * Env (all optional):
+ *   CHAT_BASE_URL + CHAT_MODEL (+ CHAT_API_KEY)  your own OpenAI-compatible server, e.g. the HSW365 Open Stack's
+ *                                                Ollama: CHAT_BASE_URL=https://llm.example.com/v1 CHAT_MODEL=llama3.1:8b
+ *   ANTHROPIC_API_KEY (NEWARK_CHAT_MODEL)        or  OPENAI_API_KEY (NEWARK_CHAT_OPENAI_MODEL)
  */
 const express = require("express");
 const axios = require("axios");
+const marcusLocal = require("../services/marcusLocal");
 
 const router = express.Router();
 const NEWARK_API = process.env.NEWARK_API || "https://lsxdlmrjrcivxwgfkpop.supabase.co/functions/v1/newark";
@@ -122,27 +129,32 @@ async function viaAnthropic(system, messages) {
   return { reply: "", saved };
 }
 
-async function viaOpenAI(system, messages) {
+// Any OpenAI-compatible chat endpoint: OpenAI itself, or a self-hosted model server (Ollama, vLLM, LM Studio).
+const openAICompatible = ({ baseUrl, apiKey, model }) => async function (system, messages) {
   const msgs = [{ role: "system", content: system }, ...messages.map((m) => ({ role: m.role, content: m.content }))];
   let saved = null;
   for (let turn = 0; turn < 3; turn++) {
-    const r = await axios.post("https://api.openai.com/v1/chat/completions", {
-      model: process.env.NEWARK_CHAT_OPENAI_MODEL || "gpt-4.1-mini", max_tokens: 400, messages: msgs,
+    const r = await axios.post(`${baseUrl.replace(/\/+$/, "")}/chat/completions`, {
+      model, max_tokens: 400, messages: msgs,
       tools: [{ type: "function", function: { name: TICKET.name, description: TICKET.description, parameters: TICKET.schema } }],
-    }, { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, timeout: 30000 });
+    }, { headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, timeout: 30000 });
     const m = r.data.choices[0].message;
     if (!m.tool_calls || !m.tool_calls.length) return { reply: String(m.content || "").trim(), saved };
     msgs.push(m);
     for (const c of m.tool_calls) {
-      let args = {}; try { args = JSON.parse(c.function.arguments || "{}"); } catch (e) {}
+      let args = {}; try { args = typeof c.function.arguments === "string" ? JSON.parse(c.function.arguments || "{}") : (c.function.arguments || {}); } catch (e) {}
       const out = await saveTicket(args); if (out.ok) saved = out.ticket;
       msgs.push({ role: "tool", tool_call_id: c.id, content: JSON.stringify(out) });
     }
   }
   return { reply: "", saved };
-}
+};
 
-const providers = () => [process.env.ANTHROPIC_API_KEY && viaAnthropic, process.env.OPENAI_API_KEY && viaOpenAI].filter(Boolean);
+const providers = () => [
+  process.env.CHAT_BASE_URL && process.env.CHAT_MODEL && { name: "own", run: openAICompatible({ baseUrl: process.env.CHAT_BASE_URL, apiKey: process.env.CHAT_API_KEY, model: process.env.CHAT_MODEL }) },
+  process.env.ANTHROPIC_API_KEY && { name: "anthropic", run: viaAnthropic },
+  process.env.OPENAI_API_KEY && { name: "openai", run: openAICompatible({ baseUrl: "https://api.openai.com/v1", apiKey: process.env.OPENAI_API_KEY, model: process.env.NEWARK_CHAT_OPENAI_MODEL || "gpt-4.1-mini" }) },
+].filter(Boolean);
 
 // Small per-visitor limit so the chat can't be used to run up a bill.
 const hits = new Map();
@@ -154,11 +166,10 @@ function limited(ip) {
   return list.length > 40;
 }
 
-router.get("/", (req, res) => res.json({ ok: true, ready: providers().length > 0 }));
+router.get("/", (req, res) => res.json({ ok: true, ready: true, engines: [...providers().map((p) => p.name), "built-in"] }));
 
 router.post("/", async (req, res) => {
   const list = providers();
-  if (!list.length) return res.status(503).json({ ok: false, error: "chat_not_configured" });
   const ip = String(req.get("x-forwarded-for") || req.ip || "").split(",")[0].trim();
   if (limited(ip)) return res.status(429).json({ ok: false, error: "Too many messages. Please call 908-454-4043." });
   const raw = Array.isArray(req.body && req.body.messages) ? req.body.messages : [];
@@ -167,17 +178,21 @@ router.post("/", async (req, res) => {
   while (messages.length && messages[0].role !== "user") messages.shift();
   if (!messages.length || messages[messages.length - 1].role !== "user") return res.status(400).json({ ok: false, error: "A question is required." });
   const section = String((req.body && req.body.section) || "the website").replace(/[\r\n]+/g, " ").slice(0, 160);
-  let lastErr = null;
-  for (const run of list) {
+  for (const p of list) {
     try {
-      const out = await run(SYSTEM(section), messages);
-      if (out.reply) return res.json({ ok: true, reply: out.reply, saved: out.saved });
+      const out = await p.run(SYSTEM(section), messages);
+      if (out.reply) return res.json({ ok: true, reply: out.reply, saved: out.saved, engine: p.name });
     } catch (e) {
-      lastErr = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message;
-      console.error("[newark chat] provider failed:", lastErr);
+      console.error(`[newark chat] ${p.name} failed:`, e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message);
     }
   }
-  res.status(502).json({ ok: false, error: "chat_unavailable" });
+  try {
+    const out = await marcusLocal.reply(messages, saveTicket);
+    return res.json({ ok: true, reply: out.reply, saved: out.saved, engine: "built-in" });
+  } catch (e) {
+    console.error("[newark chat] built-in failed:", e.message);
+    res.status(502).json({ ok: false, error: "chat_unavailable" });
+  }
 });
 
 module.exports = router;

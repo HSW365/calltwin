@@ -581,7 +581,6 @@ footer .logo small{color:#9fb3c8}
       <a href="#services">Services</a>
       <a href="#about">About</a>
       <a href="#projects">Our work</a>
-      <a href="#answering">24/7 line</a>
       <a href="#estimate">Estimates</a>
       <a href="#book">Contact</a>
       <a href="#faq">Areas</a>
@@ -596,7 +595,6 @@ footer .logo small{color:#9fb3c8}
     <a href="#services">Services</a>
     <a href="#about">About us</a>
     <a href="#projects">Our work</a>
-    <a href="#answering">24/7 line</a>
     <a href="#estimate">Get a free estimate</a>
     <a href="#book">Contact us</a>
     <a href="#pay">Pay a bill</a>
@@ -749,30 +747,6 @@ footer .logo small{color:#9fb3c8}
   </div>
 </section>
 
-<section class="block on-dark" id="answering">
-  <div class="wrap line-grid">
-    <div>
-      <h2>Every call gets answered. Even at 2&nbsp;a.m.</h2>
-      <p class="lede" style="margin-top:24px">Our front desk, Marcus, picks up every call on the first ring. He walks you through shutting off water or gas if you need to, writes up the job while you talk, and texts it straight to the owner.</p>
-      <div class="proof">
-        <div><b>First ring</b><span>Every call, every hour</span></div>
-        <div><b>No voicemail</b><span>You always reach the front desk</span></div>
-        <div><b>365 days</b><span>Nights, weekends and holidays</span></div>
-        <div><b>English, Español</b><span>Both languages on the same line</span></div>
-      </div>
-    </div>
-    <div>
-      <ol class="steps">
-        <li><time>0:00</time><div><h4>You call</h4><p>The main line, any hour, any day.</p></div></li>
-        <li><time>0:01</time><div><h4>Marcus answers</h4><p>If water is running or you smell gas, you get the safety steps first.</p></div></li>
-        <li><time>1:30</time><div><h4>Your job is written up</h4><p>Name, address, the problem and how urgent, read back to you to confirm.</p></div></li>
-        <li><time>1:31</time><div><h4>The owner has it</h4><p>It lands on his phone as a text and he calls you back.</p></div></li>
-      </ol>
-      <div class="text-msg"><small>Text to the owner, 2:14 a.m.</small>Emergency: Dana R., (908) 555-0142. Pipe burst in the basement on Easton Ave, Phillipsburg. Main is shut off. Needs a tech tonight.</div>
-    </div>
-  </div>
-</section>
-
 <section class="block tint" id="estimate">
   <div class="wrap est-grid">
     <div>
@@ -905,7 +879,7 @@ footer .logo small{color:#9fb3c8}
       </ul>
     </div>
     <div class="faq">
-      <details open><summary>Is someone really answering at 2 a.m.?</summary><p>Yes. Marcus, our AI front desk, answers every call. He takes your details, walks you through emergency steps, and texts the job to the owner right away. The owner calls you back to confirm.</p></details>
+      <details open><summary>How fast will I hear back?</summary><p>Every request sent through this site goes straight to the owner's phone as a text, and he calls you back to confirm. For an emergency, call 908-454-4043.</p></details>
       <details><summary>Do you charge for estimates?</summary><p>No. We offer free estimates. Call 908-454-4043 or request one online with photos.</p></details>
       <details><summary>How does the online estimate work?</summary><p>Send photos and a description. The owner prices every line himself and sends you a proposal by text or email. You can ask questions, request changes, or sign and pay a deposit online.</p></details>
       <details><summary>Can one company really do plumbing, HVAC, geothermal and sprinklers?</summary><p>That is why New Ark exists. One contractor coordinates all four, so the work happens on one schedule without three companies pointing at each other.</p></details>
@@ -1022,13 +996,12 @@ footer .logo small{color:#9fb3c8}
           <button data-dtab="estimates">Estimates</button>
           <button data-dtab="payments">Payments</button>
           <button data-dtab="settings">Settings</button>
-          <button data-dtab="line">Phone line</button>
           <button data-dtab="plan">Plan</button>
         </div>
         <div class="pane on" data-dpane="jobs"><div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn btn-line btn-sm" id="refreshBtn">Refresh</button></div><div class="list" id="jobList"></div></div>
         <div class="pane" data-dpane="estimates">
           <div class="fwd">
-            <p><b>AI Estimates is included in your package.</b> Estimate requests from this website and details Marcus collects on calls become draft estimates. You price every line, approve it, and send a proposal the customer signs online and pays a deposit on.</p>
+            <p><b>AI Estimates is included in your package.</b> Estimate requests from this website become draft estimates. You price every line, approve it, and send a proposal the customer signs online and pays a deposit on.</p>
             <p style="margin-top:14px"><a class="btn btn-ink" href="https://hsw365.github.io/calltwin/estimate.html" target="_blank" rel="noopener">Open estimates</a></p>
             <p class="small" style="margin-top:12px">First time? Open it from the CallTwin dashboard link we texted you. After that this button takes you straight in on this device.</p>
           </div>
@@ -1036,8 +1009,7 @@ footer .logo small{color:#9fb3c8}
         <div class="pane" data-dpane="payments"><div class="list" id="payList"></div></div>
         <div class="pane" data-dpane="settings">
           <form id="setForm" novalidate>
-            <div class="toggle"><span><b>AI front desk</b><span>On: Marcus answers every call. Off: calls ring your cell.</span></span><label class="sw"><input type="checkbox" name="ai_enabled" aria-label="AI front desk"><i></i></label></div>
-            <div class="toggle" style="margin-top:10px"><span><b>Text me every new job</b><span>Sent to the cell number below.</span></span><label class="sw"><input type="checkbox" name="alert_sms" aria-label="Text me every new job"><i></i></label></div>
+            <div class="toggle"><span><b>Text me every new job</b><span>Sent to the cell number below.</span></span><label class="sw"><input type="checkbox" name="alert_sms" aria-label="Text me every new job"><i></i></label></div>
             <div class="sep"></div>
             <div class="form">
               <div class="field"><label>Business name</label><input name="business_name"></div>
@@ -1054,19 +1026,10 @@ footer .logo small{color:#9fb3c8}
             </div>
           </form>
         </div>
-        <div class="pane" data-dpane="line">
-          <div class="fwd">
-            <p><b>How calls reach Marcus.</b> Forward your business line to the CallTwin number and every call is answered 24/7.</p>
-            <p style="margin-top:12px">CallTwin number: <code>(856) 594-3303</code></p>
-            <p style="margin-top:12px">From the phone that holds <b data-phone-txt>908-454-4043</b>, dial <code>*72 856 594 3303</code> and wait for the confirmation tone. Some carriers use <code>**21*18565943303#</code>. To stop forwarding dial <code>*73</code> (or <code>##21#</code>).</p>
-            <p style="margin-top:12px">Only want Marcus when you can't pick up? Use no-answer forwarding: <code>**61*18565943303#</code>.</p>
-            <p style="margin-top:12px">Test it: call your business line from another phone. Marcus answers, takes the job, and it shows up under Jobs and on your cell.</p>
-          </div>
-        </div>
         <div class="pane" data-dpane="plan">
           <div class="plan">
-            <div><b>Website, phone line and estimates</b><span class="amt">$1,500</span><p>Your New Ark website with the CallTwin front desk and AI Estimates built in.</p></div>
-            <div><b>CallTwin 24/7 front desk</b><span class="amt">$99 a month</span><p>Marcus answers every call and texts you each job.</p></div>
+            <div><b>Website, phone line and estimates</b><span class="amt">$1,500</span><p>Your New Ark website with CallTwin job texts and AI Estimates built in.</p></div>
+            <div><b>CallTwin job texts</b><span class="amt">$99 a month</span><p>Every job from your website is texted to your cell.</p></div>
             <div><b>AI Estimates</b><span class="amt">Included</span><p>Estimate requests, proposals and online signatures. No separate monthly fee.</p></div>
           </div>
           <div class="ledger">
@@ -1317,7 +1280,7 @@ function renderDash(leads, pays) {
       <div class="meta">${esc(fmtPhone(l.phone))}${l.email ? ", " + esc(l.email) : ""}${l.address ? ", " + esc(l.address) : ""}${l.preferred_date ? ", wants " + esc(l.preferred_date) : ""}. ${when(l.created_at)}</div></div>
       <div class="acts">${d ? `<a class="btn btn-ink btn-sm" href="tel:+1${d.slice(-10)}">Call back</a><a class="btn btn-line btn-sm" href="sms:+1${d.slice(-10)}">Text</a>` : ""}
       <select data-id="${l.id}" data-t="leads" aria-label="Job status">${LS.map((s) => `<option ${s === l.status ? "selected" : ""}>${s}</option>`).join("")}</select></div></div>`;
-  }).join("") : `<div class="empty">No jobs yet. Calls Marcus answers and website requests show up here and on your cell.</div>`;
+  }).join("") : `<div class="empty">No jobs yet. Website requests show up here and on your cell.</div>`;
   $("#payList").innerHTML = pays.length ? pays.map((p) => `<div class="item"><div><h4>$${Number(p.amount).toFixed(2)} <span class="pill cu">${esc(p.method)}</span> ${p.invoice_ref ? `<span class="pill">${esc(p.invoice_ref)}</span>` : ""}</h4><div class="meta">${esc(p.customer_name)}${p.customer_phone ? ", " + esc(fmtPhone(p.customer_phone)) : ""}. ${when(p.created_at)}</div></div>
       <div class="acts"><select data-id="${p.id}" data-t="payments" aria-label="Payment status">${PS.map((s) => `<option ${s === p.status ? "selected" : ""}>${s}</option>`).join("")}</select></div></div>`).join("") : `<div class="empty">No payment notices yet. When a customer tells us they've paid, it shows up here.</div>`;
   $$("#dash select[data-id]").forEach((s) => (s.onchange = async () => { const r = await api({ a: "status", pin: PIN, table: s.dataset.t, id: s.dataset.id, status: s.value }); if (!r.ok) alert(r.error); }));
@@ -1326,13 +1289,12 @@ function fillSettings() {
   const f = $("#setForm");
   for (const k of ["business_name", "owner_name", "owner_email", "owner_cell", "business_phone", "zelle_handle", "cashapp_tag", "stripe_link"]) f.elements[k].value = S[k] || "";
   f.elements.payout_method.value = S.payout_method || "zelle";
-  f.elements.ai_enabled.checked = S.ai_enabled !== false;
   f.elements.alert_sms.checked = S.alert_sms !== false;
 }
 $("#setForm").addEventListener("submit", async (e) => {
   e.preventDefault(); const f = e.target, msg = $("#setMsg");
   const s = {}; for (const k of ["business_name", "owner_name", "owner_email", "owner_cell", "business_phone", "zelle_handle", "cashapp_tag", "stripe_link", "payout_method"]) s[k] = f.elements[k].value;
-  s.ai_enabled = f.elements.ai_enabled.checked; s.alert_sms = f.elements.alert_sms.checked;
+  s.ai_enabled = false; s.alert_sms = f.elements.alert_sms.checked;
   const r = await api({ a: "update", pin: PIN, settings: s });
   if (r.ok) { say(msg, "Settings saved.", true); S = { ...S, ...s }; loadPublic(); } else say(msg, r.error || "Settings didn't save. Try again.", false);
 });

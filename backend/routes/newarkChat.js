@@ -23,6 +23,7 @@
 const express = require("express");
 const axios = require("axios");
 const marcusLocal = require("../services/marcusLocal");
+const mailer = require("../services/mailer");
 
 const router = express.Router();
 // Always say JSON out loud: the SignalWire library switches axios's default POST type to form-encoded once it loads.
@@ -133,7 +134,25 @@ async function saveTicket(a) {
       a: "lead", name: String(a.name).slice(0, 120), phone: String(a.phone).slice(0, 40), address: String(a.address || "").slice(0, 300),
       service: a.service || "Other", urgency: a.urgency || "Within 48 hours", details: ("Website chat: " + String(a.summary || "")).slice(0, 2000),
     }, { headers: JSON_TYPE, timeout: 10000 });
-    return r.data && r.data.ok ? { ok: true, ticket: r.data.ticket } : { ok: false, error: (r.data && r.data.error) || "Not saved." };
+    if (!r.data || !r.data.ok) return { ok: false, error: (r.data && r.data.error) || "Not saved." };
+
+    // Email the owner only after the portal confirms that the ticket was saved.
+    // The recipient and Gmail credentials stay in Render environment variables, never in source code.
+    const ownerEmail = String(process.env.NEWARK_OWNER_EMAIL || "").trim();
+    const emailBody = [
+      "New website service request — New Ark",
+      "Name: " + String(a.name || "Not provided").slice(0, 120),
+      "Phone: " + String(a.phone || "Not provided").slice(0, 40),
+      "Address / town: " + String(a.address || "Not provided").slice(0, 300),
+      "Service: " + String(a.service || "Other").slice(0, 80),
+      "Urgency: " + String(a.urgency || "Within 48 hours").slice(0, 80),
+      "Details: " + String(a.summary || "").slice(0, 1500),
+      "Call back: tel:" + digits.slice(-10),
+      "Saved in the CallTwin job system."
+    ].join("\\n");
+    const emailed = ownerEmail ? await mailer.alertEmail(ownerEmail, "New Ark Website Request", emailBody) : false;
+    if (!emailed) console.error("[newark chat] ticket saved, but owner email notification was not sent; check NEWARK_OWNER_EMAIL and mail settings.");
+    return { ok: true, ticket: r.data.ticket, emailed };
   } catch (e) {
     console.error("[newark chat] ticket save failed:", e.message);
     return { ok: false, error: "The ticket did not save. Ask the visitor to call 908-454-4043." };

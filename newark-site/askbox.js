@@ -8,8 +8,6 @@
   if (window.__nqLoaded) return; window.__nqLoaded = true;
 
   var CHAT_API = "https://calltwin.onrender.com/api/newark/chat";
-  var AGENT_ID = "agent_5001m4cdabg0etg98t3v928qp45m"; // backup text engine, used only if the server chat is not set up
-  var SDK = "https://cdn.jsdelivr.net/npm/@elevenlabs/client@0.7/+esm";
   var PHONE = "908-454-4043", TEL = "tel:+19084544043";
 
   // Each section of the home page: where the button goes, what it says, and starter questions.
@@ -122,7 +120,7 @@
     root.appendChild(fab); root.appendChild(panel); document.body.appendChild(root);
 
     // ---- chat state ----
-    var convo = null, connecting = null, turns = [], serverOff = false, history = [], waiting = false, waitTimer = 0, dots = null, chipsBox = null, greeted = {}, lastFocus = null;
+    var turns = [], waiting = false, waitTimer = 0, dots = null, chipsBox = null, greeted = {}, lastFocus = null;
 
     function scroll() { log.scrollTop = log.scrollHeight; }
     function bubble(text, kind) { var p = el("div", "nq-m nq-" + kind, text); log.insertBefore(p, dots && dots.parentNode === log ? dots : null); scroll(); return p; }
@@ -152,58 +150,25 @@
       log.appendChild(chipsBox); scroll();
     }
 
-    function onMessage(m) {
-      if (!m || !m.message || m.source !== "ai") return;
-      setWaiting(false); turns.push({ role: "assistant", content: m.message }); history.push("Marcus: " + m.message); bubble(m.message, "a");
-    }
-    function connect() {
-      if (convo) return Promise.resolve(convo);
-      if (connecting) return connecting;
-      connecting = import(SDK).then(function (mod) {
-        return mod.Conversation.startSession({
-          agentId: AGENT_ID, connectionType: "websocket", textOnly: true,
-          overrides: { conversation: { textOnly: true } },
-          dynamicVariables: { section: ctx.prompt },
-          onMessage: onMessage,
-          onDisconnect: function () { convo = null; if (waiting) fail(); },
-          onError: function (e) { console.error("[ask marcus]", e); if (waiting) fail(); }
-        });
-      }).then(function (c) {
-        convo = c; connecting = null;
-        // A dropped chat reconnects quietly; hand the agent what was already said.
-        if (history.length > 1) { try { c.sendContextualUpdate("Earlier in this same website chat:\n" + history.slice(-12, -1).join("\n")); } catch (e) {} }
-        return c;
-      }, function (e) { connecting = null; throw e; });
-      return connecting;
-    }
     function ask(text) {
       text = String(text || "").trim().slice(0, 600);
       if (!text || waiting) return;
-      dropChips(); bubble(text, "u"); history.push("Visitor: " + text); turns.push({ role: "user", content: text });
+      dropChips(); bubble(text, "u"); turns.push({ role: "user", content: text });
       input.value = ""; grow(); setWaiting(true);
-      serverAsk().catch(function (e) {
-        if (!serverOff) throw e;
-        return connect().then(function (c) { c.sendUserMessage(text); });
-      }).catch(function (e) { console.error("[ask marcus]", e); if (waiting) fail(); });
-    }
-    function serverAsk() {
-      if (serverOff) return Promise.reject(new Error("server chat off"));
-      return fetch(CHAT_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: turns.slice(-24), section: ctx.prompt }) })
+      fetch(CHAT_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: turns.slice(-24), section: ctx.prompt }) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { r: r, j: j }; }); })
         .then(function (o) {
-          if (o.r.status === 503) serverOff = true;
           if (!o.r.ok || !o.j.ok || !o.j.reply) throw new Error(o.j.error || "chat failed");
-          setWaiting(false); turns.push({ role: "assistant", content: o.j.reply }); history.push("Marcus: " + o.j.reply); bubble(o.j.reply, "a");
-        });
+          setWaiting(false); turns.push({ role: "assistant", content: o.j.reply }); bubble(o.j.reply, "a");
+        })
+        .catch(function (e) { console.error("[ask marcus]", e); turns.pop(); if (waiting) fail(); });
     }
     function grow() { input.style.height = "auto"; input.style.height = Math.min(120, input.scrollHeight + 2) + "px"; send.disabled = waiting || !input.value.trim(); }
 
     function open(c) {
-      var changed = c && c.key !== ctx.key;
       if (c) ctx = c;
       if (!root.classList.contains("nq-open")) { lastFocus = document.activeElement; root.classList.add("nq-open"); panel.setAttribute("aria-hidden", "false"); }
       greet(ctx);
-      if (changed && convo) { try { convo.sendContextualUpdate("The visitor is now asking from this part of the site: " + ctx.prompt); } catch (e) {} }
       setTimeout(function () { try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); } }, 60);
     }
     function close() {
@@ -218,7 +183,6 @@
     form.addEventListener("submit", function (e) { e.preventDefault(); ask(input.value); });
     input.addEventListener("input", grow);
     input.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); ask(input.value); } });
-    window.addEventListener("pagehide", function () { if (convo) { try { convo.endSession(); } catch (e) {} } });
 
     // The floating button opens on whichever section the visitor is looking at.
     function nearest() {

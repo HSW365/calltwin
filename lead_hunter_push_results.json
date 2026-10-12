@@ -3,30 +3,6 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Northpoint360",
-      "pushed": false
-    },
-    {
-      "businessName": "Volpe Real Estate",
-      "pushed": false
-    },
-    {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Exton Collision",
-      "pushed": false
-    },
-    {
-      "businessName": "Deptford Cuts and Color s",
-      "pushed": false
-    },
-    {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
-    },
-    {
       "businessName": "Joseph Hart, Inc. Plumbing",
       "pushed": false
     },
@@ -35,7 +11,19 @@
       "pushed": false
     },
     {
-      "businessName": "Bounce U",
+      "businessName": "Gamble's Newark Florist",
+      "pushed": false
+    },
+    {
+      "businessName": "Alleva Funeral Home",
+      "pushed": false
+    },
+    {
+      "businessName": "Cohen Funeral Services",
+      "pushed": false
+    },
+    {
+      "businessName": "The UPS Store",
       "pushed": false
     }
   ]

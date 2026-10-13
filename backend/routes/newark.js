@@ -216,6 +216,17 @@ router.post("/notify", async (req, res) => {
   res.json({ ok: true, sid: sid || undefined, texted: !!sid, emailed });
 });
 
+// Email check: sends one test message so the mail setup can be confirmed end to end.
+// Locked behind MAIL_TEST_KEY (unset = route off).
+router.post("/email-test", async (req, res) => {
+  const k = process.env.MAIL_TEST_KEY;
+  if (!k || req.get("x-test-key") !== k) return res.status(401).json({ ok: false, error: "unauthorized" });
+  const m = require("../services/mailer");
+  const to = String((req.body && req.body.to) || "").trim();
+  const ok = await m.alertEmail(to, "CallTwin", "CallTwin email alerts are on.\nNew job requests will now arrive in this inbox the moment they come in.");
+  res.status(ok ? 200 : 502).json({ ok, email: m.status() });
+});
+
 router.post("/voicemail", async (req, res) => {
   const p = { ...req.query, ...req.body };
   res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Matthew">Got it. We will call you back shortly. Goodbye.</Say><Hangup/></Response>`);

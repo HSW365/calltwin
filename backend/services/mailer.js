@@ -71,7 +71,7 @@ async function sendEmail(to, subject, text, opts = {}) {
     lastError = null;
     return true;
   } catch (e) {
-    const why = e.response ? `${e.response.status} ${JSON.stringify(e.response.data || "").slice(0, 200)}` : (e.code ? `${e.code}: ` : "") + e.message;
+    const why = typeof e.response === "string" ? `${e.code || "SMTP"}: ${e.response}` : e.response && e.response.status ? `${e.response.status} ${JSON.stringify(e.response.data || "").slice(0, 200)}` : (e.code ? `${e.code}: ` : "") + e.message;
     lastError = { at: new Date().toISOString(), message: String(why).replace(/[^\s@]+@[^\s@]+/g, "[email]").slice(0, 300) };
     console.error("[mailer] send failed:", lastError.message);
     return false;

@@ -60,12 +60,14 @@ async function alertOwner(c, body) {
   const text = (to && c.alertSms !== false && sms().smsReady())
     ? sms().sendSms(to, body.slice(0, 1400)).then(() => true, (e) => { console.error("[clients] sms:", e.message); return false; })
     : Promise.resolve(false);
-  const email = mailer().alertEmail(c.ownerEmail, c.businessName, body).catch(() => false);
+  // New Ark: alerts go to the address set on Render (NEWARK_OWNER_EMAIL) so it always matches the website chat alerts.
+  const to2 = /new\s*ark/i.test(c.businessName || "") && process.env.NEWARK_OWNER_EMAIL ? process.env.NEWARK_OWNER_EMAIL : c.ownerEmail;
+  const email = mailer().alertEmail(to2, c.businessName, body).catch(() => false);
   const [texted, emailed] = await Promise.all([text, email]);
   if (!texted && !emailed) {
     const m = mailer();
     const why = !m.emailReady() ? "email sender not set up (add GMAIL_USER + GMAIL_APP_PASSWORD on Render)"
-      : !/@/.test(String(c.ownerEmail || "")) ? "no owner email on file" : "email send failed";
+      : !/@/.test(String((/new\s*ark/i.test(c.businessName || "") && process.env.NEWARK_OWNER_EMAIL) || c.ownerEmail || "")) ? "no owner email on file" : "email send failed";
     console.error(`[clients] alert not delivered for ${c.businessName || c._id}: text failed, ${why}`);
   }
   return { texted, emailed };

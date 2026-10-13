@@ -186,6 +186,9 @@ def main():
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n"
     open(os.path.join(out, "sitemap.xml"), "w", encoding="utf-8").write(sm)
     print(f"New Ark: {len(SERVICES)} service pages, {len(TOWNS)} town pages, {len(posts)} articles, {len(urls)} urls")
+    # The site is chat-only: no one calls from it. Strip every phone link and "call us" line.
+    import subprocess, sys
+    subprocess.run([sys.executable, os.path.join(ROOT, "tools", "newark_chat_only.py"), out], check=True)
 
 if __name__ == "__main__":
     main()

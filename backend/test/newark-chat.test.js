@@ -113,7 +113,7 @@ test("an unknown question is handed to the owner, with the question as the job n
 
 test("emergencies get the safety step first", async () => {
   posts.length = 0;
-  assert.match((await say([{ role: "user", content: "a pipe burst and my basement is flooding" }])).body.reply, /908-454-4043 right now.*main water valve/);
+  assert.match((await say([{ role: "user", content: "a pipe burst and my basement is flooding" }])).body.reply, /main water valve.*emergency.*your name/);
   assert.match((await say([{ role: "user", content: "I smell gas in my kitchen" }])).body.reply, /Leave the building.*911/);
   assert.strictEqual(leads().length, 0);
 });
@@ -127,11 +127,12 @@ test("Spanish visitors are served in Spanish", async () => {
   assert.strictEqual(leads()[0].body.service, "Plumbing");
 });
 
-test("if the job does not save, Marcus says so and gives the phone number", async () => {
+test("if the job does not save, Marcus says so and never gives out a phone number", async () => {
   posts.length = 0; portalOk = false;
   const { res } = await talk(["my toilet is clogged", "Pat", "9085550100", "Alpha"]);
   portalOk = true;
-  assert.match(res.body.reply, /couldn't save.*908-454-4043/);
+  assert.match(res.body.reply, /couldn't save/);
+  assert.doesNotMatch(res.body.reply, /908|call us|call New Ark/i);
   assert.ok(!res.body.saved);
 });
 
@@ -215,4 +216,11 @@ test("stage is read from Marcus's own wording in both languages", () => {
     assert.strictEqual(marcus.stageOf(t.offer), "offer");
     assert.strictEqual(marcus.stageOf(t.unknown), "offer");
   }
+});
+
+test("emergency flow collects the details and saves a ticket", async () => {
+  posts.length = 0;
+  const { res } = await talk(["a pipe burst and water is everywhere", "Dana Cruz", "9085550188", "Phillipsburg"]);
+  assert.strictEqual(res.body.saved, "T-1");
+  assert.strictEqual(leads()[0].body.name, "Dana Cruz");
 });

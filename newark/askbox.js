@@ -8,7 +8,6 @@
   if (window.__nqLoaded) return; window.__nqLoaded = true;
 
   var CHAT_API = "https://calltwin.onrender.com/api/newark/chat";
-  var PHONE = "908-454-4043", TEL = "tel:+19084544043";
 
   // Each section of the home page: where the button goes, what it says, and starter questions.
   var SECTIONS = [
@@ -114,8 +113,7 @@
     var input = el("textarea", "nq-in"); input.rows = 1; input.placeholder = "Type your question"; input.setAttribute("aria-label", "Type your question"); input.maxLength = 600;
     var send = el("button", "nq-send"); send.type = "submit"; send.innerHTML = ICON_SEND; send.setAttribute("aria-label", "Send"); send.disabled = true;
     form.appendChild(input); form.appendChild(send);
-    var foot = el("div", "nq-foot"); foot.appendChild(document.createTextNode("Marcus is an AI assistant. Emergency or rather talk? Call "));
-    var fa = el("a", null, PHONE); fa.href = TEL; foot.appendChild(fa); foot.appendChild(document.createTextNode(", answered 24/7."));
+    var foot = el("div", "nq-foot"); foot.appendChild(document.createTextNode("Marcus is an AI assistant. Emergency? Say so here and leave your name and address. It goes straight to the owner."));
     panel.appendChild(head); panel.appendChild(topic); panel.appendChild(log); panel.appendChild(form); panel.appendChild(foot);
     root.appendChild(fab); root.appendChild(panel); document.body.appendChild(root);
 
@@ -135,8 +133,7 @@
     }
     function fail() {
       setWaiting(false);
-      var p = el("div", "nq-m nq-s"); p.appendChild(document.createTextNode("I couldn't get an answer through just now. Please try again, or call "));
-      var a = el("a", null, PHONE); a.href = TEL; p.appendChild(a); p.appendChild(document.createTextNode(". We answer 24/7."));
+      var p = el("div", "nq-m nq-s", "I couldn't get an answer through just now. Please send your message again in a moment.");
       log.appendChild(p); scroll();
     }
     function dropChips() { if (chipsBox && chipsBox.parentNode) chipsBox.parentNode.removeChild(chipsBox); chipsBox = null; }
@@ -178,6 +175,12 @@
 
     fab.addEventListener("click", function () { open(nearest() || general); });
     window.NewArkChat = { open: function () { open(general); }, ask: function (t) { open(general); ask(t); } };
+    // Every "Message us" button on the site opens this chat (the site takes no phone calls).
+    document.addEventListener("click", function (e) {
+      var t = e.target && e.target.closest ? e.target.closest("[data-chat]") : null;
+      if (!t) return;
+      e.preventDefault(); open(nearest() || general);
+    });
     x.addEventListener("click", close);
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && root.classList.contains("nq-open")) close(); });
     form.addEventListener("submit", function (e) { e.preventDefault(); ask(input.value); });

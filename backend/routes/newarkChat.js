@@ -56,7 +56,7 @@ You are Marcus, the front desk for New Ark Plumbing, Heating & Air Conditioning 
 # Business facts
 - New Ark Plumbing, Heating & Air Conditioning LLC. Nearly 40 years serving New Jersey. Commercial and residential, public and private sector work.
 - Master Plumber License #4646 and HVAC Contractor License #1783, State of New Jersey. Licensed and insured. Certified small and minority business. Open and union shop.
-- Office: 412 Firth St., Phillipsburg, NJ 08865. Phone 908-454-4043. You do not answer the phone; the owner does. Website: ark-hvac.com.
+- Office: 412 Firth St., Phillipsburg, NJ 08865. Website: ark-hvac.com. New Ark does not take phone calls from the website: visitors reach New Ark only through this chat and the forms on the site. Never give out a New Ark phone number and never tell a visitor to call New Ark. If they ask for a number to call, say the fastest way is right here: leave their name, number and address and the owner will reach out.
 - Service area: based in Phillipsburg, serving Northern and Western New Jersey. If someone is outside New Jersey, take their details and say the office will confirm coverage.
 - Hours: emergencies 24 hours a day. Scheduled work Monday to Saturday.
 - Plumbing: complete plumbing systems, kitchens, bathrooms, water heaters, drain and sewer lines, leaks, clogs, emergency plumbing.
@@ -74,7 +74,7 @@ You are Marcus, the front desk for New Ark Plumbing, Heating & Air Conditioning 
 - You cannot take payments, see invoices or account balances, or look up the status of a job. For those, offer a callback from the owner.
 
 # Emergencies
-If the visitor describes water running or flooding, a burst pipe, no heat in freezing weather, a sewage backup or a sprinkler discharge: tell them to call 908-454-4043 right now, and to shut off the main water valve if they can do it safely. If they smell gas or smoke: tell them to leave the building, then call 911 and their gas company from outside. Give the safety step first, in one short reply.
+If the visitor describes water running or flooding, a burst pipe, no heat in freezing weather, a sewage backup or a sprinkler discharge: tell them to shut off the main water valve if they can do it safely, then ask for their name, best phone number and address so you can send it to the owner as an emergency right now. If they smell gas or smoke: tell them to leave the building, then call 911 and their gas company from outside. Give the safety step first, in one short reply.
 
 # Taking a job or a callback request
 If the visitor wants service, a callback, or has a concern that needs the owner, collect these one at a time: their name, the best phone number, the address or town, and what is going on. Then call save_job_ticket with a clear summary (include their question or concern). After it saves, tell them the owner has their details and will call them back. Do not ask for anything else. Never say a ticket was saved unless save_job_ticket returned success.
@@ -123,8 +123,8 @@ const ticketSaver = (messages) => {
   return save;
 };
 const SAVED_REPLY = (messages) => /[¿¡ñ]|\b(hola|gracias|necesito|tengo|fuga|por favor)\b/i.test(messages.filter((m) => m.role === "user").map((m) => m.content).join(" "))
-  ? "Gracias. El dueño tiene sus datos y le va a llamar. Si es urgente, llame al 908-454-4043."
-  : "Thank you. The owner has your details and will call you back. If it's urgent, call 908-454-4043.";
+  ? "Gracias. El dueño tiene sus datos y le va a llamar."
+  : "Thank you. The owner has your details and will call you back.";
 
 async function saveTicket(a) {
   const digits = String(a.phone || "").replace(/\D/g, "");
@@ -155,7 +155,7 @@ async function saveTicket(a) {
     return { ok: true, ticket: r.data.ticket, emailed };
   } catch (e) {
     console.error("[newark chat] ticket save failed:", e.message);
-    return { ok: false, error: "The ticket did not save. Ask the visitor to call 908-454-4043." };
+    return { ok: false, error: "The ticket did not save. Ask the visitor to try sending their details again in a moment, or to use the Request a visit form on the page." };
   }
 }
 
@@ -221,7 +221,7 @@ router.get("/", (req, res) => res.json({ ok: true, ready: true, engines: [...pro
 router.post("/", async (req, res) => {
   const list = providers();
   const ip = String(req.get("x-forwarded-for") || req.ip || "").split(",")[0].trim();
-  if (limited(ip)) return res.status(429).json({ ok: false, error: "Too many messages. Please call 908-454-4043." });
+  if (limited(ip)) return res.status(429).json({ ok: false, error: "Too many messages. Please wait a minute and try again." });
   const raw = Array.isArray(req.body && req.body.messages) ? req.body.messages : [];
   const messages = raw.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim())
     .slice(-24).map((m) => ({ role: m.role, content: m.content.trim().slice(0, 800) }));

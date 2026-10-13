@@ -12,7 +12,6 @@
  *     saveTicket async ({ name, phone, address, service, urgency, summary }) -> { ok, ticket?, error? }
  */
 
-const PHONE = "908-454-4043";
 
 const T = {
   en: {
@@ -22,12 +21,12 @@ const T = {
     phone: (n) => `Thanks, ${n}. What's the best number to reach you?`,
     phoneAgain: "I need a 10-digit phone number so the owner can reach you. What's the best number?",
     town: "And what town or address is the job at?",
-    done: (n) => `Thank you, ${n}. The owner has your details and will call you back. If it's urgent, call ${PHONE}.`,
-    failed: `I couldn't save that just now. Please call ${PHONE} so we don't miss you.`,
+    done: (n) => `Thank you, ${n}. The owner has your details and will call you back.`,
+    failed: "I couldn't save that just now. Please send your name and number again in a moment, or use the Request a visit form on this page.",
     offer: "Would you like the owner to call you back?",
     unknown: "I don't have that answer here, but the owner can answer it. Would you like the owner to call you back?",
-    noThanks: `No problem. If you need anything else, ask me here or call ${PHONE}.`,
-    water: `Call ${PHONE} right now, and shut off the main water valve if you can do it safely.`,
+    noThanks: "No problem. If you need anything else, just ask me here.",
+    water: "Shut off the main water valve now if you can do it safely. I'll send this to the owner as an emergency. What's your name?",
     gas: "Leave the building now. Then call 911 and your gas company from outside.",
   },
   es: {
@@ -37,12 +36,12 @@ const T = {
     phone: (n) => `Gracias, ${n}. ¿Cuál es el mejor número de teléfono para llamarle?`,
     phoneAgain: "Necesito un número de teléfono de 10 dígitos para que el dueño le llame. ¿Cuál es el mejor número de teléfono?",
     town: "¿En qué pueblo o dirección es el trabajo?",
-    done: (n) => `Gracias, ${n}. El dueño tiene sus datos y le va a llamar. Si es urgente, llame al ${PHONE}.`,
-    failed: `No pude guardar eso ahora. Por favor llame al ${PHONE}.`,
+    done: (n) => `Gracias, ${n}. El dueño tiene sus datos y le va a llamar.`,
+    failed: "No pude guardar eso ahora. Por favor envíe su nombre y número otra vez en un momento.",
     offer: "¿Quiere que el dueño le llame?",
     unknown: "No tengo esa respuesta aquí, pero el dueño sí. ¿Quiere que el dueño le llame?",
-    noThanks: `Está bien. Si necesita algo más, escríbame aquí o llame al ${PHONE}.`,
-    water: `Llame al ${PHONE} ahora mismo, y cierre la llave principal del agua si puede hacerlo con seguridad.`,
+    noThanks: "Está bien. Si necesita algo más, escríbame aquí.",
+    water: "Cierre la llave principal del agua ahora si puede hacerlo con seguridad. Se lo envío al dueño como emergencia. ¿Cuál es su nombre?",
     gas: "Salga del edificio ahora. Luego llame al 911 y a su compañía de gas desde afuera.",
   },
 };
@@ -77,11 +76,11 @@ const FAQ = [
   [/how (soon|long|fast|quick).*(estimate|proposal|quote)|when will i (get|hear)/i, "The owner prices every estimate himself, so I can't promise a time. You'll get an itemized proposal to review and sign online."],
   [/(estimate|quote).*(free|charge|cost)|(free|charge|cost).*(estimate|quote)/i, "Estimates are free. Send photos and details in the Get a free estimate section. It takes about 2 minutes."],
   [/how much|price|pricing|\bcost|\brates?\b|\bfee\b/i, "Pricing depends on the job, so I can't quote one here. Estimates are free: send photos and details in the Get a free estimate section."],
-  [/come (out )?(today|tonight|now|tomorrow)|how (soon|fast|quick)|same day|right away/i, `I can't promise an arrival time here. Emergencies are answered 24 hours a day at ${PHONE}. Would you like the owner to call you back?`],
-  [/emergenc/i, `Yes. Emergencies are answered 24 hours a day. If you have one right now, call ${PHONE}.`],
+  [/come (out )?(today|tonight|now|tomorrow)|how (soon|fast|quick)|same day|right away/i, "I can't promise an arrival time here, but emergencies go first, 24 hours a day. Would you like the owner to call you back?"],
+  [/emergenc/i, "Yes, 24 hours a day. If you have one right now, tell me your name, number and address and I'll send it to the owner as an emergency."],
   [/hours|weekend|saturday|sunday|open (on|today|now|late)|when are you open/i, "Emergencies are answered 24 hours a day. Scheduled work is Monday to Saturday."],
   [/where.*(office|located|location|you)|your (office|address|location)/i, "Our office is at 412 Firth St., Phillipsburg, NJ 08865."],
-  [/phone number|number to call|how (do|can) i (call|reach|contact)/i, `You can reach New Ark at ${PHONE}.`],
+  [/phone number|number to call|how (do|can) i (call|reach|contact)/i, "The fastest way to reach New Ark is right here. Leave your name, number and what you need, and the owner will reach out."],
   [/licen[sc]e|insured|insurance|bonded|certified/i, "Yes. New Ark is licensed and insured: Master Plumber License #4646 and HVAC Contractor License #1783, State of New Jersey. It is also a certified small and minority business."],
   [/how long|how many years|in business|experience/i, "New Ark has been serving New Jersey for nearly 40 years."],
   [/public sector|government|municipal|union/i, "Yes. New Ark does public and private sector work and is an open and union shop. Past work includes the Joint Meeting of Essex & Union Counties in Elizabeth and Newark Access Station."],

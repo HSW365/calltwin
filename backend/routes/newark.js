@@ -30,15 +30,18 @@ const xml = (s) => String(s).replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&g
 
 let lastSmsError = null;
 
+// Texts go out from SIGNALWIRE_SMS_NUMBER (the verified toll-free line) when set; calls stay on SIGNALWIRE_PHONE_NUMBER.
+const smsFrom = () => process.env.SIGNALWIRE_SMS_NUMBER || process.env.SIGNALWIRE_PHONE_NUMBER;
+
 function smsReady() {
-  return !!(process.env.SIGNALWIRE_PROJECT_ID && process.env.SIGNALWIRE_API_TOKEN && space() && process.env.SIGNALWIRE_PHONE_NUMBER);
+  return !!(process.env.SIGNALWIRE_PROJECT_ID && process.env.SIGNALWIRE_API_TOKEN && space() && smsFrom());
 }
 
 async function sendSms(to, body) {
   if (!smsReady()) throw new Error("SignalWire SMS not configured");
   const pid = process.env.SIGNALWIRE_PROJECT_ID;
   const url = `https://${space()}/api/laml/2010-04-01/Accounts/${pid}/Messages.json`;
-  const form = new URLSearchParams({ From: e164(process.env.SIGNALWIRE_PHONE_NUMBER), To: to, Body: body });
+  const form = new URLSearchParams({ From: e164(smsFrom()), To: to, Body: body });
   try {
     const r = await axios.post(url, form.toString(), {
       auth: { username: pid, password: process.env.SIGNALWIRE_API_TOKEN },

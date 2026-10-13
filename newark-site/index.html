@@ -125,7 +125,7 @@ p{max-width:66ch}
 .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:
   linear-gradient(90deg,rgba(6,24,43,.97) 0%,rgba(6,24,43,.9) 30%,rgba(6,24,43,.5) 62%,rgba(6,24,43,.28) 100%),
   linear-gradient(0deg,rgba(6,24,43,.82) 0%,rgba(6,24,43,0) 42%)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(32px,5vw,88px);align-items:end;padding-block:clamp(56px,7vw,104px) clamp(120px,11vw,168px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,820px);gap:clamp(32px,5vw,88px);align-items:end;padding-block:clamp(56px,7vw,104px) clamp(120px,11vw,168px)}
 .status{display:inline-flex;align-items:center;gap:10px;font-size:15.5px;font-weight:600;color:#dbe5f0;margin-bottom:clamp(20px,2.4vw,32px)}
 .status i{width:9px;height:9px;border-radius:50%;background:#4ed28a;box-shadow:0 0 0 4px rgba(78,210,138,.22)}
 .hero h1{color:#fff}
@@ -617,21 +617,6 @@ footer .logo small{color:#9fb3c8}
         <a class="btn btn-ghost" href="#estimate">Get a free estimate</a>
       </div>
     </div>
-
-    <aside class="ask" aria-label="Ask the New Ark front desk a question">
-      <div class="ask-top"><div class="avatar" aria-hidden="true">M</div><div><b>Marcus</b><span>New Ark front desk. AI assistant, written chat.</span></div></div>
-      <h2><label for="heroQ">Have a question? Type it here.</label></h2>
-      <form id="heroAsk" autocomplete="off">
-        <input id="heroQ" maxlength="600" placeholder="Do you replace water heaters?">
-        <button class="btn btn-ink" type="submit">Ask Marcus</button>
-      </form>
-      <div class="ask-chips">
-        <button type="button" data-ask="What services do you offer?">What services do you offer?</button>
-        <button type="button" data-ask="Do you come to my town?">Do you come to my town?</button>
-        <button type="button" data-ask="How do free estimates work?">How do free estimates work?</button>
-      </div>
-      <p class="ask-foot">Marcus answers in writing, right on this page. Emergency? <a href="#chat" data-chat>Message us</a>.</p>
-    </aside>
   </div>
 </section>
 
@@ -1187,12 +1172,6 @@ function tradeFromHash() { const i = tPanels.findIndex((p) => "#" + p.id === loc
 addEventListener("hashchange", tradeFromHash); tradeFromHash();
 
 // ---------- written chat with the front desk (text only) ----------
-$("#heroAsk").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const q = $("#heroQ"), v = q.value.trim();
-  if (!window.NewArkChat) return;
-  if (v) { window.NewArkChat.ask(v); q.value = ""; } else window.NewArkChat.open();
-});
 $$("[data-ask]").forEach((b) => b.addEventListener("click", () => window.NewArkChat && window.NewArkChat.ask(b.dataset.ask)));
 
 // ---------- owner portal ----------

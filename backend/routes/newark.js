@@ -223,6 +223,12 @@ router.post("/email-test", async (req, res) => {
   if (!k || req.get("x-test-key") !== k) return res.status(401).json({ ok: false, error: "unauthorized" });
   const m = require("../services/mailer");
   const to = String((req.body && req.body.to) || "").trim();
+  // Optional: check which Gmail address the saved app password belongs to (login only, nothing is sent).
+  const tryUser = String((req.body && req.body.try_user) || "").trim();
+  if (tryUser) {
+    const t = require("nodemailer").createTransport({ host: "smtp.gmail.com", port: 465, secure: true, auth: { user: tryUser, pass: String(process.env.GMAIL_APP_PASSWORD || "").replace(/\s+/g, "") }, connectionTimeout: 10000 });
+    try { await t.verify(); return res.json({ ok: true, user: tryUser }); } catch (e) { return res.json({ ok: false, user: tryUser, error: String(e.response || e.message).slice(0, 120) }); }
+  }
   const ok = await m.alertEmail(to, "CallTwin", "CallTwin email alerts are on.\nNew job requests will now arrive in this inbox the moment they come in.");
   res.status(ok ? 200 : 502).json({ ok, email: m.status() });
 });

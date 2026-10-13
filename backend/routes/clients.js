@@ -62,7 +62,12 @@ async function alertOwner(c, body) {
     : Promise.resolve(false);
   const email = mailer().alertEmail(c.ownerEmail, c.businessName, body).catch(() => false);
   const [texted, emailed] = await Promise.all([text, email]);
-  if (!texted && !emailed) console.error(`[clients] alert not delivered for ${c.businessName || c._id}: no text, no email`);
+  if (!texted && !emailed) {
+    const m = mailer();
+    const why = !m.emailReady() ? "email sender not set up (add GMAIL_USER + GMAIL_APP_PASSWORD on Render)"
+      : !/@/.test(String(c.ownerEmail || "")) ? "no owner email on file" : "email send failed";
+    console.error(`[clients] alert not delivered for ${c.businessName || c._id}: text failed, ${why}`);
+  }
   return { texted, emailed };
 }
 /** Same alert; resolves true only when the TEXT went out (callers that tell someone "a text was sent" rely on this). */

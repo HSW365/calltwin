@@ -1,8 +1,12 @@
 name: HSW365 SMS Outreach to Business Owners
 
+# PAUSED (Oct 13 2026): the daily schedule is off.
+# This bot cold-texts scraped business numbers from the same SignalWire number (+1 856-594-3303)
+# that is being registered on the "CallTwin Job Alerts" 10DLC campaign. Carriers treat unsolicited
+# marketing texts on a job-alerts campaign as a violation and can reject or suspend the campaign and
+# block the number. Keep it off until a separate marketing campaign with proper opt-in is approved.
+# It can still be run by hand from the Actions tab (workflow_dispatch).
 on:
-  schedule:
-    - cron: "30 14 * * *"
   workflow_dispatch: {}
 
 jobs:

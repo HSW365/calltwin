@@ -50,6 +50,8 @@
     ".nq-row{display:block}",
     ".nq-fab{position:fixed;right:20px;bottom:20px;z-index:60;display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 22px 0 18px;border:0;border-radius:999px;background:#0b2a4a;color:#fff;font:700 16px/1 'Libre Franklin',system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;box-shadow:0 18px 40px -16px rgba(7,29,52,.75),0 2px 6px rgba(7,29,52,.2),0 0 0 1.5px rgba(255,255,255,.28);transition:transform .2s cubic-bezier(.22,.8,.2,1),background .18s,opacity .18s}",
     ".nq-fab:hover{background:#071d34;transform:translateY(-2px)}",
+    // Phones: the page's bottom bar already has "Message us", so the floating button would just sit on top of it.
+    "@media (max-width:760px){.nq-has-bar .nq-fab{display:none}}",
     ".nq-fab svg{width:22px;height:22px;flex:none}",
     ".nq-open .nq-fab{opacity:0;pointer-events:none;transform:scale(.9)}",
     ".nq-panel{position:fixed;right:20px;bottom:20px;z-index:70;width:392px;max-width:calc(100vw - 24px);height:min(600px,calc(100vh - 40px));height:min(600px,calc(100dvh - 40px));display:flex;flex-direction:column;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(7,29,52,.6),0 0 0 1px rgba(11,42,74,.1);opacity:0;visibility:hidden;transform:translateY(14px) scale(.985);transform-origin:100% 100%;transition:opacity .2s,transform .24s cubic-bezier(.22,.8,.2,1),visibility 0s .24s;font:16px/1.5 'Libre Franklin',system-ui,-apple-system,'Segoe UI',sans-serif;color:#16212e}",
@@ -116,6 +118,7 @@
     var foot = el("div", "nq-foot"); foot.appendChild(document.createTextNode("Marcus is an AI assistant. Emergency? Say so here and leave your name and address. It goes straight to the owner."));
     panel.appendChild(head); panel.appendChild(topic); panel.appendChild(log); panel.appendChild(form); panel.appendChild(foot);
     root.appendChild(fab); root.appendChild(panel); document.body.appendChild(root);
+    if (document.querySelector(".mcall, .sticky")) root.classList.add("nq-has-bar");
 
     // ---- chat state ----
     var turns = [], waiting = false, waitTimer = 0, dots = null, chipsBox = null, greeted = {}, lastFocus = null;

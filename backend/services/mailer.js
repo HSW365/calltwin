@@ -47,7 +47,7 @@ function smtp() {
   return transport;
 }
 
-/** opts: { replyTo, fromName, html } */
+/** opts: { replyTo, fromName, html, attachments: [{ filename, content: Buffer, contentType }] } */
 async function sendEmail(to, subject, text, opts = {}) {
   const rcpt = String(to || "").trim();
   if (!emailReady() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rcpt)) return false;
@@ -56,6 +56,8 @@ async function sendEmail(to, subject, text, opts = {}) {
   const subj = String(subject || "").replace(/[\r\n]+/g, " ").slice(0, 200);
   const body = String(text || "").slice(0, 20000);
   const replyTo = opts.replyTo && /@/.test(opts.replyTo) ? String(opts.replyTo).trim() : undefined;
+  const files = (opts.attachments || []).filter((f) => f && f.filename && Buffer.isBuffer(f.content))
+    .map((f) => ({ filename: String(f.filename).replace(/[\r\n"\/\\]/g, "").slice(0, 120), content: f.content, contentType: f.contentType || "application/octet-stream" }));
   try {
     if (provider() === "sendgrid") {
       await axios.post("https://api.sendgrid.com/v3/mail/send", {
@@ -64,9 +66,10 @@ async function sendEmail(to, subject, text, opts = {}) {
         reply_to: replyTo ? { email: replyTo } : undefined,
         subject: subj,
         content: [{ type: "text/plain", value: body }, ...(opts.html ? [{ type: "text/html", value: opts.html }] : [])],
+        attachments: files.length ? files.map((f) => ({ filename: f.filename, type: f.contentType, content: f.content.toString("base64"), disposition: "attachment" })) : undefined,
       }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${env("SENDGRID_API_KEY")}` }, timeout: 15000 });
     } else {
-      await smtp().sendMail({ from: { name, address: from }, to: rcpt, replyTo, subject: subj, text: body, html: opts.html || undefined });
+      await smtp().sendMail({ from: { name, address: from }, to: rcpt, replyTo, subject: subj, text: body, html: opts.html || undefined, attachments: files.length ? files : undefined });
     }
     lastError = null;
     return true;

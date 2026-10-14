@@ -326,8 +326,18 @@ router.post("/voicemail", async (req, res) => {
   if (!p.RecordingUrl || !p.c) return;
   const c = await Client.findById(p.c).catch(() => null);
   if (!c) return;
-  const lead = await ClientLead.create({ client: c._id, source: "voicemail", name: "Voicemail caller", phone: p.From || "", summary: `Voicemail (${p.RecordingDuration || "?"}s): ${p.RecordingUrl}.mp3` });
-  const sent = await alertOwner(c, `New voicemail for ${c.businessName} from ${p.From || "unknown"}. Listen: ${p.RecordingUrl}.mp3`);
+  // Write the voicemail out and pull the job details so the alert reads like a ticket (name, number, address, service).
+  const vm = require("../services/voicemailNotes");
+  const n = await vm.notesFor(p.RecordingUrl);
+  const lead = await ClientLead.create({
+    client: c._id, source: "voicemail",
+    name: n.name || "Voicemail caller",
+    phone: n.phone ? vm.fmtPhone(n.phone) : (p.From || ""),
+    address: n.address || "",
+    service: n.service || "",
+    summary: `${n.service ? n.service + ". " : ""}Voicemail (${p.RecordingDuration || "?"}s)${n.transcript ? `: "${n.transcript.slice(0, 600)}"` : ""} Listen: ${p.RecordingUrl}.mp3`,
+  });
+  const sent = await alertOwner(c, vm.alertText(c.businessName, p.From, p.RecordingUrl, n));
   lead.notified = sent.texted || sent.emailed;
   await lead.save();
   require("../estimate/service").fromCallTwinLead(c, lead);

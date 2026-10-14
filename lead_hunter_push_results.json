@@ -3,35 +3,11 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Ufberg Dental P.C.",
+      "businessName": "State Farm Insurance: Ann Lin",
       "pushed": false
     },
     {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
-    },
-    {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
-    },
-    {
-      "businessName": "Tri-Point Electric",
-      "pushed": false
-    },
-    {
-      "businessName": "John's Tree Service",
-      "pushed": false
-    },
-    {
-      "businessName": "Bill Johnston Landscape Co.",
-      "pushed": false
-    },
-    {
-      "businessName": "Ritetax FInancial",
-      "pushed": false
-    },
-    {
-      "businessName": "Liberty Tax",
+      "businessName": "Allstate",
       "pushed": false
     },
     {
@@ -43,7 +19,15 @@
       "pushed": false
     },
     {
-      "businessName": "The UPS Store",
+      "businessName": "Italo's Tailor Shop",
+      "pushed": false
+    },
+    {
+      "businessName": "Sunsilk Tailor",
+      "pushed": false
+    },
+    {
+      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
       "pushed": false
     }
   ]

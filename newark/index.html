@@ -91,6 +91,9 @@ p{max-width:66ch}
 .util a{color:#fff;font-weight:600}
 .util a:hover{text-decoration:underline;text-underline-offset:4px}
 .util-r{display:flex;gap:24px;align-items:center;white-space:nowrap}
+.util .wrap{min-height:52px}
+.util a.owner-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:4px;background:var(--red);color:#fff;font-size:15.5px;font-weight:800;letter-spacing:.02em;text-decoration:none}
+.util a.owner-btn:hover{background:#a51217;text-decoration:none}
 
 /* nav */
 .nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);transition:box-shadow .25s}
@@ -567,7 +570,7 @@ footer .logo small{color:#9fb3c8}
 <div class="util">
   <div class="wrap">
     <span class="util-l">Master Plumber License #4646. HVAC Contractor License #1783. 412 Firth St, Phillipsburg, NJ.</span>
-    <span class="util-r"><a href="#pay">Pay a bill</a><a href="#owner" data-owner>Owner login</a></span>
+    <span class="util-r"><a href="#pay">Pay a bill</a><a class="owner-btn" href="#owner" data-owner><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Owner Login</a></span>
   </div>
 </div>
 

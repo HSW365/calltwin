@@ -15,8 +15,10 @@ const express = require("express");
 const axios = require("axios");
 
 const router = express.Router();
-router.use(express.json());
-router.use(express.urlencoded({ extended: false }));
+// The proposal maker parses its own bodies (large photo uploads); everything else keeps the small default.
+const json = express.json(), form = express.urlencoded({ extended: false });
+router.use((req, res, next) => (req.path.startsWith("/proposal") ? next() : json(req, res, next)));
+router.use((req, res, next) => (req.path.startsWith("/proposal") ? next() : form(req, res, next)));
 
 const NEWARK_API = process.env.NEWARK_API || "https://lsxdlmrjrcivxwgfkpop.supabase.co/functions/v1/newark";
 const hookKey = () => process.env.NEWARK_HOOK_KEY || "";

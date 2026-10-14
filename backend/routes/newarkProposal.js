@@ -8,6 +8,10 @@
  *   POST /letterhead { pin, company }                save the company block used on every document
  *   POST /pdf       { pin, doc }                     the finished PDF (application/pdf)
  *   POST /email     { pin, doc, to, message? }       email the PDF to the customer (reply-to = owner)
+ *   POST /get       { pin, id }                      one saved document, with its photos
+ *   POST /analyze   multipart: pin, type, notes, photos[] (jpeg/png/webp), audio[] (voice note or short video)
+ *                                                    AI drafts heading, scope and line items from the photos and his words;
+ *                                                    prices are filled only from his own past lines (see services/newarkJobAnalyze.js)
  *   POST /writeup   { pin, notes, items, type }      AI turns the owner's short notes into the title + scope paragraph.
  *                                                    The AI never sees or writes prices; all money comes from the owner's lines.
  */
@@ -16,6 +20,12 @@ const axios = require("axios");
 const mongoose = require("mongoose");
 const M = require("../services/newarkProposalMath");
 const { renderProposalPdf } = require("../services/newarkProposalPdf");
+const multer = require("multer");
+const { analyzeJob } = require("../services/newarkJobAnalyze");
+
+// Photos and video frames arrive already shrunk by the page; voice notes and short clips go to transcription.
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024, files: 16, fieldSize: 64 * 1024 } });
+const IMG = /^image\/(jpeg|png|webp)$/, AUD = /^(audio|video)\//;
 
 const Proposal = mongoose.models.NewarkProposal || mongoose.model("NewarkProposal", new mongoose.Schema({
   kind: { type: String, default: "doc", index: true }, // "doc" | "letterhead"
@@ -59,13 +69,39 @@ const fileName = (d) => `${d.company.name} ${M.TYPES[d.type]} ${d.number || d.da
 
 module.exports = function proposalRouter(ownerPin) {
   const router = express.Router();
-  router.use(express.json({ limit: "400kb" }));
+  router.use(express.json({ limit: "8mb" }));
+
+  // Photos / video / voice note -> drafted estimate. Multipart, so the PIN is read after the upload is parsed.
+  router.post("/analyze", upload.fields([{ name: "photos", maxCount: 12 }, { name: "audio", maxCount: 3 }]), ownerPin, wrap(async (req, res) => {
+    const images = ((req.files && req.files.photos) || []).filter((f) => IMG.test(f.mimetype) && f.size <= 4 * 1024 * 1024);
+    const audios = ((req.files && req.files.audio) || []).filter((f) => AUD.test(f.mimetype));
+    const notes = String(req.body.notes || "").trim().slice(0, 2000);
+    if (!images.length && !audios.length && !notes) return bad(res, "Add photos, a video, or a voice note first.");
+    const docs = (await Proposal.find({ kind: "doc" }, { "doc.items": 1, updatedAt: 1 }).sort({ updatedAt: -1 }).limit(300).lean())
+      .map((r) => ({ items: (r.doc && r.doc.items) || [], updatedAt: r.updatedAt }));
+    try {
+      const out = await analyzeJob({ type: M.TYPES[req.body.type] ? req.body.type : "estimate", notes, images, audios, docs });
+      res.json({ ok: true, ...out });
+    } catch (e) {
+      if (e.status) return bad(res, e.message, e.status);
+      throw e;
+    }
+  }));
+
   router.use(ownerPin);
 
   router.post("/list", wrap(async (req, res) => {
     const rows = await Proposal.find({ kind: "doc" }).sort({ updatedAt: -1 }).limit(100).lean();
     res.json({ ok: true, next: await nextNumber(), company: await letterhead(), defaults: M.DEFAULT_TERMS,
-      items: rows.map((r) => ({ id: r._id, number: r.number, type: r.type, customer: r.customer, totalCents: r.totalCents, updatedAt: r.updatedAt, doc: r.doc })) });
+      items: rows.map((r) => ({ id: r._id, number: r.number, type: r.type, customer: r.customer, totalCents: r.totalCents, updatedAt: r.updatedAt,
+        photoCount: ((r.doc && r.doc.photos) || []).length, doc: { ...r.doc, photos: undefined } })) });
+  }));
+
+  router.post("/get", wrap(async (req, res) => {
+    if (!mongoose.isValidObjectId(req.body.id)) return bad(res, "Not found.", 404);
+    const r = await Proposal.findOne({ _id: req.body.id, kind: "doc" }).lean();
+    if (!r) return bad(res, "Not found.", 404);
+    res.json({ ok: true, id: r._id, doc: r.doc });
   }));
 
   router.post("/save", wrap(async (req, res) => {

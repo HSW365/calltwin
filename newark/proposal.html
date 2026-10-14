@@ -163,6 +163,35 @@ details.co[open] summary::before{content:"–"}
   .step h2{font-size:26px}
   .step p{display:none}
 }
+
+/* step 0: photos, video, voice */
+.start{border:2px solid var(--navy)}
+.cap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.cap{grid-template-columns:1fr}}
+.cap label.btn{margin:0;color:inherit}
+.cap label.btn-ink{color:#fff}
+.cap input[type=file]{position:absolute;width:1px;height:1px;opacity:0;min-height:0}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.shot{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper)}
+.shot img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.shot input{min-height:42px;border:0;border-top:1px solid var(--line);border-radius:0;font-size:14.5px;padding:0 10px}
+.shot button{position:absolute;top:6px;right:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(6,24,43,.78);color:#fff;font-size:20px;cursor:pointer;line-height:1}
+.shot .vid{position:absolute;left:6px;top:6px;background:var(--red);color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 7px;border-radius:3px}
+.voice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border:1px dashed var(--line2);border-radius:8px}
+.voice .btn.rec{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(196,22,28,.18)}}
+.voice span{font-size:16px;color:var(--text2)}
+.build{width:100%;margin-top:16px;min-height:64px;font-size:19px}
+.chk{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:16px;font-weight:600;color:var(--text2)}
+.chk input{width:24px;height:24px;min-height:0}
+.line.need{border-color:#d9a300;background:#fff8e1}
+.line.need .money input{border-color:#d9a300}
+.line .flag{display:none;grid-column:2/-1;font-size:13.5px;font-weight:800;color:#8a5a00;letter-spacing:.02em}
+.line.need .flag{display:block}
+.line .flag.ok{display:block;color:#0b5a31;font-weight:700}
+.line.need .flag.ok{display:none}
+@media (max-width:700px){.line .flag{grid-column:1/-1}}
+.checks{margin-top:10px;padding-left:20px;font-size:15.5px;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -191,6 +220,27 @@ details.co[open] summary::before{content:"–"}
 <main class="page" id="app" hidden>
   <div>
     <form id="f" novalidate autocomplete="off">
+      <!-- 0 -->
+      <section class="card start">
+        <div class="step"><i>★</i><h2>Start from the job</h2><p>Photos, video, your voice</p></div>
+        <div class="cap">
+          <label class="btn btn-ink" for="camIn">Take photos or video<input id="camIn" type="file" accept="image/*,video/*" capture="environment" multiple></label>
+          <label class="btn btn-line" for="pickIn">Choose from my phone<input id="pickIn" type="file" accept="image/*,video/*" multiple></label>
+        </div>
+        <div class="shots" id="shots"></div>
+        <div class="voice">
+          <button class="btn btn-line" type="button" id="recBtn">Tap to talk about the job</button>
+          <span id="recInfo">Say what you see and what the job needs.</span>
+          <button class="btn-quiet" type="button" id="recDel" hidden>Delete voice note</button>
+        </div>
+        <label for="notes" style="margin-top:16px">Or type a few words <em>(optional)</em></label>
+        <textarea id="notes" name="notes" placeholder="50 gal gas water heater leaking from the bottom, basement, replace. haul away old one."></textarea>
+        <button class="btn btn-red build" type="button" id="buildBtn">Build my estimate</button>
+        <div class="msg" id="buildMsg" role="status"></div>
+        <ul class="checks" id="checks" hidden></ul>
+        <label class="chk"><input type="checkbox" id="showPhotos" checked> Put the job photos in the PDF</label>
+      </section>
+
       <!-- 1 -->
       <section class="card">
         <div class="step"><i>1</i><h2>What are you sending?</h2></div>
@@ -226,9 +276,7 @@ details.co[open] summary::before{content:"–"}
         <div class="grid">
           <div class="full"><label for="jobsite">Jobsite address</label><input id="jobsite" name="jobsite" placeholder="118 Export Street, Newark, NJ"></div>
           <div class="full">
-            <label for="notes">A few words about the job <em>(for the write-up)</em></label>
-            <textarea id="notes" name="notes" placeholder="installed sprinkler system to existing system per drawings and proposal 9/26. added air and hydraulic test"></textarea>
-            <div class="addrow"><button class="btn btn-line" type="button" id="aiBtn">Write it up for me</button></div>
+            <div class="addrow" style="margin-top:0"><button class="btn btn-line" type="button" id="aiBtn">Rewrite heading and scope</button></div>
             <div class="msg" id="aiMsg" role="status"></div>
           </div>
           <div class="full"><label for="title">Heading</label><input id="title" name="title" placeholder="Sprinkler system installation"></div>
@@ -339,7 +387,7 @@ function cents(v) {
 const qty = (v) => { if (v === "" || v == null) return 1; const n = parseFloat(String(v).replace(/,/g, "")); return isFinite(n) && n >= 0 ? Math.round(n * 100) / 100 : 1; };
 function money(c) { const a = Math.abs(Math.round(c)); const s = "$" + Math.floor(a / 100).toLocaleString("en-US") + "." + String(a % 100).padStart(2, "0"); return c < 0 ? `(${s})` : s; }
 
-let LOADED = false, PIN = sess.get("na_pin"), CURRENT = null, DEFAULTS = {}, COMPANY = {}, NEXT = "", ITEMS = [];
+let SHOTS = [], CLIPS = [], VOICE = null, LOADED = false, PIN = sess.get("na_pin"), CURRENT = null, DEFAULTS = {}, COMPANY = {}, NEXT = "", ITEMS = [];
 
 async function call(path, body, raw) {
   const r = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: PIN, ...body }) });
@@ -369,7 +417,10 @@ function lineRow(it = {}) {
     <div><span class="lab">Qty</span><input data-k="qty" inputmode="decimal" value="${esc(it.qty ?? 1)}" aria-label="Quantity"></div>
     <div><span class="lab">Price each</span><div class="money"><input data-k="price" inputmode="decimal" value="${esc(it.price ?? "")}" placeholder="0.00" aria-label="Price each"></div></div>
     <button class="btn-x" type="button" aria-label="Remove line" style="margin-top:22px">×</button>
+    <div class="flag">Needs your price</div>
     <div class="amt">Line total <b>$0.00</b></div>`;
+  if (it.need) el.classList.add("need");
+  el.querySelector("[data-k=price]").addEventListener("input", (e) => { if (cents(e.target.value)) el.classList.remove("need"); });
   el.querySelector(".btn-x").onclick = () => { el.remove(); if (!$$("#lines .line").length) addLine(); recalc(); };
   const ta = el.querySelector("textarea"); const grow = () => { ta.style.height = "54px"; ta.style.height = Math.max(54, ta.scrollHeight + 2) + "px"; };
   ta.addEventListener("input", grow); setTimeout(grow);
@@ -398,6 +449,8 @@ function read() {
     taxPct: $("#taxPct").value.trim(),
     items: $$("#lines .line").map((l) => ({ desc: l.querySelector("[data-k=desc]").value.trim(), qty: l.querySelector("[data-k=qty]").value.trim(), price: l.querySelector("[data-k=price]").value.trim() })).filter((i) => i.desc || i.price),
     payments: $$("#pays .pay").map((p) => ({ label: p.querySelector("[data-k=label]").value.trim(), amount: p.querySelector("[data-k=amount]").value.trim() })).filter((p) => cents(p.amount)),
+    photos: SHOTS.slice(0, 8).map((x) => ({ src: x.src, caption: x.caption || "" })), // the first 8 go in the PDF
+    showPhotos: $("#showPhotos").checked,
   };
 }
 function fill(d) {
@@ -410,6 +463,8 @@ function fill(d) {
   $("#taxPct").value = d.taxPct ? String(d.taxPct) : "";
   $("#lines").innerHTML = ""; (d.items && d.items.length ? d.items : [{}]).forEach((it) => addLine({ desc: it.desc, qty: it.qty, price: it.price ?? (it.priceCents != null ? (it.priceCents / 100).toFixed(2) : "") }));
   $("#pays").innerHTML = ""; (d.payments || []).forEach((p) => $("#pays").appendChild(payRow({ label: p.label, amount: p.amount ?? (p.amountCents != null ? (p.amountCents / 100).toFixed(2) : "") })));
+  SHOTS = (d.photos || []).map((p) => ({ src: p.src, caption: p.caption || "" })); VOICE = null; CLIPS = []; drawShots(); drawVoice();
+  $("#showPhotos").checked = d.showPhotos !== false; say($("#buildMsg"), ""); $("#checks").hidden = true;
   typeChanged(); recalc();
 }
 
@@ -430,7 +485,7 @@ function recalc() {
   $("#tDueL").textContent = paid ? "Balance due" : "Total"; $("#tDue").textContent = money(paid ? total - paid : total);
   $("#tKind").textContent = TYPES[d.type] + " total";
   $("#dKind").textContent = paid ? "Balance due" : TYPES[d.type] + " total"; $("#dDue").textContent = $("#tDue").textContent;
-  store("na_prop_draft", { id: CURRENT, doc: d });
+  store("na_prop_draft", { id: CURRENT, doc: { ...d, photos: undefined } }); // photos are too big for the draft; they are kept on Save
 }
 function typeChanged() {
   const t = $("#f").elements.type.value;
@@ -444,11 +499,11 @@ $("#resetTerms").onclick = () => { $("#terms").value = DEFAULTS[$("#f").elements
 
 // ---- saved list ----
 function renderSaved(items) {
-  $("#saved").innerHTML = items.length ? items.map((r) => `<div class="srow"><div><b><span class="tag">${esc(TYPES[r.type] || "")}</span>${esc(r.customer || "No name")}</b><small>No. ${esc(r.number)} · ${money(r.totalCents || 0)} · ${new Date(r.updatedAt).toLocaleDateString()}</small></div>
+  $("#saved").innerHTML = items.length ? items.map((r) => `<div class="srow"><div><b><span class="tag">${esc(TYPES[r.type] || "")}</span>${esc(r.customer || "No name")}</b><small>No. ${esc(r.number)} · ${money(r.totalCents || 0)} · ${new Date(r.updatedAt).toLocaleDateString()}${r.photoCount ? ` · ${r.photoCount} photo${r.photoCount > 1 ? "s" : ""}` : ""}</small></div>
     <button type="button" data-open="${r.id}">Open</button><button type="button" class="use" data-use="${r.id}" title="Start a new one from this">Use again</button></div>`).join("")
     : `<div class="empty">Nothing saved yet. Fill in the form and press Save.</div>`;
   const byId = Object.fromEntries(items.map((r) => [r.id, r]));
-  $$("#saved [data-open]").forEach((b) => (b.onclick = () => { const r = byId[b.dataset.open]; CURRENT = r.id; fill(r.doc); say($("#actMsg"), `Opened ${TYPES[r.type]} ${r.number}.`, true); scrollTo({ top: 0, behavior: "smooth" }); }));
+  $$("#saved [data-open]").forEach((b) => (b.onclick = () => busy(b, async () => { const r = byId[b.dataset.open]; const j = r.photoCount ? await call("/get", { id: r.id }) : { doc: r.doc }; CURRENT = r.id; fill(j.doc); say($("#actMsg"), `Opened ${TYPES[r.type]} ${r.number}.`, true); scrollTo({ top: 0, behavior: "smooth" }); })));
   $$("#saved [data-use]").forEach((b) => (b.onclick = () => { const r = byId[b.dataset.use]; CURRENT = null; fill({ ...r.doc, number: "", date: today(), payments: [] }); say($("#actMsg"), "Copied as a new form. Change what you need, then Save.", true); scrollTo({ top: 0, behavior: "smooth" }); }));
 }
 async function load() {
@@ -524,6 +579,128 @@ $("#coForm").addEventListener("submit", (e) => {
   e.preventDefault(); const btn = $("button[type=submit]", e.target);
   busy(btn, async () => { const c = Object.fromEntries(new FormData(e.target)); const j = await call("/letterhead", { company: c }); COMPANY = j.company; say($("#coMsg"), "Saved. Every form uses this now.", true); });
 });
+
+// ---- photos, video, voice ----
+const MAX_SHOTS = 12, AUDIO_MAX = 24 * 1024 * 1024;
+function shrink(src, max = 1280, q = 0.74) {
+  return new Promise((ok, bad) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", q));
+    };
+    img.onerror = () => bad(new Error("That photo couldn't be opened."));
+    img.src = src;
+  });
+}
+// Three still frames from a video (start, middle, end of the clip), made on the phone.
+function frames(file, n = 3) {
+  return new Promise((ok) => {
+    const v = document.createElement("video"), url = URL.createObjectURL(file), out = [];
+    v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+    const done = () => { URL.revokeObjectURL(url); ok(out); };
+    const stop = setTimeout(done, 20000);
+    v.onerror = () => { clearTimeout(stop); done(); };
+    v.onloadeddata = async () => {
+      const dur = isFinite(v.duration) && v.duration > 0 ? v.duration : 1;
+      for (let i = 0; i < n; i++) {
+        await new Promise((r) => { v.onseeked = r; v.currentTime = Math.min(dur - 0.05, dur * (0.15 + (0.7 * i) / Math.max(1, n - 1))); setTimeout(r, 3000); });
+        const k = Math.min(1, 1280 / Math.max(v.videoWidth || 1280, v.videoHeight || 720));
+        const c = document.createElement("canvas"); c.width = Math.round((v.videoWidth || 1280) * k); c.height = Math.round((v.videoHeight || 720) * k);
+        try { c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); out.push(c.toDataURL("image/jpeg", 0.74)); } catch {}
+      }
+      clearTimeout(stop); done();
+    };
+  });
+}
+async function addFiles(list) {
+  const msg = $("#buildMsg"); say(msg, "Adding…", true);
+  for (const f of list) {
+    if (SHOTS.length >= MAX_SHOTS) { say(msg, `That's the most it can use (${MAX_SHOTS} pictures). Remove some to add more.`, false); break; }
+    try {
+      if (f.type.startsWith("video/")) {
+        const fr = await frames(f);
+        fr.slice(0, MAX_SHOTS - SHOTS.length).forEach((src, i) => SHOTS.push({ src, caption: "", frame: true, clip: f.name + i }));
+        if (f.size <= AUDIO_MAX && CLIPS.length < 2) CLIPS.push(f); // its sound (you talking) is used too
+        if (!fr.length) say(msg, "Couldn't take pictures from that video. Try photos, or a shorter clip.", false);
+      } else if (f.type.startsWith("image/")) {
+        const url = URL.createObjectURL(f);
+        try { SHOTS.push({ src: await shrink(url), caption: "" }); } finally { URL.revokeObjectURL(url); }
+      }
+    } catch (e) { say(msg, e.message, false); }
+  }
+  if (msg.textContent === "Adding…") say(msg, "");
+  drawShots(); recalc();
+}
+function drawShots() {
+  $("#shots").innerHTML = SHOTS.map((x, i) => `<div class="shot">${x.frame ? '<span class="vid">VIDEO</span>' : ""}<img src="${x.src}" alt="Job photo ${i + 1}"><button type="button" data-del="${i}" aria-label="Remove photo">×</button><input data-cap="${i}" value="${esc(x.caption)}" placeholder="What is this? (optional)" aria-label="Caption for photo ${i + 1}"></div>`).join("");
+  $$("#shots [data-del]").forEach((b) => (b.onclick = () => { SHOTS.splice(+b.dataset.del, 1); drawShots(); recalc(); }));
+  $$("#shots [data-cap]").forEach((inp) => (inp.oninput = () => { SHOTS[+inp.dataset.cap].caption = inp.value.slice(0, 120); }));
+}
+["#camIn", "#pickIn"].forEach((id) => $(id).addEventListener("change", (e) => { const fl = [...e.target.files]; e.target.value = ""; addFiles(fl); }));
+
+// voice note
+let rec = null, recT = 0, recTimer = null;
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+function drawVoice() {
+  const b = $("#recBtn"), info = $("#recInfo");
+  if (rec) { b.textContent = "Stop recording"; b.classList.add("rec"); info.textContent = `Recording ${fmt(recT)}`; $("#recDel").hidden = true; return; }
+  b.classList.remove("rec");
+  b.textContent = VOICE ? "Record again" : "Tap to talk about the job";
+  info.textContent = VOICE ? `Voice note ready (${fmt(VOICE.secs)})` : "Say what you see and what the job needs.";
+  $("#recDel").hidden = !VOICE;
+}
+$("#recBtn").onclick = async () => {
+  if (rec) { rec.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) return say($("#buildMsg"), "This phone can't record here. Type a few words instead.", false);
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { return say($("#buildMsg"), "Allow the microphone to record a voice note, or type a few words instead.", false); }
+  const type = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || "";
+  const chunks = [];
+  rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.onstop = () => {
+    stream.getTracks().forEach((t) => t.stop()); clearInterval(recTimer);
+    const blob = new Blob(chunks, { type: (rec.mimeType || type || "audio/webm").split(";")[0] });
+    VOICE = blob.size > 1000 ? { blob, secs: recT } : null; rec = null; drawVoice();
+  };
+  recT = 0; rec.start(1000); drawVoice();
+  recTimer = setInterval(() => { recT++; drawVoice(); if (recT >= 180) rec && rec.stop(); }, 1000);
+};
+$("#recDel").onclick = () => { VOICE = null; drawVoice(); };
+
+// build: photos + video + voice -> drafted estimate
+$("#buildBtn").onclick = () => busy($("#buildBtn"), async () => {
+  const msg = $("#buildMsg"), d = read();
+  if (!SHOTS.length && !VOICE && !CLIPS.length && !d.notes) return say(msg, "Take a few photos or a video, or tap to talk about the job first.", false);
+  const hasLines = d.items.some((i) => i.desc || i.price);
+  if (hasLines && !confirm("Replace the heading, scope and lines on this form with a new draft from the photos?")) return;
+  say(msg, "Looking at the job… this can take up to a minute.", true);
+  const fd = new FormData();
+  fd.append("pin", PIN); fd.append("type", d.type); fd.append("notes", d.notes || "");
+  for (const x of SHOTS.slice(0, 12)) fd.append("photos", await (await fetch(x.src)).blob(), "photo.jpg");
+  if (VOICE) fd.append("audio", VOICE.blob, "note." + (VOICE.blob.type.includes("mp4") ? "m4a" : VOICE.blob.type.includes("ogg") ? "ogg" : "webm"));
+  CLIPS.forEach((c) => fd.append("audio", c, "clip.mp4"));
+  const r = await fetch(API + "/analyze", { method: "POST", body: fd });
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+  if (r.status === 401 || r.status === 429) { sess.del("na_pin"); PIN = null; showGate(j.error); return; }
+  if (!r.ok || !j.ok) return say(msg, j.error || "That didn't work. Try again.", false);
+  if (j.title) $("#title").value = j.title;
+  if (j.scope) $("#scope").value = j.scope;
+  $("#lines").innerHTML = "";
+  (j.items.length ? j.items : [{}]).forEach((it) => addLine({ desc: it.desc, qty: it.qty, price: it.priceCents != null ? (it.priceCents / 100).toFixed(2) : "", need: it.priceCents == null && !!it.desc }));
+  recalc();
+  const parts = [`Drafted ${j.items.length} line${j.items.length === 1 ? "" : "s"}.`];
+  if (j.priced) parts.push(`${j.priced} priced from your past jobs.`);
+  if (j.unpriced) parts.push(`${j.unpriced} need${j.unpriced === 1 ? "s" : ""} your price (in yellow).`);
+  parts.push("Check it over, then send.");
+  say(msg, parts.join(" "), true);
+  $("#checks").innerHTML = (j.check || []).map((c) => `<li>${esc(c)}</li>`).join(""); $("#checks").hidden = !(j.check || []).length;
+  const first = $("#lines .line.need"); if (first) setTimeout(() => first.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+});
+$("#showPhotos").addEventListener("change", recalc);
 
 // ---- start ----
 if (PIN) load().catch((e) => { if (e.message !== "signed out") showGate(e.message); }); else showGate();

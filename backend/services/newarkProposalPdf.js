@@ -169,6 +169,32 @@ function draw(pdf, d) {
     pdf.fillColor(MUT).font("Helvetica").fontSize(8.5).text(`Submitted by ${co.name}${co.permit ? `, Permit No. ${co.permit}` : ""}.`, M, y, { width: CW });
   }
 
+  // ---------- job photos ----------
+  const pics = d.showPhotos ? (d.photos || []) : [];
+  if (pics.length) {
+    pdf.addPage(); y = M;
+    pdf.fillColor(NAVY).font("Helvetica-Bold").fontSize(16).text("JOB PHOTOS", M, y, { characterSpacing: 1 });
+    pdf.fillColor(MUT).font("Helvetica").fontSize(9).text(`${TYPES[d.type]} ${d.number}${d.jobsite ? `  ·  ${d.jobsite}` : ""}`, M, pdf.y + 2);
+    y = pdf.y + 12;
+    pdf.moveTo(M, y).lineTo(W - M, y).lineWidth(1.2).strokeColor(RED).stroke();
+    y += 14;
+    const gap = 16, cw = (CW - gap) / 2, ch = 190;
+    pics.forEach((p, i) => {
+      const col = i % 2;
+      if (col === 0 && i > 0) y += ch + 34;
+      if (y + ch + 30 > H - 80) { pdf.addPage(); y = M; }
+      const x = M + col * (cw + gap);
+      try {
+        const buf = Buffer.from(String(p.src).split(",")[1], "base64");
+        pdf.image(buf, x, y, { fit: [cw, ch], align: "center", valign: "center" });
+      } catch (e) {
+        pdf.fillColor(MUT).font("Helvetica-Oblique").fontSize(9).text("Photo could not be shown.", x, y + ch / 2, { width: cw, align: "center" });
+      }
+      pdf.rect(x, y, cw, ch).lineWidth(0.4).strokeColor(RULE).stroke();
+      pdf.fillColor(INK).font("Helvetica").fontSize(9).text(p.caption || `Photo ${i + 1}`, x, y + ch + 5, { width: cw, height: 24, ellipsis: true });
+    });
+  }
+
   // ---------- footer on every page ----------
   const range = pdf.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) {

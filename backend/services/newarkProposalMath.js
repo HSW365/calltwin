@@ -71,6 +71,11 @@ function normalize(doc) {
     scope: str(d.scope, 4000),
     items, payments, taxPct,
     terms: str(d.terms, 3000),
+    // Job photos for the PDF: small JPEG/PNG data URLs made by the page, at most 8.
+    photos: (Array.isArray(d.photos) ? d.photos : []).slice(0, 8)
+      .filter((p) => p && /^data:image\/(jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(String(p.src || "")) && String(p.src).length <= 900000)
+      .map((p) => ({ src: p.src, caption: str(p.caption, 120) })),
+    showPhotos: d.showPhotos !== false,
     company: {},
   };
   for (const k of Object.keys(COMPANY)) out.company[k] = str(co[k], 200) || COMPANY[k];

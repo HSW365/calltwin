@@ -886,4 +886,4 @@ async function stripeEvent(type, obj) {
   return true;
 }
 
-module.exports = { router, stripeEvent };
+module.exports = { router, stripeEvent, settingsBySite };

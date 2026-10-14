@@ -973,9 +973,10 @@ footer .logo small{color:#9fb3c8}
         <div class="pane on" data-dpane="jobs"><div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn btn-line btn-sm" id="refreshBtn">Refresh</button></div><div class="list" id="jobList"></div></div>
         <div class="pane" data-dpane="estimates">
           <div class="fwd">
-            <p><b>AI Estimates is included in your package.</b> Estimate requests from this website become draft estimates. You price every line, approve it, and send a proposal the customer signs online and pays a deposit on.</p>
-            <p style="margin-top:14px"><a class="btn btn-ink" href="https://hsw365.github.io/calltwin/estimate.html" target="_blank" rel="noopener">Open estimates</a></p>
-            <p class="small" style="margin-top:12px">First time? Open it from the CallTwin dashboard link we texted you. After that this button takes you straight in on this device.</p>
+            <p><b>Estimates &amp; Proposals</b>. Owner only. Turn a job into a priced estimate, approve it, and send the customer a proposal they sign online and pay a deposit on. You set every price. Nothing goes to a customer until you approve it.</p>
+            <p style="margin-top:14px"><button class="btn btn-ink" type="button" id="estOpen">Open Estimates &amp; Proposals</button></p>
+            <div class="msg" id="estMsg" role="status" style="margin-top:10px"></div>
+            <p class="small" style="margin-top:12px">Locked to your owner PIN. Customers and visitors can't open it.</p>
           </div>
         </div>
         <div class="pane" data-dpane="payments"><div class="list" id="payList"></div></div>
@@ -1262,6 +1263,22 @@ $("#setForm").addEventListener("submit", async (e) => {
   const r = await api({ a: "update", pin: PIN, settings: s });
   if (r.ok) { say(msg, "Settings saved.", true); S = { ...S, ...s }; loadPublic(); } else say(msg, r.error || "Settings didn't save. Try again.", false);
 });
+// Estimates & Proposals: owner only. The server checks the PIN again before handing back the private workspace link.
+const EST_ACCESS = "https://calltwin.onrender.com/api/newark/estimates-access";
+$("#estOpen").onclick = async () => {
+  const msg = $("#estMsg"), btn = $("#estOpen");
+  if (!PIN) return say(msg, "Sign in with your PIN first.", false);
+  const w = window.open("about:blank", "_blank");
+  btn.disabled = true; say(msg, "Opening…", true);
+  try {
+    const r = await fetch(EST_ACCESS, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: PIN }) });
+    const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+    if (!j.ok || !j.url) { if (w) w.close(); return say(msg, j.error || "Couldn't open estimates. Try again.", false); }
+    if (w) { w.opener = null; w.location.replace(j.url); } else location.href = j.url;
+    msg.textContent = ""; msg.className = "msg";
+  } catch { if (w) w.close(); say(msg, "No connection. Try again.", false); }
+  finally { btn.disabled = false; }
+};
 $("#testSms").onclick = async () => { const r = await api({ a: "test_alert", pin: PIN }); say($("#setMsg"), r.ok ? "Test text sent. Check your phone." : r.error, r.ok); };
 
 // primary nav: mark the section being read

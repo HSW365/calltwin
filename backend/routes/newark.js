@@ -3,6 +3,7 @@
  *
  *   POST /api/newark/notify     alert the owner by text (SignalWire SMS) and email together. Auth: x-newark-key header.
  *   POST /api/newark/voicemail  SignalWire <Record> callback -> saves a job ticket in the portal.
+ *   POST /api/newark/estimates-access  owner PIN -> private AI Estimates & Proposals workspace link (owner only).
  *   helpers used by routes/inbound.js: ownerContact(), fallbackXml()
  *
  * Env: NEWARK_HOOK_KEY (shared with the Supabase "newark" function),
@@ -249,6 +250,47 @@ router.post("/voicemail", async (req, res) => {
     }, { headers: { "x-newark-key": hookKey() }, timeout: 8000 });
   } catch (e) {
     console.error("[newark] voicemail save failed:", e.message);
+  }
+});
+
+// ---------- Estimates & Proposals: owner only ----------
+// The owner's portal PIN is checked against the New Ark portal first; only then is his private
+// AI Estimates workspace link handed back. No PIN, no access. Wrong PINs are rate limited per IP.
+const SITE_ORIGINS = [/^https:\/\/(www\.)?ark-hvac\.com$/, /^https:\/\/newark-ark\.onrender\.com$/, /^https:\/\/hsw365\.github\.io$/, /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/];
+const estTries = new Map(); // ip -> [timestamps of failed tries]
+router.use("/estimates-access", (req, res, next) => {
+  const o = req.get("origin") || "";
+  if (SITE_ORIGINS.some((r) => r.test(o))) { res.set("Access-Control-Allow-Origin", o); res.set("Vary", "Origin"); }
+  res.set("Access-Control-Allow-Headers", "content-type");
+  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.set("Cache-Control", "no-store");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+router.post("/estimates-access", async (req, res) => {
+  const ipAddr = String(req.headers["x-forwarded-for"] || req.ip || "").split(",")[0].trim();
+  const now = Date.now();
+  const fails = (estTries.get(ipAddr) || []).filter((t) => now - t < 15 * 60000);
+  if (fails.length >= 6) return res.status(429).json({ ok: false, error: "Too many tries. Wait 15 minutes and try again." });
+  const pin = String((req.body && req.body.pin) || "");
+  const fail = (code, error) => { fails.push(now); estTries.set(ipAddr, fails); return res.status(code).json({ ok: false, error }); };
+  if (!/^\d{6,10}$/.test(pin)) return fail(401, "Sign in to your owner dashboard first.");
+  try {
+    const r = await axios.post(NEWARK_API, JSON.stringify({ a: "login", pin }), { headers: { "Content-Type": "application/json" }, timeout: 8000, validateStatus: () => true });
+    if (!r.data || r.data.ok !== true) return fail(401, "That PIN isn't right. Sign in again.");
+  } catch (e) {
+    console.error("[newark] estimates-access login check failed:", e.message);
+    return res.status(502).json({ ok: false, error: "Couldn't check your PIN. Try again in a minute." });
+  }
+  estTries.delete(ipAddr);
+  try {
+    const hit = await require("../estimate/routes").settingsBySite("newark");
+    if (!hit) return res.status(404).json({ ok: false, error: "Estimates aren't switched on for New Ark yet. Text (856) 796-8081." });
+    const site = (process.env.CALLTWIN_SITE || "https://hsw365.github.io/calltwin").replace(/\/$/, "");
+    res.json({ ok: true, url: `${site}/estimate.html?k=${encodeURIComponent(hit.client.portalKey)}` });
+  } catch (e) {
+    console.error("[newark] estimates-access lookup failed:", e.message);
+    res.status(500).json({ ok: false, error: "Something went wrong. Try again." });
   }
 });
 

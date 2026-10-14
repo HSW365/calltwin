@@ -343,6 +343,35 @@ router.post("/voicemail", async (req, res) => {
   require("../estimate/service").fromCallTwinLead(c, lead);
 });
 
+// Ops check: run the newest voicemail on the account through the job-ticket step and show the result.
+// ?send=1 also re-sends that job to the owner. Protected by NEWARK_HOOK_KEY.
+router.get("/voicemail-check", async (req, res) => {
+  const key = process.env.NEWARK_HOOK_KEY;
+  if (!key || (req.get("x-newark-key") || req.query.k) !== key) return res.status(401).json({ ok: false });
+  const sid = process.env.SIGNALWIRE_PROJECT_ID, tok = process.env.SIGNALWIRE_API_TOKEN;
+  const sp = (process.env.SIGNALWIRE_SPACE || process.env.SIGNALWIRE_SPACE_URL || "").trim().replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const vm = require("../services/voicemailNotes");
+  try {
+    const r = await fetch(`https://${sp}/api/laml/2010-04-01/Accounts/${sid}/Recordings.json?PageSize=1`, {
+      headers: { Authorization: "Basic " + Buffer.from(`${sid}:${tok}`).toString("base64") }, signal: AbortSignal.timeout(15000),
+    });
+    const rec = ((await r.json()).recordings || [])[0];
+    if (!rec) return res.json({ ok: false, error: "no recordings" });
+    const url = `https://${sp}/api/laml/2010-04-01/Accounts/${sid}/Recordings/${rec.sid}`;
+    let from = "";
+    try {
+      const cr = await fetch(`https://${sp}/api/laml/2010-04-01/Accounts/${sid}/Calls/${rec.call_sid}.json`, { headers: { Authorization: "Basic " + Buffer.from(`${sid}:${tok}`).toString("base64") } });
+      from = (await cr.json()).from || "";
+    } catch (_) {}
+    const n = await vm.notesFor(url);
+    const c = await Client.findById(req.query.c || "6ab95fecef103c6dbb383c43").catch(() => null);
+    const text = vm.alertText(c ? c.businessName : "New Ark", from, url, n);
+    let sent = null;
+    if (req.query.send === "1" && c) sent = await alertOwner(c, text);
+    res.json({ ok: !n._why, recorded: rec.date_created, seconds: rec.duration, why: n._why || null, alert: text, sent });
+  } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+});
+
 // ---------- owner portal ----------
 router.get("/portal", async (req, res) => {
   const c = await byKey(req.query.k);

@@ -97,16 +97,19 @@ async function extract(transcript) {
 
 /** Returns { transcript, name, phone, address, service, urgent } — any field may be empty. */
 async function notesFor(recordingUrl) {
-  if (!ready() || !recordingUrl) return {};
+  const why = (step) => { console.error(`[voicemail] notes stopped: ${step}`); return { _why: step }; };
+  if (!ready()) return why("no speech-to-text server set (STT_BASE_URL/CHAT_BASE_URL + key)");
+  if (!recordingUrl) return why("no recording url");
   try {
     const buf = await download(/\.(mp3|wav)$/i.test(recordingUrl) ? recordingUrl : recordingUrl + ".mp3");
-    if (!buf) { console.error("[voicemail] recording download failed"); return {}; }
+    if (!buf) return why("recording download failed");
     const transcript = await transcribe(buf);
-    if (!transcript) return {};
-    return { transcript, ...(await extract(transcript)) };
+    if (!transcript) return why("empty transcript");
+    const fields = await extract(transcript);
+    console.log(`[voicemail] notes ok: ${transcript.length} chars; name=${!!fields.name} phone=${!!fields.phone} address=${!!fields.address} service=${!!fields.service}`);
+    return { transcript, ...fields };
   } catch (e) {
-    console.error("[voicemail] notes failed:", e.message);
-    return {};
+    return why("error: " + String(e.message).slice(0, 200));
   }
 }
 

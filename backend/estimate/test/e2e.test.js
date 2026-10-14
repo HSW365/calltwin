@@ -274,12 +274,14 @@ test("New Ark deal: AI Estimate free, CallTwin 30 days free then $99; others pay
   assert.equal(o.body.addon.trialDays, 14);
 });
 
-test("New Ark website posts estimate requests by site id", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
+test("New Ark is owner-entry only: customers can't submit estimate requests", { skip: !MongoMemoryServer && "mongodb-memory-server-core not installed" }, async () => {
   let r = await request(app).get("/api/estimates/public/site/newark");
   assert.equal(r.status, 200);
+  const before = await EstimateJob.countDocuments();
   r = await request(app).post("/api/estimates/public/site/newark").field("name", "Pat Customer").field("phone", "908-555-0100").field("problem", "Water heater leaking in basement").field("address", "10 Main St, Phillipsburg NJ");
-  assert.equal(r.status, 200);
-  assert.ok(r.body.number);
+  assert.equal(r.status, 403);
+  assert.equal(r.body.number, undefined);
+  assert.equal(await EstimateJob.countDocuments(), before);
   r = await request(app).get("/api/estimates/public/site/nope");
   assert.equal(r.status, 404);
 });

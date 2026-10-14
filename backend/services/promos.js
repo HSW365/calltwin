@@ -16,6 +16,7 @@ const PROMOS = [
     calltwinTrialDays: 30,
     noSetupFee: true,
     estimate: "comp",
+    ownerEntryOnly: true, // only the owner enters estimate info; customers can't submit estimate requests
   },
 ];
 

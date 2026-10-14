@@ -581,13 +581,13 @@ footer .logo small{color:#9fb3c8}
       <a href="#services">Services</a>
       <a href="#about">About</a>
       <a href="#projects">Our work</a>
-      <a href="#estimate">Estimates</a>
+      <a href="#book">Free estimates</a>
       <a href="#book">Contact</a>
       <a href="#faq">Areas</a>
     </nav>
     <div class="nav-cta">
       <a class="nav-phone" href="#chat" data-chat><span>Replies in minutes, 24/7</span><b>Message us</b></a>
-      <a class="btn btn-ink btn-sm hide-m" href="#estimate">Get a free estimate</a>
+      <a class="btn btn-ink btn-sm hide-m" href="#book">Get a free estimate</a>
       <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><span></span></button>
     </div>
   </div>
@@ -595,7 +595,7 @@ footer .logo small{color:#9fb3c8}
     <a href="#services">Services</a>
     <a href="#about">About us</a>
     <a href="#projects">Our work</a>
-    <a href="#estimate">Get a free estimate</a>
+    <a href="#book">Get a free estimate</a>
     <a href="#book">Contact us</a>
     <a href="#pay">Pay a bill</a>
     <a href="#faq">Areas served and questions</a>
@@ -614,7 +614,7 @@ footer .logo small{color:#9fb3c8}
       <p class="lede">New Ark Plumbing, Heating &amp; Air Conditioning LLC has served New Jersey communities for nearly 40 years, for commercial and residential clients.</p>
       <div class="hero-ctas">
         <a class="btn btn-fire" href="#chat" data-chat><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message us</a>
-        <a class="btn btn-ghost" href="#estimate">Get a free estimate</a>
+        <a class="btn btn-ghost" href="#book">Get a free estimate</a>
       </div>
     </div>
   </div>
@@ -625,7 +625,7 @@ footer .logo small{color:#9fb3c8}
     <div><b>#4646</b><strong>Master Plumber License</strong><span>State of New Jersey. Licensed and insured.</span></div>
     <div><b>#1783</b><strong>HVAC Contractor License</strong><span>State of New Jersey</span></div>
     <div><b>Nearly 40 years</b><strong>Commercial and residential</strong><span>Public and private sector clients</span></div>
-    <div><b>Free estimates</b><strong>Message us or request one online</strong><span>Reviewed and priced by the owner</span></div>
+    <div><b>Free estimates</b><strong>Message us or send the contact form</strong><span>Priced by the owner himself</span></div>
   </div>
 </div>
 
@@ -732,47 +732,6 @@ footer .logo small{color:#9fb3c8}
   </div>
 </section>
 
-<section class="block tint" id="estimate">
-  <div class="wrap est-grid">
-    <div>
-      <h2>Get a free estimate.</h2>
-      <p class="lede" style="margin-top:20px">Send a few photos and tell us what is going on. You get a clear, itemized proposal you can approve and sign from your phone.</p>
-      <ol class="path">
-        <li><i>1</i><div><b>Send photos and details</b><span>The equipment, the leak, the label on the unit. Whatever you have.</span></div></li>
-        <li><i>2</i><div><b>The owner prices it</b><span>Every line is priced by New Ark, never guessed. If we need a look in person, we will say so.</span></div></li>
-        <li><i>3</i><div><b>Review and sign online</b><span>Ask a question, request a change, or approve with your signature.</span></div></li>
-        <li><i>4</i><div><b>Lock in your date</b><span>Pay the deposit and we put you on the schedule.</span></div></li>
-      </ol>
-    </div>
-    <div class="sheet">
-      <div class="sheet-h"><h3>Request an estimate</h3><span class="small">About 2 minutes</span></div>
-      <form class="form" id="estForm" novalidate>
-        <div class="field"><label for="eName">Full name</label><input id="eName" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="ePhone">Phone</label><input id="ePhone" name="phone" type="tel" autocomplete="tel" required placeholder="(908) 555-0100"></div>
-        <div class="field"><label for="eEmail">Email <em>(to receive the proposal)</em></label><input id="eEmail" name="email" type="email" autocomplete="email"></div>
-        <div class="field"><label for="eAddr">Job address</label><input id="eAddr" name="address" autocomplete="street-address" placeholder="Street, town, ZIP"></div>
-        <div class="field full"><span class="lab" id="eSvcL">Type of work</span>
-          <div class="chips" role="radiogroup" aria-labelledby="eSvcL">
-            <label class="chip"><input type="radio" name="service" value="Plumbing" checked><span>Plumbing</span></label>
-            <label class="chip"><input type="radio" name="service" value="Heating and cooling"><span>Heating and cooling</span></label>
-            <label class="chip"><input type="radio" name="service" value="Geothermal"><span>Geothermal</span></label>
-            <label class="chip"><input type="radio" name="service" value="Fire sprinklers"><span>Fire sprinklers</span></label>
-          </div></div>
-        <div class="field full"><label for="eProb">What needs doing</label><textarea id="eProb" name="problem" required placeholder="Replace a 12-year-old 50 gallon gas water heater in the basement. It's leaking from the bottom."></textarea></div>
-        <div class="field"><label for="eEquip">Equipment, brand or age <em>(optional)</em></label><input id="eEquip" name="measurements" placeholder="Bradford White, about 12 years"></div>
-        <div class="field"><label for="eWhen">When do you want it done? <em>(optional)</em></label><input id="eWhen" name="preferredTime" placeholder="Next week, mornings"></div>
-        <div class="field full">
-          <label class="drop" id="drop" for="ePhotos"><svg width="26" height="26" aria-hidden="true"><use href="#i-cam"/></svg><b>Add photos</b><span class="small">Up to 8, 5 MB each. Tap to use your camera.</span><input id="ePhotos" type="file" accept="image/*,application/pdf" multiple></label>
-          <div class="thumbs" id="thumbs"></div>
-        </div>
-        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div class="full msg" id="estMsg" role="status"></div>
-        <div class="full form-foot"><small>Emergency right now? Don't wait on an estimate. <a style="text-decoration:underline" href="#chat" data-chat>Message us</a>.</small><button class="btn btn-ink" type="submit">Send estimate request</button></div>
-      </form>
-    </div>
-  </div>
-</section>
-
 <section class="block" id="book">
   <div class="wrap book-grid">
     <div>
@@ -858,8 +817,8 @@ footer .logo small{color:#9fb3c8}
     </div>
     <div class="faq">
       <details open><summary>How fast will I hear back?</summary><p>Every request sent through this site goes straight to the owner, and he gets back to you to confirm. For an emergency, message us here.</p></details>
-      <details><summary>Do you charge for estimates?</summary><p>No. We offer free estimates. message us here or request one online with photos.</p></details>
-      <details><summary>How does the online estimate work?</summary><p>Send photos and a description. The owner prices every line himself and sends you a proposal by text or email. You can ask questions, request changes, or sign and pay a deposit online.</p></details>
+      <details><summary>Do you charge for estimates?</summary><p>No. We offer free estimates. Message us here or send the contact form and the owner will get back to you.</p></details>
+      <details><summary>How does the estimate work?</summary><p>Tell us about the job by message or the contact form. The owner looks it over, prices every line himself, and sends you a written proposal by text or email. You can ask questions, request changes, or sign and pay a deposit online.</p></details>
       <details><summary>Can one company really do plumbing, HVAC, geothermal and sprinklers?</summary><p>That is why New Ark exists. One contractor coordinates all four, so the work happens on one schedule without three companies pointing at each other.</p></details>
       <details><summary>Do you do commercial work?</summary><p>Yes. We have a wide range of experience with large commercial projects as well as residential clients, for both public and private sector clients.</p></details>
       <details><summary>How do I pay?</summary><p>By Zelle. Use the Pay a bill section, then send the payment notice so we can match it to your invoice.</p></details>
@@ -884,14 +843,14 @@ footer .logo small{color:#9fb3c8}
         <p style="max-width:32ch">Plumbing, HVAC, geothermal systems and fire protection services contractor. Serving New Jersey communities for nearly 40 years.</p><p>Master Plumber License #4646<br>HVAC Contractor License #1783</p></div>
       <div><h5>Services</h5><a href="plumbing.html">Plumbing</a><a href="emergency-plumber.html">Emergency plumber</a><a href="water-heater-repair-replacement.html">Water heaters</a><a href="drain-sewer.html">Drain and sewer</a><a href="heating-furnace-boiler.html">Furnaces and boilers</a><a href="air-conditioning.html">Air conditioning</a><a href="geothermal.html">Geothermal</a><a href="fire-sprinklers.html">Fire sprinklers</a><a href="https://arkfps.com/" target="_blank" rel="noopener">New Ark Fire Protection Services</a></div>
       <div><h5>Service areas</h5><a href="phillipsburg-nj.html">Phillipsburg</a><a href="washington-nj.html">Washington</a><a href="hackettstown-nj.html">Hackettstown</a><a href="clinton-nj.html">Clinton</a><a href="flemington-nj.html">Flemington</a></div>
-      <div><h5>Customers</h5><a href="#about">About us</a><a href="#projects">Our work</a><a href="#estimate">Get a free estimate</a><a href="#book">Contact us</a><a href="#pay">Pay a bill</a><a href="#faq">Areas served</a><a href="blog/">Homeowner tips</a><a href="https://g.page/r/CaFa1WvcZmm_EAI/review" target="_blank" rel="noopener">Review us on Google</a></div>
+      <div><h5>Customers</h5><a href="#about">About us</a><a href="#projects">Our work</a><a href="#book">Get a free estimate</a><a href="#book">Contact us</a><a href="#pay">Pay a bill</a><a href="#faq">Areas served</a><a href="blog/">Homeowner tips</a><a href="https://g.page/r/CaFa1WvcZmm_EAI/review" target="_blank" rel="noopener">Review us on Google</a></div>
       <div><h5>Contact</h5><a href="#chat" data-chat>message us</a><p>412 Firth St<br>Phillipsburg, NJ 08865</p><p>Open 24 hours for emergencies</p><a href="#owner" data-owner>Owner login</a></div>
     </div>
     <div class="legal"><span>&copy; <span id="yr"></span> New Ark Plumbing, Heating &amp; Air Conditioning LLC. All rights reserved.</span><span>Front desk and estimates run on <a href="https://hsw365.github.io/calltwin/" target="_blank" rel="noopener">CallTwin</a> by HSW365 Media</span></div>
   </div>
 </footer>
 
-<div class="mcall"><a class="btn btn-fire" href="#chat" data-chat><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message us</a><a class="btn btn-line" href="#estimate">Estimate</a></div>
+<div class="mcall"><a class="btn btn-fire" href="#chat" data-chat><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message us</a><a class="btn btn-line" href="#book">Estimate</a></div>
 
 <!-- OWNER PORTAL -->
 <div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="pTitle">
@@ -1001,7 +960,7 @@ footer .logo small{color:#9fb3c8}
           <div class="plan">
             <div><b>Website, phone line and estimates</b><span class="amt">$1,500</span><p>Your New Ark website with CallTwin job texts and AI Estimates built in.</p></div>
             <div><b>CallTwin job texts</b><span class="amt">$99 a month</span><p>Every job from your website is texted to your cell.</p></div>
-            <div><b>AI Estimates</b><span class="amt">Included</span><p>Estimate requests, proposals and online signatures. No separate monthly fee.</p></div>
+            <div><b>AI Estimates</b><span class="amt">Included</span><p>Estimates you write, proposals and online signatures. No separate monthly fee.</p></div>
           </div>
           <div class="ledger">
             <div><span>Package price</span><span>$1,500</span></div>
@@ -1017,7 +976,6 @@ footer .logo small{color:#9fb3c8}
 
 <script type="module">
 const API = "https://lsxdlmrjrcivxwgfkpop.supabase.co/functions/v1/newark";
-const EST_API = "https://calltwin.onrender.com/api/estimates/public/site/newark";
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -1085,59 +1043,6 @@ $("#leadForm").addEventListener("submit", async (e) => {
   btn.disabled = false; btn.textContent = "Book my visit";
   if (r.ok) { say(msg, `Booked. Your ticket is ${r.ticket}. We'll call ${fmtPhone(data.phone)} shortly to set a time${data.urgency === "Emergency" ? ". For an active emergency, message us in the chat now too." : "."}`, true); f.reset(); }
   else say(msg, r.error || "That didn't go through. Please message us in the chat instead.", false);
-});
-
-// estimate request (CallTwin AI Estimates)
-const photos = [];
-const drop = $("#drop"), fileIn = $("#ePhotos"), thumbs = $("#thumbs");
-function drawThumbs() {
-  thumbs.innerHTML = "";
-  photos.forEach((f, i) => {
-    const s = document.createElement("span");
-    s.innerHTML = f.type.startsWith("image/") ? `<img alt="">` : `<b class="small" style="display:grid;place-items:center;height:100%">PDF</b>`;
-    if (f.type.startsWith("image/")) s.querySelector("img").src = URL.createObjectURL(f);
-    const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Remove " + f.name);
-    x.onclick = () => { photos.splice(i, 1); drawThumbs(); };
-    s.appendChild(x); thumbs.appendChild(s);
-  });
-  drop.querySelector("b").textContent = photos.length ? `${photos.length} added. Add more` : "Add photos";
-}
-function addFiles(list) {
-  for (const f of list) {
-    if (photos.length >= 8) break;
-    if (f.size > 5 * 1024 * 1024) { say($("#estMsg"), `${f.name} is over 5 MB. Try a smaller photo.`, false); continue; }
-    photos.push(f);
-  }
-  drawThumbs();
-}
-fileIn.addEventListener("change", () => { addFiles(fileIn.files); fileIn.value = ""; });
-["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
-["dragleave", "drop"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
-drop.addEventListener("drop", (e) => addFiles(e.dataTransfer.files));
-$("#estForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const f = e.target, msg = $("#estMsg"), btn = $("button[type=submit]", f);
-  const d = Object.fromEntries(new FormData(f));
-  if (!d.name?.trim() || digits(d.phone).length < 10) return say(msg, "Add your name and a 10-digit phone number.", false);
-  if (!d.problem?.trim()) return say(msg, "Describe the job so we can price it.", false);
-  const fd = new FormData();
-  for (const [k, v] of Object.entries(d)) fd.append(k, v);
-  photos.forEach((p) => fd.append("photos", p));
-  btn.disabled = true; btn.textContent = "Sending...";
-  try {
-    const r = await fetch(EST_API, { method: "POST", body: fd });
-    const j = await r.json().catch(() => ({ ok: false }));
-    if (j.ok) {
-      say(msg, `Request ${j.number} is in. The owner will review it and send your estimate${d.email ? " by email and text" : " by text"}. We may call ${fmtPhone(d.phone)} with a question first.`, true);
-      f.reset(); photos.length = 0; drawThumbs();
-    } else {
-      // fall back to the booking board so the request is never lost
-      const b = await api({ a: "lead", name: d.name, phone: d.phone, email: d.email, address: d.address, service: d.service, urgency: "Estimate", details: `Estimate request: ${d.problem}${d.measurements ? "\nEquipment: " + d.measurements : ""}${d.preferredTime ? "\nWhen: " + d.preferredTime : ""}${photos.length ? "\n(" + photos.length + " photos: please ask the customer to text them)" : ""}` });
-      if (b.ok) { say(msg, `Got it. Ticket ${b.ticket}. The owner will call ${fmtPhone(d.phone)} to go over your estimate.`, true); f.reset(); photos.length = 0; drawThumbs(); }
-      else say(msg, j.error || "That didn't go through. Please message us in the chat instead.", false);
-    }
-  } catch { say(msg, "No connection. Check your signal, or message us.", false); }
-  btn.disabled = false; btn.textContent = "Send estimate request";
 });
 
 // pay notice

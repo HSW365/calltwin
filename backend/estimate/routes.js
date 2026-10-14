@@ -609,6 +609,8 @@ router.get("/public/site/:id", limit(60, 60e3), wrap(async (req, res) => {
   res.json({ ok: true, company: { name: s.company.name || client.businessName, phone: s.company.phone || client.businessPhone }, services: s.services.map((x) => x.name) });
 }));
 router.post("/public/site/:id", limit(8, 600e3), upload.array("photos", 8), wrap(async (req, res) => {
+  const promo = require("../services/promos").PROMOS.find((x) => x.id === String(req.params.id || ""));
+  if (promo && promo.ownerEntryOnly) return bad(res, "Online estimate requests are closed. Message us and the owner will get back to you.", 403);
   const hit = await settingsBySite(req.params.id);
   if (!hit) return bad(res, "Estimate requests aren't open yet. Please call us.", 404);
   const b = req.body || {};

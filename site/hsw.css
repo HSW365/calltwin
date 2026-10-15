@@ -392,3 +392,27 @@ footer{border-top:1px solid var(--line);background:#050508;padding:clamp(44px,5v
   html{scroll-behavior:auto}
   *{transition:none!important;animation:none!important}
 }
+
+/* voice ai agents */
+.vx{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px);align-items:center}
+.vx-panel{background:radial-gradient(120% 90% at 100% 0,color-mix(in srgb,var(--acc) 12%,transparent),transparent 60%),var(--card);border:1px solid var(--line2);border-radius:6px;padding:24px;box-shadow:0 34px 70px -44px #000}
+.vx-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.vx-live{display:inline-flex;align-items:center;gap:8px;color:var(--acc)}
+.vx-live:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.vx-wave{display:flex;align-items:center;gap:4px;height:110px;margin:22px 0 6px}
+.vx-wave i{flex:1;height:100%;border-radius:2px;background:linear-gradient(180deg,var(--acc),#a855f7);animation:vxw 1.25s ease-in-out infinite}
+@keyframes vxw{0%,100%{transform:scaleY(.18)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.vx-wave i{animation:none;transform:scaleY(.5)}}
+.vx-stats{display:grid;grid-template-columns:1fr 1fr;margin:0 0 22px;border:1px solid var(--line2);border-radius:6px;background:var(--card)}
+.vx-stats div{padding:18px 20px;min-width:0}
+.vx-stats div:nth-child(even){border-left:1px solid var(--line)}
+.vx-stats div:nth-child(n+3){border-top:1px solid var(--line)}
+.vx-stats dt{font-family:var(--disp);font-weight:900;font-size:clamp(24px,2.4vw,34px);color:#fff;line-height:1;text-transform:uppercase}
+.vx-stats dd{margin:6px 0 0;font-size:14px;color:var(--mut)}
+.vx-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.vx-uses{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:clamp(32px,4vw,48px);background:var(--line);border:1px solid var(--line2);border-radius:6px;overflow:hidden}
+.vx-uses article{background:var(--card);padding:22px 24px}
+.vx-uses span{font-family:var(--mono);font-size:11.5px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em}
+.vx-uses h3{font-family:var(--disp);font-weight:900;font-size:24px;color:#fff;text-transform:uppercase;margin:8px 0 6px;line-height:1}
+.vx-uses p{margin:0;font-size:14.5px;color:var(--mut);line-height:1.45}
+@media (max-width:900px){.vx{grid-template-columns:1fr}.vx-uses{grid-template-columns:1fr}}

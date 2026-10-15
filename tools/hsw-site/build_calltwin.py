@@ -58,7 +58,7 @@ s = dict(
     canonical="https://hsw365.github.io/calltwin/",
     util="CallTwin is a product of HSW365 Media LLC. English and Spanish callers.",
     util_links=[("By trade", "for/"), ("Articles", "blog/")],
-    nav=[("What it does", "#does"), ("How it works", "#how"), ("Who it's for", "#who"), ("Pricing", "#pricing"), ("Questions", "#faq")],
+    nav=[("What it does", "#does"), ("How it works", "#how"), ("Who it's for", "#who"), ("Pricing", "#pricing"), ("Voice AI", "#voice"), ("Questions", "#faq")],
     phone=dict(label="Sign up by phone", text=TEL_TXT, href=TEL),
     cta=("Get CallTwin", "signup.html"),
     foot_links=[("Get CallTwin", "signup.html"), ("Pricing", "#pricing"), ("By trade", "for/"), ("Articles", "blog/")],
@@ -145,12 +145,32 @@ pricing = (sec_head("One plan. Everything included.", "A one-time setup, two wee
                   btn("Start with CallTwin Pro", "signup.html", "line"))
            + '</div>')
 
+VOICE_MAIL = ("mailto:hsw365media@gmail.com?subject=Voice%20AI%20agent%20request&body="
+              "Business%20name%3A%0AWebsite%3A%0AWhat%20calls%20should%20the%20agent%20handle%20(answer%2C%20book%2C%20follow%20up%2C%20support)%3F%0ALanguages%3A%0ABest%20number%20to%20reach%20me%3A%0A")
+bars = "".join(f'<i style="animation-delay:-{(i * 137) % 1250 / 1000:.2f}s"></i>' for i in range(40))
+USES = [("Inbound", "Receptionist", "Answers every call and takes the caller's details."),
+        ("Scheduling", "Appointment setter", "Books, moves and confirms appointments, then texts the confirmation."),
+        ("Outbound", "Lead follow-up", "Calls new leads back while they are still ready to buy."),
+        ("Support", "Customer support", "Handles common questions and hands the hard ones to you with notes."),
+        ("Voice", "Your own voice", "A natural voice, or a custom one built for your brand."),
+        ("Custom", "Built for your flow", "Your script, your questions, your handoff rules.")]
+voice = (sec_head("Build human-like voice AI agents.", "CallTwin is one agent. We also build voice agents to order: a voice that talks like a real person, built around your business, your script and your voice.")
+         + '<div class="vx"><div class="vx-panel" aria-hidden="true"><div class="vx-top"><span class="vx-live">Agent on call</span><span>Voice / EN</span></div>'
+         + f'<div class="vx-wave">{bars}</div>'
+         + talk([("me", "CALLER", "Can I move my appointment to Friday?"), ("ai", "AGENT", "You're set for Friday at 10 AM. I just texted you the confirmation.")])
+         + '</div><div><dl class="vx-stats"><div><dt>24/7</dt><dd>Always on</dd></div><div><dt>Seconds</dt><dd>To pick up</dd></div>'
+         + '<div><dt>Multilingual</dt><dd>Speaks your callers\' language</dd></div><div><dt>Every call</dt><dd>Logged and sent to you</dd></div></dl>'
+         + checks(["Inbound calls, outbound follow-ups or both", "Your script and handoff rules", "Works on the number you already have", "Quote and timeline sent by email"])
+         + f'<div class="vx-ctas">{btn("Request a voice agent", VOICE_MAIL, "acc")}{btn("Start with CallTwin", "signup.html", "line")}</div></div></div>'
+         + '<div class="vx-uses">' + "".join(f'<article><span>{E(k)}</span><h3>{E(h)}</h3><p>{E(t)}</p></article>' for k, h, t in USES) + '</div>')
+
 qa = [
     ("Can I keep my business number?", "Yes. You keep the number your customers already have and forward it to your CallTwin number. You can forward every call, or only the ones you don't answer."),
     ("What happens after I sign up?", "Your receptionist is built from the business details you enter. You get a CallTwin number by text and on your dashboard. Forward your business line to it and every call is answered."),
     ("What does it cost?", "Setup is a one-time $500, paid at sign-up. Your first 14 days of service are free, then it is $99 a month. Cancel the monthly anytime."),
     ("How do I pay?", "By card, Zelle or Cash App."),
     ("Can it book appointments?", "Yes, once your calendar or scheduling tool is connected and you have given it your booking rules. Until then it takes the request and sends it to you."),
+    ("Can you build a voice AI agent besides CallTwin?", "Yes. Voice AI agents for booking, follow-up calls or support are built to order. Request one, tell us what calls it should handle, and we send a quote and timeline by email."),
     ("Can I sign up without filling in a form?", f'Yes. Call <a class="tlink" href="{TEL}">{TEL_TXT}</a> and we will sign you up on the call.'),
 ]
 
@@ -159,6 +179,7 @@ body = (hero(s)
         + sec("how", sec_head("Live the day you sign up.", "There is nothing to install and no new number to hand out. You forward the line you already have.") + how, tint=True)
         + sec("who", who)
         + sec("pricing", pricing, tint=True)
+        + sec("voice", voice)
         + sec("about", motto(s, "Turn negative into positive.", "The HSW365 motto. A missed call is the negative. A booked job is the positive.",
                              "Who is behind CallTwin", "CallTwin is built and run by HSW365 Media LLC in New Jersey.", ABOUT_PS,
                              [("Set up for you", "Built from your business details at sign-up"), ("You keep your number", "Forward the line you already have"),

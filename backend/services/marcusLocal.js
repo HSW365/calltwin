@@ -81,7 +81,7 @@ const FAQ = [
   [/hours|weekend|saturday|sunday|open (on|today|now|late)|when are you open/i, "Emergencies are answered 24 hours a day. Scheduled work is Monday to Saturday."],
   [/where.*(office|located|location|you)|your (office|address|location)/i, "Our office is at 412 Firth St., Phillipsburg, NJ 08865."],
   [/phone number|number to call|how (do|can) i (call|reach|contact)/i, "The fastest way to reach New Ark is right here. Leave your name, number and what you need, and the owner will reach out."],
-  [/licen[sc]e|insured|insurance|bonded|certified/i, "Yes. New Ark is licensed and insured: Master Plumber License #4646 and HVAC Contractor License #1783, State of New Jersey. It is also a certified small and minority business."],
+  [/licen[sc]e|insured|insurance|bonded|certified/i, "Yes. New Ark is licensed and insured: Master Plumber License #36BI00464600 and HVAC Contractor License #19HC00178300, State of New Jersey. It is also a certified small and minority business."],
   [/how long|how many years|in business|experience/i, "New Ark has been serving New Jersey for nearly 40 years."],
   [/public sector|government|municipal|union/i, "Yes. New Ark does public and private sector work and is an open and union shop. Past work includes the Joint Meeting of Essex & Union Counties in Elizabeth and Newark Access Station."],
   [/restaurant/i, "Yes. New Ark has worked on restaurants, including Benihana in Short Hills."],

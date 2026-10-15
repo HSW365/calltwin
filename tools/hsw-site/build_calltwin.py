@@ -145,8 +145,7 @@ pricing = (sec_head("One plan. Everything included.", "A one-time setup, two wee
                   btn("Start with CallTwin Pro", "signup.html", "line"))
            + '</div>')
 
-VOICE_MAIL = ("mailto:hsw365media@gmail.com?subject=Voice%20AI%20agent%20request&body="
-              "Business%20name%3A%0AWebsite%3A%0AWhat%20calls%20should%20the%20agent%20handle%20(answer%2C%20book%2C%20follow%20up%2C%20support)%3F%0ALanguages%3A%0ABest%20number%20to%20reach%20me%3A%0A")
+VOICE_BUY = "https://hsw365.github.io/queenee/?buy=voice"
 bars = "".join(f'<i style="animation-delay:-{(i * 137) % 1250 / 1000:.2f}s"></i>' for i in range(40))
 USES = [("Inbound", "Receptionist", "Answers every call and takes the caller's details."),
         ("Scheduling", "Appointment setter", "Books, moves and confirms appointments, then texts the confirmation."),
@@ -160,8 +159,9 @@ voice = (sec_head("Build human-like voice AI agents.", "CallTwin is one agent. W
          + talk([("me", "CALLER", "Can I move my appointment to Friday?"), ("ai", "AGENT", "You're set for Friday at 10 AM. I just texted you the confirmation.")])
          + '</div><div><dl class="vx-stats"><div><dt>24/7</dt><dd>Always on</dd></div><div><dt>Seconds</dt><dd>To pick up</dd></div>'
          + '<div><dt>Multilingual</dt><dd>Speaks your callers\' language</dd></div><div><dt>Every call</dt><dd>Logged and sent to you</dd></div></dl>'
-         + checks(["Inbound calls, outbound follow-ups or both", "Your script and handoff rules", "Works on the number you already have", "Quote and timeline sent by email"])
-         + f'<div class="vx-ctas">{btn("Request a voice agent", VOICE_MAIL, "acc")}{btn("Start with CallTwin", "signup.html", "line")}</div></div></div>'
+         + '<p class="vx-price"><b>$997</b><span>a month, 5,000 minutes included<br>First month at sign-up. Cancel anytime.</span></p>'
+         + checks(["Inbound calls, outbound follow-ups or both", "Your script and handoff rules", "Works on the number you already have", "Record your voice right in sign-up"])
+         + f'<div class="vx-ctas">{btn("Get a voice agent", VOICE_BUY, "acc")}{btn("Start with CallTwin", "signup.html", "line")}</div></div></div>'
          + '<div class="vx-uses">' + "".join(f'<article><span>{E(k)}</span><h3>{E(h)}</h3><p>{E(t)}</p></article>' for k, h, t in USES) + '</div>')
 
 qa = [
@@ -170,7 +170,7 @@ qa = [
     ("What does it cost?", "Setup is a one-time $500, paid at sign-up. Your first 14 days of service are free, then it is $99 a month. Cancel the monthly anytime."),
     ("How do I pay?", "By card, Zelle or Cash App."),
     ("Can it book appointments?", "Yes, once your calendar or scheduling tool is connected and you have given it your booking rules. Until then it takes the request and sends it to you."),
-    ("Can you build a voice AI agent besides CallTwin?", "Yes. Voice AI agents for booking, follow-up calls or support are built to order. Request one, tell us what calls it should handle, and we send a quote and timeline by email."),
+    ("Can you build a voice AI agent besides CallTwin?", "Yes. Voice AI agents for booking, follow-up calls or support are built to order. It is $997 a month with 5,000 minutes included. Sign up, tell us what calls it should handle and record your voice in the sign-up."),
     ("Can I sign up without filling in a form?", f'Yes. Call <a class="tlink" href="{TEL}">{TEL_TXT}</a> and we will sign you up on the call.'),
 ]
 

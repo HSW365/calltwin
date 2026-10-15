@@ -416,3 +416,6 @@ footer{border-top:1px solid var(--line);background:#050508;padding:clamp(44px,5v
 .vx-uses h3{font-family:var(--disp);font-weight:900;font-size:24px;color:#fff;text-transform:uppercase;margin:8px 0 6px;line-height:1}
 .vx-uses p{margin:0;font-size:14.5px;color:var(--mut);line-height:1.45}
 @media (max-width:900px){.vx{grid-template-columns:1fr}.vx-uses{grid-template-columns:1fr}}
+.vx-price{display:flex;align-items:baseline;gap:12px;margin:0 0 18px}
+.vx-price b{font-family:var(--disp);font-weight:900;font-size:48px;color:#fff;line-height:1}
+.vx-price span{font-size:14px;color:var(--mut);line-height:1.4}

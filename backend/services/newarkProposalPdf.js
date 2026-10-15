@@ -37,7 +37,7 @@ function draw(pdf, d) {
   pdf.fillColor(NAVY).font("Helvetica-Bold").fontSize(21).text(co.name.toUpperCase(), lx, y + 4, { width: lw, characterSpacing: 0.4 });
   pdf.fillColor(MUT).font("Helvetica").fontSize(8.5).text(co.tagline.toUpperCase(), lx, pdf.y + 2, { width: lw, characterSpacing: 0.4, lineGap: 1 });
   const contact = [`${co.address}, ${co.city}`, [co.office && `Office ${co.office}`, co.cell && `Cell ${co.cell}`].filter(Boolean).join("   "),
-    [co.fax && `Fax ${co.fax}`, co.email].filter(Boolean).join("   "), co.permit && `Permit No. ${co.permit}`].filter(Boolean);
+    [co.fax && `Fax ${co.fax}`, co.email].filter(Boolean).join("   "), co.permit && `Permit No. ${co.permit}`, ...String(co.licenses || "").split(" · ")].filter(Boolean);
   pdf.fillColor(INK).fontSize(8.5).text(contact.join("\n"), lx, pdf.y + 6, { width: lw, lineGap: 1.5 });
   const headBottom = pdf.y;
 
@@ -166,7 +166,7 @@ function draw(pdf, d) {
       x += w + 16;
     });
     y += 30;
-    pdf.fillColor(MUT).font("Helvetica").fontSize(8.5).text(`Submitted by ${co.name}${co.permit ? `, Permit No. ${co.permit}` : ""}.`, M, y, { width: CW });
+    pdf.fillColor(MUT).font("Helvetica").fontSize(8.5).text(`Submitted by ${co.name}${co.permit ? `, Permit No. ${co.permit}` : ""}.${co.licenses ? ` ${co.licenses}.` : ""}`, M, y, { width: CW });
   }
 
   // ---------- job photos ----------

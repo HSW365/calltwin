@@ -9,6 +9,7 @@ const COMPANY = {
   name: "New Ark Plumbing",
   tagline: "Plumbing · Heating & Air Conditioning · Fire Protection",
   permit: "P01631",
+  licenses: "NJ Master Plumber Lic. #36BI00464600 · HVAC Contractor Lic. #19HC00178300 · Fire Sprinkler Contractor Lic. #P01631",
   address: "412 Firth Street",
   city: "Phillipsburg, NJ 08865",
   office: "908-454-4043",

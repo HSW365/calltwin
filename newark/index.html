@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>New Ark Plumbing, Heating &amp; Air Conditioning | Phillipsburg, NJ</title>
-<meta name="description" content="New Ark Plumbing, Heating and Air Conditioning: plumbing, HVAC, geothermal and fire protection for New Jersey homes, businesses and public buildings. Nearly 40 years. Master Plumber License #36BI00464600. Message us anytime, 24/7.">
+<meta name="description" content="New Ark Plumbing, Heating and Air Conditioning: plumbing, HVAC, geothermal and fire protection for New Jersey homes, businesses and public buildings. Nearly 40 years. Master Plumber License #36BI00464600, HVAC Contractor License #19HC00178300, Fire Sprinkler Contractor License #P01631. Message us anytime, 24/7.">
 <meta name="theme-color" content="#06182b">
 <link rel="canonical" href="https://ark-hvac.com/">
 <meta property="og:type" content="website">
@@ -161,7 +161,11 @@ p{max-width:66ch}
 .plate{position:relative;z-index:2;margin-top:clamp(-84px,-6vw,-56px)}
 .plate .wrap{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-radius:6px;box-shadow:0 34px 70px -44px rgba(6,24,43,.6),0 0 0 1px var(--line)}
 .plate .wrap>div{padding:26px 28px}
+.plate .wrap{grid-template-columns:repeat(6,1fr)}
+.plate .wrap>div{grid-column:span 2}
+.plate .wrap>div:nth-child(n+4){grid-column:span 3;border-top:1px solid var(--line)}
 .plate .wrap>div+div{border-left:1px solid var(--line)}
+.plate .wrap>div:nth-child(4){border-left:0}
 .plate b{display:block;font-family:var(--disp);font-size:clamp(30px,2.7vw,40px);font-weight:900;color:var(--navy);line-height:.95;letter-spacing:.005em}
 .plate b.lic{font-size:clamp(21px,1.8vw,28px);letter-spacing:.03em;white-space:nowrap}
 .plate strong{display:block;font-size:15.5px;font-weight:700;color:var(--navy);margin-top:8px;line-height:1.3}
@@ -492,8 +496,10 @@ footer .logo small{color:#9fb3c8}
   .hero-grid{align-items:start}
   .ask{max-width:560px}
   .plate .wrap{grid-template-columns:1fr 1fr}
-  .plate .wrap>div:nth-child(3){border-left:0}
+  .plate .wrap>div,.plate .wrap>div:nth-child(n+4){grid-column:auto;border-left:1px solid var(--line);border-top:0}
+  .plate .wrap>div:nth-child(odd){border-left:0}
   .plate .wrap>div:nth-child(n+3){border-top:1px solid var(--line)}
+  .plate .wrap>div:last-child{grid-column:1/-1}
   .foot{grid-template-columns:1fr 1fr 1fr}
   .plan{grid-template-columns:1fr}
   .about-grid{grid-template-columns:200px minmax(0,1fr)}
@@ -524,7 +530,7 @@ footer .logo small{color:#9fb3c8}
   .ask input{flex:none;width:100%}
   .plate{margin-top:-64px}
   .plate .wrap{grid-template-columns:1fr}
-  .plate .wrap>div{padding:20px 22px}
+  .plate .wrap>div,.plate .wrap>div:nth-child(n+4),.plate .wrap>div:last-child{padding:20px 22px;grid-column:auto;border-left:0}
   .plate .wrap>div+div{border-left:0;border-top:1px solid var(--line)}
   .trade-body{grid-template-columns:1fr}
   .about-grid{grid-template-columns:1fr}
@@ -570,7 +576,7 @@ footer .logo small{color:#9fb3c8}
 
 <div class="util">
   <div class="wrap">
-    <span class="util-l">Master Plumber License #36BI00464600. HVAC Contractor License #19HC00178300. 412 Firth St, Phillipsburg, NJ.</span>
+    <span class="util-l">Master Plumber License #36BI00464600. HVAC Contractor License #19HC00178300. Fire Sprinkler Contractor License #P01631. 412 Firth St, Phillipsburg, NJ.</span>
     <span class="util-r"><a href="#pay">Pay a bill</a><a class="owner-btn" href="#owner" data-owner><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Owner Login</a></span>
   </div>
 </div>
@@ -628,6 +634,7 @@ footer .logo small{color:#9fb3c8}
   <div class="wrap">
     <div><b class="lic">#36BI00464600</b><strong>Master Plumber License</strong><span>State of New Jersey. Licensed and insured.</span></div>
     <div><b class="lic">#19HC00178300</b><strong>HVAC Contractor License</strong><span>State of New Jersey</span></div>
+    <div><b class="lic">#P01631</b><strong>Fire Sprinkler Contractor License</strong><span>State of New Jersey</span></div>
     <div><b>Nearly 40 years</b><strong>Commercial and residential</strong><span>Public and private sector clients</span></div>
     <div><b>Free estimates</b><strong>Message us or send the contact form</strong><span>Priced by the owner himself</span></div>
   </div>
@@ -707,6 +714,7 @@ footer .logo small{color:#9fb3c8}
       <div class="creds">
         <div><b>Master Plumber License #36BI00464600</b><span>State of New Jersey</span></div>
         <div><b>HVAC Contractor License #19HC00178300</b><span>State of New Jersey</span></div>
+        <div><b>Fire Sprinkler Contractor License #P01631</b><span>State of New Jersey</span></div>
         <div><b>Small and minority business</b><span>Certified</span></div>
         <div><b>Open and union shop</b><span>Operations for public and private work</span></div>
         <div><b>Well established and reputable</b><span>Many successful projects and satisfied clients</span></div>
@@ -826,7 +834,7 @@ footer .logo small{color:#9fb3c8}
       <details><summary>Can one company really do plumbing, HVAC, geothermal and sprinklers?</summary><p>That is why New Ark exists. One contractor coordinates all four, so the work happens on one schedule without three companies pointing at each other.</p></details>
       <details><summary>Do you do commercial work?</summary><p>Yes. We have a wide range of experience with large commercial projects as well as residential clients, for both public and private sector clients.</p></details>
       <details><summary>How do I pay?</summary><p>By Zelle. Use the Pay a bill section, then send the payment notice so we can match it to your invoice.</p></details>
-      <details><summary>Are you licensed?</summary><p>Yes. Master Plumber License #36BI00464600 and HVAC Contractor License #19HC00178300. We are licensed and insured, with over 40 years in the industry.</p></details>
+      <details><summary>Are you licensed?</summary><p>Yes. Master Plumber License #36BI00464600 , HVAC Contractor License #19HC00178300 and Fire Sprinkler Contractor License #P01631. We are licensed and insured, with over 40 years in the industry.</p></details>
       <details><summary>What area do you cover?</summary><p>We are located in Phillipsburg, NJ and serve clients throughout the Northern New Jersey area. See the list of areas on this page, and message us if you are not sure.</p></details>
     </div>
   </div>
@@ -844,7 +852,7 @@ footer .logo small{color:#9fb3c8}
   <div class="wrap">
     <div class="foot">
       <div><a href="#top" class="logo" style="margin-bottom:18px"><img src="img/logo.webp" alt="" width="54" height="54" loading="lazy"><span><b>New Ark</b><small>Plumbing, Heating &amp; Air Conditioning, LLC</small></span></a>
-        <p style="max-width:32ch">Plumbing, HVAC, geothermal systems and fire protection services contractor. Serving New Jersey communities for nearly 40 years.</p><p>Master Plumber License #36BI00464600<br>HVAC Contractor License #19HC00178300</p></div>
+        <p style="max-width:32ch">Plumbing, HVAC, geothermal systems and fire protection services contractor. Serving New Jersey communities for nearly 40 years.</p><p>Master Plumber License #36BI00464600<br>HVAC Contractor License #19HC00178300<br>Fire Sprinkler Contractor License #P01631</p></div>
       <div><h5>Services</h5><a href="plumbing.html">Plumbing</a><a href="emergency-plumber.html">Emergency plumber</a><a href="water-heater-repair-replacement.html">Water heaters</a><a href="drain-sewer.html">Drain and sewer</a><a href="heating-furnace-boiler.html">Furnaces and boilers</a><a href="air-conditioning.html">Air conditioning</a><a href="geothermal.html">Geothermal</a><a href="fire-sprinklers.html">Fire sprinklers</a><a href="https://arkfps.com/" target="_blank" rel="noopener">New Ark Fire Protection Services</a></div>
       <div><h5>Service areas</h5><a href="phillipsburg-nj.html">Phillipsburg</a><a href="washington-nj.html">Washington</a><a href="hackettstown-nj.html">Hackettstown</a><a href="clinton-nj.html">Clinton</a><a href="flemington-nj.html">Flemington</a></div>
       <div><h5>Customers</h5><a href="#about">About us</a><a href="#projects">Our work</a><a href="#book">Get a free estimate</a><a href="#book">Contact us</a><a href="#pay">Pay a bill</a><a href="#faq">Areas served</a><a href="blog/">Homeowner tips</a><a href="https://g.page/r/CaFa1WvcZmm_EAI/review" target="_blank" rel="noopener">Review us on Google</a></div>

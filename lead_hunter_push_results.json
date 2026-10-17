@@ -3,6 +3,38 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
+      "businessName": "Ufberg Dental P.C.",
+      "pushed": false
+    },
+    {
+      "businessName": "Bear-Glasgow Dental",
+      "pushed": false
+    },
+    {
+      "businessName": "Franklinville Family Dentistry",
+      "pushed": false
+    },
+    {
+      "businessName": "King Street Hair",
+      "pushed": false
+    },
+    {
+      "businessName": "Joseph Hart, Inc. Plumbing",
+      "pushed": false
+    },
+    {
+      "businessName": "John C. Ciervo & Son",
+      "pushed": false
+    },
+    {
+      "businessName": "Tri-Point Electric",
+      "pushed": false
+    },
+    {
+      "businessName": "Bounce U",
+      "pushed": false
+    },
+    {
       "businessName": "Ritetax FInancial",
       "pushed": false
     },
@@ -11,7 +43,15 @@
       "pushed": false
     },
     {
-      "businessName": "Gamble's Newark Florist",
+      "businessName": "Italo's Tailor Shop",
+      "pushed": false
+    },
+    {
+      "businessName": "Sunsilk Tailor",
+      "pushed": false
+    },
+    {
+      "businessName": "Tino's Custom Tailoring & Dry Cleaning",
       "pushed": false
     },
     {

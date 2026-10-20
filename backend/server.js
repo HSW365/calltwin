@@ -26,6 +26,7 @@ const legalRoutes = require("./routes/legal");
 const { router: inboundRoutes, ensureInboundRouting } = require("./routes/inbound");
 const { router: newarkRoutes } = require("./routes/newark");
 const { router: clientRoutes } = require("./routes/clients");
+const { router: relayRoutes } = require("./routes/relay");
 const { startScheduler } = require("./services/scheduler");
 const { router: estimateRoutes } = require("./estimate/routes");
 const { startEstimateScheduler } = require("./estimate/service");
@@ -42,6 +43,8 @@ app.use("/api/newark", newarkRoutes);
 app.use("/api/clients", clientRoutes);
 // HSW365 AI Estimate add-on (estimates, proposals, e-sign, deposits, follow-ups).
 app.use("/api/estimates", estimateRoutes);
+// Mail relay for the HSW365 Sales Autopilot on iRun (sends/reads through this server's Gmail). Auth: x-relay-token.
+app.use("/api/relay", relayRoutes);
 app.use(express.json());
 app.use("/audio", express.static(path.join(__dirname, "public/audio")));
 app.use("/", legalRoutes);

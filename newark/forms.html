@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Sprinkler Forms | New Ark Owner</title>
+<link rel="icon" href="img/logo.webp">
+<style>
+@font-face{font-family:"Big Shoulders";src:url("fonts/big-shoulders.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Libre Franklin";src:url("fonts/libre-franklin.woff2") format("woff2");font-weight:100 900;font-display:swap}
+:root{
+  --navy:#0b2a4a;--navy-deep:#06182b;--blue:#1c5fb8;--red:#c4161c;--green:#0b6b3a;
+  --mist:#f2f5f9;--paper:#fbfcfd;--line:#d9e0e8;--line2:#bcc7d3;
+  --text:#16212e;--text2:#3d4b5c;--mut:#5f6d7e;--ai:#e8f0fb;--aiLine:#9dbbe6;
+  --disp:"Big Shoulders","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --body:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --gut:clamp(16px,3.4vw,40px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--mist);color:var(--text);font-family:var(--body);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.bar{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20}
+.bar-in{display:flex;align-items:center;gap:14px;padding:12px var(--gut);max-width:1320px;margin:0 auto}
+.bar img{width:44px;height:44px;border-radius:4px;background:#fff}
+.bar h1{font-family:var(--disp);font-weight:900;font-size:30px;letter-spacing:.01em;line-height:1}
+.bar small{display:block;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.72;font-weight:600}
+.bar .sp{flex:1}
+.bar a{background:none;border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:3px;height:44px;padding:0 16px;font-size:15px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center}
+.bar a:hover{border-color:#fff}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 24px;border-radius:3px;font-weight:700;font-size:17px;border:1.5px solid transparent;cursor:pointer;transition:background .15s,border-color .15s,color .15s;white-space:nowrap;text-decoration:none}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn-ink{background:var(--navy);color:#fff}.btn-ink:hover{background:var(--navy-deep)}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:#a51217}
+.btn-line{background:#fff;border-color:var(--navy);color:var(--navy)}.btn-line:hover{background:var(--navy);color:#fff}
+.btn-quiet{background:none;border:0;color:var(--blue);font-weight:700;font-size:16px;min-height:44px;padding:0 6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+label,.lab{display:block;font-size:15px;font-weight:700;color:var(--text2);margin-bottom:7px}
+label em{font-style:normal;font-weight:400;color:var(--mut)}
+input,select,textarea{width:100%;min-width:0;min-height:54px;border-radius:6px;background:#fff;border:1px solid var(--line2);padding:0 14px;font-size:18px;outline:none;transition:border-color .15s,box-shadow .15s}
+textarea{padding:12px 14px;resize:vertical;line-height:1.45;min-height:90px}
+input:focus,select:focus,textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(11,42,74,.14)}
+input::placeholder,textarea::placeholder{color:#9aa4ae}
+.msg{font-size:16px;padding:13px 16px;border-radius:6px;margin-top:12px}
+.msg.ok{background:#e3f3ea;border:1px solid #9fd2b4;color:#0b5a31}
+.msg.err{background:#fbe7ea;border:1px solid #efb1bb;color:#8e1122}
+.msg:empty{display:none}
+
+.page{max-width:1320px;margin:0 auto;padding:22px var(--gut) 140px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;align-items:start}
+@media (max-width:1000px){.page{grid-template-columns:minmax(0,1fr)}}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:clamp(18px,2.6vw,28px);margin-bottom:18px}
+.step{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.step i{font-style:normal;font-family:var(--disp);font-weight:900;font-size:30px;line-height:1;color:var(--red);min-width:22px}
+.step h2{font-family:var(--disp);font-weight:800;font-size:30px;line-height:1;color:var(--navy);letter-spacing:.005em}
+.step p{font-size:15px;color:var(--mut);margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.grid .full{grid-column:1/-1}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+
+/* template picker */
+.picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:620px){.picks{grid-template-columns:1fr}}
+.tpl{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:18px 20px;border:1.5px solid var(--line2);border-radius:8px;background:var(--paper);cursor:pointer;min-height:118px;transition:border-color .15s,background .15s}
+.tpl:hover{border-color:var(--navy)}
+.tpl.on{border:2.5px solid var(--navy);background:#fff;box-shadow:0 8px 24px -16px rgba(6,24,43,.6)}
+.tpl small{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--red)}
+.tpl b{font-family:var(--disp);font-weight:800;font-size:27px;line-height:1.02;color:var(--navy)}
+.tpl span{font-size:14.5px;color:var(--mut);line-height:1.35}
+
+/* start from the job */
+.start{border:2px solid var(--navy)}
+.cap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.cap{grid-template-columns:1fr}}
+.cap label.btn{margin:0}
+.cap label.btn-ink{color:#fff}
+.cap input[type=file]{position:absolute;width:1px;height:1px;opacity:0;min-height:0}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.shot{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper)}
+.shot img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.shot input{min-height:42px;border:0;border-top:1px solid var(--line);border-radius:0;font-size:14.5px;padding:0 10px}
+.shot button{position:absolute;top:6px;right:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(6,24,43,.78);color:#fff;font-size:20px;cursor:pointer;line-height:1}
+.shot .vid{position:absolute;left:6px;top:6px;background:var(--red);color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 7px;border-radius:3px}
+.voice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border:1px dashed var(--line2);border-radius:8px}
+.voice .btn.rec{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(196,22,28,.18)}}
+.voice span{font-size:16px;color:var(--text2)}
+.build{width:100%;margin-top:16px;min-height:64px;font-size:19px}
+.chk{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:16px;font-weight:600;color:var(--text2)}
+.chk input{width:24px;height:24px;min-height:0}
+.checks{margin-top:10px;padding-left:20px;font-size:15.5px;color:var(--text2)}
+
+/* the form */
+.fhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+.fhead small{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--red)}
+.fhead h2{font-family:var(--disp);font-weight:800;font-size:32px;line-height:1.02;color:var(--navy);flex-basis:100%}
+.custpick{margin-bottom:16px}
+.sec h3{font-family:var(--disp);font-weight:900;font-size:34px;line-height:1;color:var(--navy);margin:6px 0 2px}
+.part{border-top:2px solid var(--navy);margin-top:18px;padding-top:12px}
+.part-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.part-h h4{font-family:var(--disp);font-weight:800;font-size:25px;color:var(--navy);line-height:1;flex:1}
+.part-h .btn-quiet{font-size:14.5px}
+.grp{font-size:13.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--text2);margin:14px 0 4px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:center;padding:12px 10px;border-bottom:1px solid var(--line);border-radius:6px}
+.row .q{font-size:17px;line-height:1.35}
+.row.ai{background:var(--ai)}
+.row.open .q::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#d9a300;margin-right:8px;vertical-align:2px}
+@media (max-width:700px){.row{grid-template-columns:1fr}}
+.yn{display:flex;border:1.5px solid var(--navy);border-radius:6px;overflow:hidden}
+.yn button{min-width:66px;min-height:50px;border:0;border-left:1.5px solid var(--navy);background:#fff;color:var(--navy);font-weight:800;font-size:16px;cursor:pointer;padding:0 12px}
+.yn button:first-child{border-left:0}
+.yn button[aria-pressed=true][data-v=yes]{background:var(--green);color:#fff}
+.yn button[aria-pressed=true][data-v=no]{background:var(--red);color:#fff}
+.yn button[aria-pressed=true][data-v=na],.yn button[aria-pressed=true][data-v=other]{background:var(--navy);color:#fff}
+@media (max-width:700px){.yn{width:100%}.yn button{flex:1}}
+.why{grid-column:1/-1;font-size:14px;color:#123d73;display:flex;gap:8px;align-items:flex-start}
+.why b{flex:none;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:#1c5fb8;color:#fff;border-radius:3px;padding:2px 6px;margin-top:1px}
+.reads{grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap}
+.reads label{display:flex;align-items:center;gap:8px;margin:0;font-size:15px}
+.reads input{width:120px;min-height:46px;text-align:right}
+.field{padding:10px 0}
+.field.ai input,.field.ai textarea{background:var(--ai);border-color:var(--aiLine)}
+.unit{position:relative}
+.unit span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:15px;pointer-events:none}
+.unit input{padding-right:70px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{min-height:48px;padding:0 16px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:24px;font-weight:700;font-size:16px;cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--navy);color:#fff}
+.tbl{overflow-x:auto;margin:6px 0 4px;border:1px solid var(--line);border-radius:8px}
+.tbl table{border-collapse:collapse;min-width:100%}
+.tbl th{font-size:12.5px;text-align:left;color:var(--text2);padding:8px;background:var(--mist);border-bottom:1px solid var(--line);white-space:normal;min-width:96px;vertical-align:bottom}
+.tbl td{padding:4px;border-bottom:1px solid var(--line)}
+.tbl td input{min-height:44px;font-size:16px;padding:0 8px}
+.tbl td.rl{font-size:14px;font-weight:700;padding:0 10px;white-space:nowrap}
+.tbl.ai{border-color:var(--aiLine)}
+details.note{margin:6px 0;font-size:14.5px;color:var(--text2)}
+details.note summary{cursor:pointer;font-weight:700;color:var(--navy);min-height:40px;display:flex;align-items:center}
+details.note p{white-space:pre-line;padding:6px 0}
+.sigNote{font-size:14.5px;color:var(--mut);margin-top:6px}
+
+/* side */
+.side{position:sticky;top:88px}
+@media (max-width:1000px){.side{position:static}}
+.stat{background:var(--navy);color:#fff;border-radius:10px;padding:24px}
+.stat h3{font-size:13px;letter-spacing:.16em;text-transform:uppercase;opacity:.75;font-weight:700;margin-bottom:10px}
+.stat .big{font-family:var(--disp);font-size:56px;font-weight:900;line-height:.9;font-variant-numeric:tabular-nums}
+.stat .big span{font-size:26px;opacity:.7}
+.meter{height:10px;background:rgba(255,255,255,.18);border-radius:5px;margin:14px 0 12px;overflow:hidden}
+.meter i{display:block;height:100%;background:#fff;border-radius:5px;width:0;transition:width .3s}
+.stat p{font-size:15px;opacity:.85;line-height:1.45}
+.stat .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13.5px;opacity:.9}
+.stat .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.stat .legend .l1::before{background:#9dbbe6}.stat .legend .l2::before{background:#d9a300;border-radius:50%}
+.acts{display:grid;gap:10px;margin-top:16px}
+.acts .btn{width:100%}
+.acts .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.saved{max-height:380px;overflow:auto;margin:0 -6px;padding:0 6px}
+.srow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.srow div{flex:1 1 100%;min-width:0}
+.srow b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow small{color:var(--mut);font-size:14px}
+.srow .tag{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--red);margin-right:6px}
+.srow button{flex:1;font-size:14.5px;font-weight:700;height:40px;padding:0 12px;border-radius:3px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
+.srow button.use{background:var(--navy);color:#fff}
+.empty{color:var(--mut);font-size:15.5px;padding:8px 0}
+
+.ov{position:fixed;inset:0;background:rgba(6,24,43,.62);display:grid;place-items:center;padding:16px;z-index:50}
+.dlg{background:#fff;border-radius:10px;width:min(560px,100%);padding:26px;max-height:92vh;overflow:auto}
+.dlg h3{font-family:var(--disp);font-weight:900;font-size:34px;color:var(--navy);line-height:1;margin-bottom:6px}
+.dlg p.s{color:var(--mut);font-size:16px;margin-bottom:18px}
+.dlg .rowb{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+
+.gate{max-width:460px;margin:9vh auto;padding:0 var(--gut)}
+.gate .card{padding:30px}
+.gate h2{font-family:var(--disp);font-weight:900;font-size:40px;color:var(--navy);line-height:1;margin-bottom:8px}
+.gate p{color:var(--mut);margin-bottom:20px;font-size:16.5px}
+.gate input{font-size:24px;letter-spacing:.3em;text-align:center}
+.gate .btn{width:100%;margin-top:14px}
+
+.dock{display:none}
+@media (max-width:1000px){
+  .dock{display:flex;align-items:center;gap:12px;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--navy);color:#fff;padding:10px var(--gut) calc(10px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px -12px rgba(6,24,43,.5)}
+  .dock div{flex:1;min-width:0}
+  .dock small{display:block;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.75;font-weight:700}
+  .dock b{font-family:var(--disp);font-size:30px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+  .dock .btn{min-height:52px;padding:0 18px;background:var(--red);color:#fff}
+}
+@media (max-width:600px){
+  .bar-in{padding:10px var(--gut);gap:10px}
+  .bar img{width:38px;height:38px}
+  .bar small{display:none}
+  .bar h1{font-size:24px}
+  .bar a{height:40px;padding:0 12px;font-size:14px}
+  .step h2{font-size:26px}
+  .step p{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="bar"><div class="bar-in">
+  <img src="img/logo.webp" alt="">
+  <div><small>New Ark · Owner only</small><h1>Sprinkler Forms</h1></div>
+  <span class="sp"></span>
+  <a href="proposal.html">Proposals</a>
+  <a href="./#owner" aria-label="Back to dashboard">Back</a>
+</div></header>
+
+<section class="gate" id="gate" hidden>
+  <div class="card">
+    <h2>Owner sign in</h2>
+    <p>Enter your owner PIN. Only you can make, send or see these forms.</p>
+    <form id="gateForm" novalidate>
+      <label for="gPin" class="sr">PIN</label>
+      <input id="gPin" type="password" inputmode="numeric" autocomplete="current-password" required>
+      <button class="btn btn-ink" type="submit">Sign in</button>
+      <div class="msg" id="gateMsg" role="status"></div>
+    </form>
+  </div>
+</section>
+
+<main class="page" id="app" hidden>
+  <div>
+    <section class="card">
+      <div class="step"><i>1</i><h2>Pick the form</h2><p>NFPA water-based fire protection</p></div>
+      <div class="picks" id="picks" role="radiogroup" aria-label="Form"></div>
+    </section>
+
+    <section class="card start" id="startCard" hidden>
+      <div class="step"><i>★</i><h2>Fill it from the job</h2><p>Photos, video, your voice</p></div>
+      <div class="cap">
+        <label class="btn btn-ink" for="camIn">Take photos or video<input id="camIn" type="file" accept="image/*,video/*" capture="environment" multiple></label>
+        <label class="btn btn-line" for="pickIn">Choose from my phone<input id="pickIn" type="file" accept="image/*,video/*" multiple></label>
+      </div>
+      <div class="shots" id="shots"></div>
+      <div class="voice">
+        <button class="btn btn-line" type="button" id="recBtn">Tap to talk about the job</button>
+        <span id="recInfo">Say what you checked and the readings, like "main drain static 72, residual 58".</span>
+        <button class="btn-quiet" type="button" id="recDel" hidden>Delete voice note</button>
+      </div>
+      <label for="notes" style="margin-top:16px">Or type a few words <em>(optional)</em></label>
+      <textarea id="notes" placeholder="Annual. All valves open, chained and locked. FDC left cap missing. Main drain 72 static 58 residual. Gong works."></textarea>
+      <button class="btn btn-red build" type="button" id="buildBtn">Fill my form</button>
+      <div class="msg" id="buildMsg" role="status"></div>
+      <ul class="checks" id="checks" hidden></ul>
+      <label class="chk"><input type="checkbox" id="showPhotos" checked> Put the job photos in the PDF</label>
+    </section>
+
+    <section class="card" id="formCard" hidden>
+      <div class="fhead"><small id="fForm"></small><h2 id="fTitle"></h2></div>
+      <div class="custpick" id="custWrap" hidden>
+        <label for="custSel">Fill the property from a customer <em>(from your proposals)</em></label>
+        <select id="custSel"><option value="">Choose a customer…</option></select>
+      </div>
+      <div id="formBody"></div>
+    </section>
+  </div>
+
+  <aside class="side">
+    <div class="stat" aria-live="polite">
+      <h3 id="sKind">Boxes checked</h3>
+      <div class="big" id="sBig">0<span> / 0</span></div>
+      <div class="meter"><i id="sBar"></i></div>
+      <p id="sLine">Pick a form to start.</p>
+      <div class="legend"><span class="l1">Filled from the job</span><span class="l2">Still open</span></div>
+    </div>
+    <div class="acts">
+      <button class="btn btn-red" type="button" id="emailBtn">Email the form</button>
+      <div class="two"><button class="btn btn-line" type="button" id="viewBtn">See PDF</button><button class="btn btn-line" type="button" id="printBtn">Print / Fax</button></div>
+      <button class="btn btn-ink" type="button" id="saveBtn">Save</button>
+      <div class="msg" id="actMsg" role="status"></div>
+    </div>
+    <section class="card" style="margin-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <h2 style="font-family:var(--disp);font-weight:800;font-size:26px;color:var(--navy)">Saved forms</h2>
+      </div>
+      <div class="saved" id="saved"><div class="empty">Loading…</div></div>
+    </section>
+  </aside>
+</main>
+
+<div class="dock" id="dock" hidden><div><small>Boxes checked</small><b id="dBig">0 / 0</b></div><button class="btn" type="button" id="dockGo">Finish</button></div>
+
+<div class="ov" id="mailOv" hidden role="dialog" aria-modal="true" aria-labelledby="mailH">
+  <div class="dlg">
+    <h3 id="mailH">Email the form</h3>
+    <p class="s">The filled form goes as a PDF. When they reply, it comes to your email.</p>
+    <form id="mailForm" novalidate>
+      <label for="mTo">Send to</label><input id="mTo" type="email" inputmode="email" required>
+      <label for="mMsg" style="margin-top:14px">Message <em>(optional)</em></label>
+      <textarea id="mMsg" placeholder="Attached is the annual sprinkler inspection report."></textarea>
+      <div class="msg" id="mailMsg" role="status"></div>
+      <div class="rowb"><button class="btn btn-line" type="button" id="mailCancel">Cancel</button><button class="btn btn-red" type="submit">Send now</button></div>
+    </form>
+  </div>
+</div>
+
+<script>
+const API = "https://calltwin.onrender.com/api/newark/proposal";
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const store = (k, v) => { try { if (v === null) localStorage.removeItem(k); else if (v !== undefined) localStorage.setItem(k, JSON.stringify(v)); return JSON.parse(localStorage.getItem(k) || "null"); } catch { return null; } };
+const sess = { get(k) { try { return sessionStorage.getItem(k); } catch { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch {} }, del(k) { try { sessionStorage.removeItem(k); } catch {} } };
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const say = (el, text, ok) => { el.textContent = text || ""; el.className = "msg " + (text ? (ok ? "ok" : "err") : ""); };
+const usDate = () => { const d = new Date(); return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`; };
+const BOX = new Set(["ynna", "yn", "yno"]);
+
+let PIN = sess.get("na_pin"), TEMPLATES = [], COMPANY = {}, CUSTOMERS = [], NEXT = "", LOADED = false;
+let T = null, VALUES = {}, AI = {}, NUMBER = "", CURRENT = null, EMAIL = "";
+let SHOTS = [], CLIPS = [], VOICE = null;
+
+async function call(path, body, raw) {
+  const r = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: PIN, ...body }) });
+  if (r.status === 401 || r.status === 429) {
+    const j = await r.json().catch(() => ({}));
+    sess.del("na_pin"); PIN = null; showGate(j.error || "Please sign in again."); throw new Error("signed out");
+  }
+  if (raw && r.ok) return r.blob();
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+  if (!r.ok || !j.ok) throw new Error(j.error || "That didn't work. Try again.");
+  return j;
+}
+function showGate(m) { $("#app").hidden = true; $("#dock").hidden = true; $("#gate").hidden = false; say($("#gateMsg"), m || "", false); setTimeout(() => $("#gPin").focus(), 50); }
+$("#gateForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); PIN = $("#gPin").value.trim();
+  if (!/^\d{6,10}$/.test(PIN)) return say($("#gateMsg"), "Your PIN is 6 to 10 digits.", false);
+  try { await load(); sess.set("na_pin", PIN); } catch (err) { if (err.message !== "signed out") say($("#gateMsg"), err.message, false); }
+});
+
+// ---------- template walk ----------
+function allFields(t) {
+  const out = [];
+  const add = (it) => { if (it.k !== "note") out.push(it); (it.read || []).forEach((r) => out.push({ k: "reading", id: r.id })); };
+  t.header.forEach(add); t.sections.forEach((s) => s.parts.forEach((p) => p.groups.forEach((g) => g.items.forEach(add)))); t.footer.forEach(add);
+  return out;
+}
+const isCert = (t) => !t.header.some((f) => f.id === "covers");
+
+// ---------- picker ----------
+function drawPicks() {
+  $("#picks").innerHTML = TEMPLATES.map((t) => `<button type="button" class="tpl${T && T.id === t.id ? " on" : ""}" role="radio" aria-checked="${T && T.id === t.id}" data-t="${t.id}">
+    <small>${esc(t.form)}</small><b>${esc(t.short)}</b><span>${esc(t.title)}</span></button>`).join("");
+  $$("#picks [data-t]").forEach((b) => (b.onclick = () => {
+    if (T && T.id === b.dataset.t) return;
+    if (T && Object.keys(VALUES).length > 3 && !confirm("Start a new blank form? Anything not saved on this one will be cleared.")) return;
+    startNew(b.dataset.t);
+  }));
+}
+function defaults(t) {
+  const v = { date: usDate() };
+  if (isCert(t)) v.contractorName = COMPANY.name || "New Ark Plumbing";
+  else { v.license = COMPANY.permit || ""; const ins = store("na_inspector"); if (ins) v.inspector = ins; }
+  return v;
+}
+function startNew(id) {
+  T = TEMPLATES.find((t) => t.id === id) || TEMPLATES[0];
+  CURRENT = null; NUMBER = ""; EMAIL = ""; VALUES = defaults(T); AI = {};
+  SHOTS = []; CLIPS = []; VOICE = null; drawShots(); drawVoice(); $("#notes").value = ""; $("#checks").hidden = true; say($("#buildMsg"), "");
+  drawAll(); say($("#actMsg"), ""); history.replaceState(null, "", "?t=" + T.id);
+  $("#startCard").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function drawAll() {
+  drawPicks();
+  $("#startCard").hidden = $("#formCard").hidden = !T;
+  if (!T) return progress();
+  $("#fForm").textContent = `${T.kicker} · ${T.form}${NUMBER ? ` · No. ${NUMBER}` : ""}`;
+  $("#fTitle").textContent = T.title;
+  $("#custWrap").hidden = !CUSTOMERS.length;
+  drawForm(); progress();
+}
+
+// ---------- the form ----------
+function boxRow(it) {
+  const opts = it.k === "ynna" ? [["yes", "Yes"], ["no", "No"], ["na", "N/A"]] : it.k === "yno" ? [["yes", "Yes"], ["no", "No"], ["other", "Other"]] : [["yes", "Yes"], ["no", "No"]];
+  const v = VALUES[it.id], ai = AI[it.id];
+  const reads = (it.read || []).map((r) => `<label>${esc(r.label)}<input data-f="${r.id}" inputmode="decimal" value="${esc(VALUES[r.id] || "")}" aria-label="${esc(it.label + " " + r.label)}" ${AI[r.id] ? 'style="background:var(--ai);border-color:var(--aiLine)"' : ""}>${esc(r.unit || "")}</label>`).join("");
+  const why = ai || (it.read || []).map((r) => AI[r.id]).find(Boolean);
+  return `<div class="row${v ? "" : " open"}${ai ? " ai" : ""}" data-row="${it.id}">
+    <div class="q">${esc(it.label)}</div>
+    <div class="yn" role="group" aria-label="${esc(it.label)}">${opts.map(([k, l]) => `<button type="button" data-box="${it.id}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join("")}</div>
+    ${reads ? `<div class="reads">${reads}</div>` : ""}
+    ${why ? `<div class="why"><b>From the job</b><span>${esc(why)}</span></div>` : ""}
+  </div>`;
+}
+function field(it) {
+  const ai = AI[it.id], v = VALUES[it.id];
+  if (BOX.has(it.k)) return boxRow(it);
+  if (it.k === "note") return `<details class="note"><summary>${esc((it.text.split(":")[0] || "Printed text") + " (printed on the form)")}</summary><p>${esc(it.text)}</p></details>`;
+  const why = ai ? `<div class="why" style="margin-top:6px"><b>From the job</b><span>${esc(ai)}</span></div>` : "";
+  if (it.k === "text") {
+    const inp = `<input id="f_${it.id}" data-f="${it.id}" value="${esc(v || "")}">`;
+    return `<div class="field${ai ? " ai" : ""}"><label for="f_${it.id}">${esc(it.label)}</label>${it.unit ? `<div class="unit">${inp}<span>${esc(it.unit)}</span></div>` : inp}${why}</div>`;
+  }
+  if (it.k === "long") return `<div class="field${ai ? " ai" : ""}"><label for="f_${it.id}">${esc(it.label)}</label><textarea id="f_${it.id}" data-f="${it.id}">${esc(v || "")}</textarea>${why}</div>`;
+  if (it.k === "sig") return `<div class="field"><label for="f_${it.id}">${esc(it.label)} <em>(optional)</em></label><input id="f_${it.id}" data-f="${it.id}" value="${esc(v || "")}" placeholder="Leave blank to sign the printed copy by hand"></div>`;
+  if (it.k === "pick") {
+    const sel = Array.isArray(v) ? v : v ? [v] : [];
+    return `<div class="field${ai ? " ai" : ""}"><span class="lab">${esc(it.label)}${it.multi ? " <em>(tap all that apply)</em>" : ""}</span><div class="chips">${it.options.map((o) => `<button type="button" data-pick="${it.id}" data-o="${esc(o)}" aria-pressed="${sel.includes(o)}">${esc(o)}</button>`).join("")}</div>${why}</div>`;
+  }
+  if (it.k === "table") {
+    const n = it.rowLabels ? it.rowLabels.length : it.rows, data = Array.isArray(v) ? v : [];
+    let h = `<div class="field"><div class="tbl${ai ? " ai" : ""}"><table><thead><tr>${it.rowLabels ? "<th></th>" : ""}${it.cols.map((c) => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>`;
+    for (let r = 0; r < n; r++) h += `<tr>${it.rowLabels ? `<td class="rl">${esc(it.rowLabels[r])}</td>` : ""}${it.cols.map((c) => `<td><input data-tbl="${it.id}" data-r="${r}" data-c="${c.id}" value="${esc((data[r] || {})[c.id] || "")}" aria-label="${esc(c.label + " row " + (r + 1))}"></td>`).join("")}</tr>`;
+    return h + `</tbody></table></div>${why}</div>`;
+  }
+  return "";
+}
+function drawForm() {
+  const t = T, cert = isCert(t);
+  let h = `<div class="grid">${t.header.map((it) => it.k === "pick" ? `<div class="full">${field(it)}</div>` : `<div${["propertyName", "propertyAddress"].includes(it.id) ? ' class="full"' : ""}>${field(it)}</div>`).join("")}</div>`;
+  t.sections.forEach((s, si) => {
+    h += `<div class="sec">${s.title ? `<h3>${esc(s.title)}</h3>` : ""}`;
+    s.parts.forEach((p, pi) => {
+      const hasBoxes = p.groups.some((g) => g.items.some((it) => BOX.has(it.k)));
+      h += `<div class="part"><div class="part-h"><h4>${esc(p.title)}</h4>${hasBoxes && !cert ? `<button type="button" class="btn-quiet" data-allyes="${si}.${pi}">Mark the empty ones Yes</button>` : ""}</div>`;
+      p.groups.forEach((g) => { if (g.title) h += `<div class="grp">${esc(g.title)}</div>`; g.items.forEach((it) => (h += field(it))); });
+      h += `</div>`;
+    });
+    h += `</div>`;
+  });
+  h += `<div class="part"><div class="part-h"><h4>Sign-off</h4></div>${t.footer.map(field).join("")}<p class="sigNote">Signatures print as lines so you can sign the paper copy. The AI never fills signatures, dates you sign, or your license number.</p></div>`;
+  $("#formBody").innerHTML = h;
+}
+function touched(id) { if (AI[id]) delete AI[id]; }
+function rowRefresh(id) {
+  const it = allFields(T).find((f) => f.id === id); const row = $(`[data-row="${id}"]`);
+  if (!it || !row) return; row.outerHTML = boxRow(it);
+}
+$("#formBody").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.box) {
+    const id = b.dataset.box; VALUES[id] = VALUES[id] === b.dataset.v ? undefined : b.dataset.v; if (!VALUES[id]) delete VALUES[id];
+    touched(id); rowRefresh(id); changed();
+  } else if (b.dataset.pick) {
+    const it = allFields(T).find((f) => f.id === b.dataset.pick), o = b.dataset.o;
+    let sel = Array.isArray(VALUES[it.id]) ? [...VALUES[it.id]] : VALUES[it.id] ? [VALUES[it.id]] : [];
+    if (it.multi) sel = sel.includes(o) ? sel.filter((x) => x !== o) : [...sel, o]; else sel = sel.includes(o) ? [] : [o];
+    if (sel.length) VALUES[it.id] = it.multi ? sel : sel[0]; else delete VALUES[it.id];
+    touched(it.id); $$(`[data-pick="${it.id}"]`).forEach((x) => x.setAttribute("aria-pressed", sel.includes(x.dataset.o)));
+    b.closest(".field").classList.remove("ai"); const w = b.closest(".field").querySelector(".why"); if (w) w.remove(); changed();
+  } else if (b.dataset.allyes) {
+    const [si, pi] = b.dataset.allyes.split(".").map(Number); let n = 0;
+    T.sections[si].parts[pi].groups.forEach((g) => g.items.forEach((it) => { if (BOX.has(it.k) && !VALUES[it.id] && !/differ by more than/i.test(it.label)) { VALUES[it.id] = "yes"; n++; rowRefresh(it.id); } }));
+    say($("#actMsg"), n ? `Marked ${n} box${n === 1 ? "" : "es"} Yes in ${T.sections[si].parts[pi].title}.` : "Every box there is already checked.", true); changed();
+  }
+});
+$("#formBody").addEventListener("input", (e) => {
+  const el = e.target;
+  if (el.dataset.f) { const s = el.value; if (s.trim()) VALUES[el.dataset.f] = s; else delete VALUES[el.dataset.f]; touched(el.dataset.f); if (el.dataset.f === "inspector") store("na_inspector", s.trim() || null); }
+  else if (el.dataset.tbl) {
+    const id = el.dataset.tbl, it = allFields(T).find((f) => f.id === id), n = it.rowLabels ? it.rowLabels.length : it.rows;
+    const rows = Array.isArray(VALUES[id]) ? VALUES[id] : Array.from({ length: n }, () => ({}));
+    while (rows.length < n) rows.push({});
+    rows[+el.dataset.r] = { ...rows[+el.dataset.r], [el.dataset.c]: el.value }; VALUES[id] = rows; touched(id);
+  }
+  el.style.background = ""; el.style.borderColor = "";
+  const fld = el.closest(".field"); if (fld) fld.classList.remove("ai");
+  changed();
+});
+$("#custSel").onchange = () => {
+  const c = CUSTOMERS[+$("#custSel").value]; if (!c) return;
+  VALUES.propertyName = c.name; if (c.address) VALUES.propertyAddress = c.address; if (c.phone && T.header.some((f) => f.id === "phone")) VALUES.phone = c.phone;
+  if (c.email) EMAIL = c.email;
+  ["propertyName", "propertyAddress", "phone"].forEach((k) => { const i = $(`[data-f="${k}"]`); if (i) i.value = VALUES[k] || ""; });
+  $("#custSel").value = ""; changed();
+};
+
+// ---------- progress + draft ----------
+function progress() {
+  if (!T) { $("#sBig").innerHTML = "0<span> / 0</span>"; $("#sBar").style.width = "0"; $("#dBig").textContent = "0 / 0"; return; }
+  const boxes = allFields(T).filter((f) => BOX.has(f.k)), done = boxes.filter((f) => VALUES[f.id]).length, ai = Object.keys(AI).length;
+  $("#sBig").innerHTML = `${done}<span> / ${boxes.length}</span>`; $("#dBig").textContent = `${done} / ${boxes.length}`;
+  $("#sBar").style.width = boxes.length ? (100 * done) / boxes.length + "%" : "0";
+  $("#sLine").textContent = done === boxes.length ? "Every box is checked. Sign and send." : `${boxes.length - done} box${boxes.length - done === 1 ? "" : "es"} still open (yellow dot).${ai ? ` ${ai} filled from the job (blue) — look them over.` : ""}`;
+}
+function doc() { return { template: T.id, number: NUMBER, values: VALUES, ai: AI, email: EMAIL, photos: SHOTS.slice(0, 8).map((x) => ({ src: x.src, caption: x.caption || "" })), showPhotos: $("#showPhotos").checked }; }
+function changed() { progress(); if (T) store("na_form_draft", { id: CURRENT, doc: { ...doc(), photos: undefined } }); }
+
+// ---------- saved ----------
+const TPL = (id) => TEMPLATES.find((t) => t.id === id) || {};
+function renderSaved(items) {
+  $("#saved").innerHTML = items.length ? items.map((r) => `<div class="srow"><div><b><span class="tag">${esc(TPL(r.template).form || "")}</span>${esc(r.property || "No property")}</b><small>${esc(TPL(r.template).short || "")} · No. ${esc(r.number)} · ${r.done}/${r.boxes} boxes · ${new Date(r.updatedAt).toLocaleDateString()}</small></div>
+    <button type="button" data-open="${r.id}">Open</button><button type="button" class="use" data-use="${r.id}" title="Start next visit from this one">Next visit</button></div>`).join("")
+    : `<div class="empty">Nothing saved yet. Pick a form, fill it, and press Save.</div>`;
+  const open = (id, again) => async () => {
+    const j = await call("/forms/get", { id });
+    T = TPL(j.form.template); AI = again ? {} : j.form.ai || {}; EMAIL = j.form.email || "";
+    if (again) {
+      // next visit: same property and system, fresh boxes and readings
+      const keep = {}; for (const f of T.header) if (f.k === "text" && j.form.values[f.id]) keep[f.id] = j.form.values[f.id];
+      VALUES = { ...defaults(T), ...keep, date: usDate() }; CURRENT = null; NUMBER = ""; SHOTS = [];
+    } else { VALUES = j.form.values || {}; CURRENT = id; NUMBER = j.form.number; SHOTS = (j.form.photos || []).map((p) => ({ src: p.src, caption: p.caption })); $("#showPhotos").checked = j.form.showPhotos !== false; }
+    CLIPS = []; VOICE = null; drawShots(); drawVoice(); drawAll(); changed();
+    say($("#actMsg"), again ? "Started a new form for the next visit. Property filled in; boxes are blank." : `Opened ${T.form} No. ${NUMBER}.`, true);
+    scrollTo({ top: 0, behavior: "smooth" });
+  };
+  $$("#saved [data-open]").forEach((b) => (b.onclick = () => busy(b, open(b.dataset.open, false))));
+  $$("#saved [data-use]").forEach((b) => (b.onclick = () => busy(b, open(b.dataset.use, true))));
+}
+async function load() {
+  const [t, l] = await Promise.all([call("/forms/templates", {}), call("/forms/list", {})]);
+  TEMPLATES = t.templates; COMPANY = t.company || {}; CUSTOMERS = t.customers || []; NEXT = t.next || "";
+  $("#custSel").innerHTML = `<option value="">Choose a customer…</option>` + CUSTOMERS.map((c, i) => `<option value="${i}">${esc(c.name)}${c.address ? " — " + esc(c.address) : ""}</option>`).join("");
+  renderSaved(l.items || []);
+  $("#gate").hidden = true; $("#app").hidden = false; $("#dock").hidden = false;
+  if (!LOADED) {
+    LOADED = true;
+    const want = new URLSearchParams(location.search).get("t"), dr = store("na_form_draft");
+    if (dr && dr.doc && TEMPLATES.some((x) => x.id === dr.doc.template) && (!want || want === dr.doc.template)) {
+      T = TPL(dr.doc.template); VALUES = dr.doc.values || {}; AI = dr.doc.ai || {}; NUMBER = dr.doc.number || ""; EMAIL = dr.doc.email || ""; CURRENT = dr.id || null;
+    } else if (want && TEMPLATES.some((x) => x.id === want)) { T = TPL(want); VALUES = defaults(T); }
+    drawAll();
+  }
+}
+
+// ---------- actions ----------
+async function busy(btn, fn) { const t = btn.textContent; btn.disabled = true; btn.textContent = "Working…"; try { await fn(); } catch (e) { if (e.message !== "signed out") say($("#actMsg"), e.message, false); } finally { btn.disabled = false; btn.textContent = t; } }
+function need() { if (!T) return "Pick a form first."; if (!VALUES.propertyName) return "Add the property name first."; return ""; }
+async function save(quiet) {
+  const why = need(); if (why) throw new Error(why);
+  const j = await call("/forms/save", { id: CURRENT, form: doc() });
+  CURRENT = j.id; NUMBER = j.number; $("#fForm").textContent = `${T.kicker} · ${T.form} · No. ${NUMBER}`; changed();
+  const l = await call("/forms/list", {}); renderSaved(l.items || []);
+  if (!quiet) say($("#actMsg"), `Saved ${T.form} No. ${j.number}.${j.open ? ` ${j.open} box${j.open === 1 ? "" : "es"} still open.` : ""}`, true);
+  return j;
+}
+$("#saveBtn").onclick = () => busy($("#saveBtn"), () => save());
+async function openPdf(print) {
+  const w = window.open("", "_blank");
+  try {
+    await save(true);
+    const blob = await call("/forms/pdf", { form: doc() }, true);
+    const url = URL.createObjectURL(blob);
+    if (w) { w.location.href = url; if (print) setTimeout(() => { try { w.print(); } catch {} }, 1200); } else location.href = url;
+    say($("#actMsg"), print ? "PDF opened. Print it, or send it from your fax." : "PDF opened in a new tab.", true);
+  } catch (e) { if (w) w.close(); throw e; }
+}
+$("#viewBtn").onclick = () => busy($("#viewBtn"), () => openPdf(false));
+$("#printBtn").onclick = () => busy($("#printBtn"), () => openPdf(true));
+$("#dockGo").onclick = () => $(".stat").scrollIntoView({ behavior: "smooth", block: "start" });
+$("#emailBtn").onclick = () => {
+  const why = need(); if (why) return say($("#actMsg"), why, false);
+  $("#mTo").value = EMAIL; say($("#mailMsg"), "", true); $("#mailOv").hidden = false; setTimeout(() => ($("#mTo").value ? $("#mMsg") : $("#mTo")).focus(), 50);
+};
+$("#mailCancel").onclick = () => ($("#mailOv").hidden = true);
+$("#mailOv").addEventListener("click", (e) => { if (e.target.id === "mailOv") $("#mailOv").hidden = true; });
+addEventListener("keydown", (e) => { if (e.key === "Escape") $("#mailOv").hidden = true; });
+$("#mailForm").addEventListener("submit", (e) => {
+  e.preventDefault(); const btn = $("button[type=submit]", e.target);
+  const to = $("#mTo").value.trim(); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) return say($("#mailMsg"), "Check the email address.", false);
+  busy(btn, async () => {
+    try {
+      EMAIL = to; const s = await save(true);
+      await call("/forms/email", { form: doc(), to, message: $("#mMsg").value.trim() });
+      $("#mailOv").hidden = true; $("#mMsg").value = "";
+      say($("#actMsg"), `Sent ${T.form} No. ${s.number} to ${to}.`, true);
+    } catch (err) { say($("#mailMsg"), err.message, false); throw err; }
+  });
+});
+
+// ---------- photos, video, voice ----------
+const MAX_SHOTS = 12, AUDIO_MAX = 24 * 1024 * 1024;
+function shrink(src, max = 1600, q = 0.78) {
+  return new Promise((ok, bad) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", q));
+    };
+    img.onerror = () => bad(new Error("That photo couldn't be opened."));
+    img.src = src;
+  });
+}
+function frames(file, n = 4) {
+  return new Promise((ok) => {
+    const v = document.createElement("video"), url = URL.createObjectURL(file), out = [];
+    v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+    const done = () => { URL.revokeObjectURL(url); ok(out); };
+    const stop = setTimeout(done, 25000);
+    v.onerror = () => { clearTimeout(stop); done(); };
+    v.onloadeddata = async () => {
+      const dur = isFinite(v.duration) && v.duration > 0 ? v.duration : 1;
+      for (let i = 0; i < n; i++) {
+        await new Promise((r) => { v.onseeked = r; v.currentTime = Math.min(dur - 0.05, dur * (0.1 + (0.8 * i) / Math.max(1, n - 1))); setTimeout(r, 3000); });
+        const k = Math.min(1, 1600 / Math.max(v.videoWidth || 1280, v.videoHeight || 720));
+        const c = document.createElement("canvas"); c.width = Math.round((v.videoWidth || 1280) * k); c.height = Math.round((v.videoHeight || 720) * k);
+        try { c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); out.push(c.toDataURL("image/jpeg", 0.78)); } catch {}
+      }
+      clearTimeout(stop); done();
+    };
+  });
+}
+async function addFiles(list) {
+  const msg = $("#buildMsg"); say(msg, "Adding…", true);
+  for (const f of list) {
+    if (SHOTS.length >= MAX_SHOTS) { say(msg, `That's the most it can use (${MAX_SHOTS} pictures). Remove some to add more.`, false); break; }
+    try {
+      if (f.type.startsWith("video/")) {
+        const fr = await frames(f);
+        fr.slice(0, MAX_SHOTS - SHOTS.length).forEach((src) => SHOTS.push({ src, caption: "", frame: true }));
+        if (f.size <= AUDIO_MAX && CLIPS.length < 2) CLIPS.push(f);
+        if (!fr.length) say(msg, "Couldn't take pictures from that video. Try photos, or a shorter clip.", false);
+      } else if (f.type.startsWith("image/")) {
+        const url = URL.createObjectURL(f);
+        try { SHOTS.push({ src: await shrink(url), caption: "" }); } finally { URL.revokeObjectURL(url); }
+      }
+    } catch (e) { say(msg, e.message, false); }
+  }
+  if (msg.textContent === "Adding…") say(msg, "");
+  drawShots();
+}
+function drawShots() {
+  $("#shots").innerHTML = SHOTS.map((x, i) => `<div class="shot">${x.frame ? '<span class="vid">VIDEO</span>' : ""}<img src="${x.src}" alt="Job photo ${i + 1}"><button type="button" data-del="${i}" aria-label="Remove photo">×</button><input data-cap="${i}" value="${esc(x.caption)}" placeholder="What is this? (optional)" aria-label="Caption for photo ${i + 1}"></div>`).join("");
+  $$("#shots [data-del]").forEach((b) => (b.onclick = () => { SHOTS.splice(+b.dataset.del, 1); drawShots(); }));
+  $$("#shots [data-cap]").forEach((inp) => (inp.oninput = () => { SHOTS[+inp.dataset.cap].caption = inp.value.slice(0, 120); }));
+}
+["#camIn", "#pickIn"].forEach((id) => $(id).addEventListener("change", (e) => { const fl = [...e.target.files]; e.target.value = ""; addFiles(fl); }));
+
+let rec = null, recT = 0, recTimer = null;
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+function drawVoice() {
+  const b = $("#recBtn"), info = $("#recInfo");
+  if (rec) { b.textContent = "Stop recording"; b.classList.add("rec"); info.textContent = `Recording ${fmt(recT)}`; $("#recDel").hidden = true; return; }
+  b.classList.remove("rec");
+  b.textContent = VOICE ? "Record again" : "Tap to talk about the job";
+  info.textContent = VOICE ? `Voice note ready (${fmt(VOICE.secs)})` : 'Say what you checked and the readings, like "main drain static 72, residual 58".';
+  $("#recDel").hidden = !VOICE;
+}
+$("#recBtn").onclick = async () => {
+  if (rec) { rec.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) return say($("#buildMsg"), "This phone can't record here. Type a few words instead.", false);
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { return say($("#buildMsg"), "Allow the microphone to record a voice note, or type a few words instead.", false); }
+  const type = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || "";
+  const chunks = [];
+  rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.onstop = () => {
+    stream.getTracks().forEach((t) => t.stop()); clearInterval(recTimer);
+    const blob = new Blob(chunks, { type: (rec.mimeType || type || "audio/webm").split(";")[0] });
+    VOICE = blob.size > 1000 ? { blob, secs: recT } : null; rec = null; drawVoice();
+  };
+  recT = 0; rec.start(1000); drawVoice();
+  recTimer = setInterval(() => { recT++; drawVoice(); if (recT >= 240) rec && rec.stop(); }, 1000);
+};
+$("#recDel").onclick = () => { VOICE = null; drawVoice(); };
+
+// photos + video + voice -> boxes and readings (blanks only; what you already checked stays yours)
+$("#buildBtn").onclick = () => busy($("#buildBtn"), async () => {
+  const msg = $("#buildMsg"), notes = $("#notes").value.trim();
+  if (!T) return say(msg, "Pick a form first.", false);
+  if (!SHOTS.length && !VOICE && !CLIPS.length && !notes) return say(msg, "Take a few photos or a video, or tap to talk about the job first.", false);
+  say(msg, "Looking at the job… this can take up to a minute.", true);
+  const fd = new FormData();
+  fd.append("pin", PIN); fd.append("template", T.id); fd.append("notes", notes);
+  for (const x of SHOTS.slice(0, 12)) fd.append("photos", await (await fetch(x.src)).blob(), "photo.jpg");
+  if (VOICE) fd.append("audio", VOICE.blob, "note." + (VOICE.blob.type.includes("mp4") ? "m4a" : VOICE.blob.type.includes("ogg") ? "ogg" : "webm"));
+  CLIPS.forEach((c) => fd.append("audio", c, "clip.mp4"));
+  const r = await fetch(API + "/forms/analyze", { method: "POST", body: fd });
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+  if (r.status === 401 || r.status === 429) { sess.del("na_pin"); PIN = null; showGate(j.error); return; }
+  if (!r.ok || !j.ok) return say(msg, j.error || "That didn't work. Try again.", false);
+  let n = 0, kept = 0;
+  for (const [id, v] of Object.entries(j.values || {})) {
+    const empty = VALUES[id] == null || VALUES[id] === "" || (Array.isArray(VALUES[id]) && !VALUES[id].some((x) => x && (typeof x !== "object" || Object.keys(x).length)));
+    if (!empty) { kept++; continue; }
+    VALUES[id] = v; AI[id] = (j.why || {})[id] || "From the job photos and your notes"; n++;
+  }
+  if (j.comments && !VALUES.comments) { VALUES.comments = j.comments; AI.comments = "Deficiencies found in the photos and your notes"; n++; }
+  drawForm(); changed();
+  const open = allFields(T).filter((f) => BOX.has(f.k) && !VALUES[f.id]).length;
+  say(msg, n ? `Filled ${n} item${n === 1 ? "" : "s"} from the job (in blue).${kept ? ` Left ${kept} you already filled alone.` : ""} ${open} box${open === 1 ? "" : "es"} still open for you. Look it over, then sign and send.`
+    : "Nothing on this form could be read from that. Fill the boxes yourself, or add closer photos of the gauges, valves and labels.", !!n);
+  $("#checks").innerHTML = (j.check || []).map((c) => `<li>${esc(c)}</li>`).join(""); $("#checks").hidden = !(j.check || []).length;
+  const first = $("#formBody .row.ai"); if (first) setTimeout(() => first.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+});
+$("#showPhotos").addEventListener("change", changed);
+
+if (PIN) load().catch((e) => { if (e.message !== "signed out") showGate(e.message); }); else showGate();
+</script>
+</body>
+</html>

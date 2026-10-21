@@ -8,7 +8,7 @@ import re, sys, pathlib, datetime
 root = pathlib.Path(sys.argv[1])
 DOMAIN = "https://ark-hvac.com/"
 OLD_BASES = ["https://hsw365.github.io/calltwin/newark/", "https://newark-ark.onrender.com/"]
-SKIP = {"index.html", "activate.html"}
+SKIP = {"index.html", "activate.html", "proposal.html", "forms.html"}  # owner pages keep their own styles and stay out of the sitemap
 
 pages = [p for p in list(root.glob("*.html")) + list(root.glob("blog/*.html")) if not (p.parent == root and p.name in SKIP)]
 for p in pages:

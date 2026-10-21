@@ -192,6 +192,14 @@ details.co[open] summary::before{content:"–"}
 .line.need .flag.ok{display:none}
 @media (max-width:700px){.line .flag{grid-column:1/-1}}
 .checks{margin-top:10px;padding-left:20px;font-size:15.5px;color:var(--text2)}
+/* sprinkler forms shortcut */
+.nfpa{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;border-left:6px solid var(--red)}
+.nfpa div{flex:1 1 260px}
+.nfpa b{display:block;font-family:var(--disp);font-weight:800;font-size:26px;line-height:1.05;color:var(--navy)}
+.nfpa span{font-size:15px;color:var(--mut)}
+.nfpa nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:1 1 380px}
+.nfpa nav a{min-height:52px;font-size:15.5px;padding:0 12px;white-space:normal;text-align:center;line-height:1.15}
+@media (max-width:560px){.nfpa nav{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -220,6 +228,17 @@ details.co[open] summary::before{content:"–"}
 <main class="page" id="app" hidden>
   <div>
     <form id="f" novalidate autocomplete="off">
+      <!-- NFPA sprinkler forms -->
+      <section class="card nfpa">
+        <div><b>Fire sprinkler forms</b><span>NFPA inspection and test forms, ready to fill. Take photos or talk, and it checks the boxes for you.</span></div>
+        <nav aria-label="Sprinkler forms">
+          <a class="btn btn-ink" href="forms.html?t=form6">Form 6 · Wet pipe inspection</a>
+          <a class="btn btn-ink" href="forms.html?t=form5">Form 5 · Dry pipe inspection</a>
+          <a class="btn btn-line" href="forms.html?t=form4">Form 4 · Aboveground certificate</a>
+          <a class="btn btn-line" href="forms.html?t=form3">Form 3 · Underground certificate</a>
+        </nav>
+      </section>
+
       <!-- 0 -->
       <section class="card start">
         <div class="step"><i>★</i><h2>Start from the job</h2><p>Photos, video, your voice</p></div>

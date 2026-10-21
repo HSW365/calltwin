@@ -155,4 +155,4 @@ async function analyzeJob({ type = "estimate", notes = "", images = [], audios =
   };
 }
 
-module.exports = { analyzeJob, priceBook, priceLines, noMoney, ready };
+module.exports = { analyzeJob, priceBook, priceLines, noMoney, ready, transcribe };

@@ -14,6 +14,18 @@
  *                                                    prices are filled only from his own past lines (see services/newarkJobAnalyze.js)
  *   POST /writeup   { pin, notes, items, type }      AI turns the owner's short notes into the title + scope paragraph.
  *                                                    The AI never sees or writes prices; all money comes from the owner's lines.
+ *
+ * NFPA sprinkler forms (Forms 3, 4, 5, 6) built in as templates, owner only (services/newarkNfpaForms.js):
+ *   POST /forms/templates { pin }                    the four templates + letterhead + recent customers to pick from
+ *   POST /forms/list      { pin }                    saved forms (newest first)
+ *   POST /forms/get       { pin, id }
+ *   POST /forms/save      { pin, form, id? }         -> { id, number }
+ *   POST /forms/delete    { pin, id }
+ *   POST /forms/pdf       { pin, form }              the filled form as a PDF
+ *   POST /forms/email     { pin, form, to, message? }
+ *   POST /forms/analyze   multipart: pin, template, notes, photos[], audio[]
+ *                                                    AI fills the boxes and readings the photos/voice actually show, with a reason for each;
+ *                                                    never signatures, sign-off dates or the license number.
  */
 const express = require("express");
 const axios = require("axios");
@@ -22,6 +34,9 @@ const M = require("../services/newarkProposalMath");
 const { renderProposalPdf } = require("../services/newarkProposalPdf");
 const multer = require("multer");
 const { analyzeJob } = require("../services/newarkJobAnalyze");
+const F = require("../services/newarkNfpaForms");
+const { renderNfpaPdf } = require("../services/newarkNfpaPdf");
+const { fillForm } = require("../services/newarkNfpaAnalyze");
 
 // Photos and video frames arrive already shrunk by the page; voice notes and short clips go to transcription.
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024, files: 16, fieldSize: 64 * 1024 } });
@@ -65,6 +80,16 @@ async function finished(raw) {
   const doc = M.normalize({ ...(raw || {}), company: { ...(await letterhead()), ...((raw && raw.company) || {}) } });
   return doc;
 }
+const formFile = (f) => {
+  const t = F.TEMPLATES[f.template];
+  return `${t.form} ${t.short} ${f.values.propertyName || ""} ${f.number || ""}`.replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-") + ".pdf";
+};
+async function nextFormNumber() {
+  const yr = new Date().getFullYear();
+  const last = await Proposal.find({ kind: "form", number: new RegExp(`^F${yr}-\\d+$`) }).sort({ createdAt: -1 }).limit(50).lean();
+  const max = last.reduce((a, p) => Math.max(a, parseInt(String(p.number).split("-")[1], 10) || 0), 0);
+  return `F${yr}-${String(max + 1).padStart(3, "0")}`;
+}
 const fileName = (d) => `${d.company.name} ${M.TYPES[d.type]} ${d.number || d.date}`.replace(/[^\w\- ]+/g, "").replace(/\s+/g, "-") + ".pdf";
 
 module.exports = function proposalRouter(ownerPin) {
@@ -88,7 +113,101 @@ module.exports = function proposalRouter(ownerPin) {
     }
   }));
 
+  // NFPA form: photos / video / voice -> boxes and readings filled. Multipart, so the PIN is read after the upload is parsed.
+  router.post("/forms/analyze", upload.fields([{ name: "photos", maxCount: 12 }, { name: "audio", maxCount: 3 }]), ownerPin, wrap(async (req, res) => {
+    const images = ((req.files && req.files.photos) || []).filter((f) => IMG.test(f.mimetype) && f.size <= 4 * 1024 * 1024);
+    const audios = ((req.files && req.files.audio) || []).filter((f) => AUD.test(f.mimetype));
+    const notes = String(req.body.notes || "").trim().slice(0, 2000);
+    if (!F.TEMPLATES[req.body.template]) return bad(res, "Pick a form first.");
+    if (!images.length && !audios.length && !notes) return bad(res, "Add photos, a video, or a voice note first.");
+    try {
+      res.json({ ok: true, ...(await fillForm({ template: req.body.template, notes, images, audios })) });
+    } catch (e) {
+      if (e.status) return bad(res, e.message, e.status);
+      throw e;
+    }
+  }));
+
   router.use(ownerPin);
+
+  // ---------- NFPA forms ----------
+  router.post("/forms/templates", wrap(async (req, res) => {
+    // Customers from his proposals, so a form's property block fills with one tap.
+    const seen = new Set(), customers = [];
+    const rows = await Proposal.find({ kind: "doc" }, { doc: 1 }).sort({ updatedAt: -1 }).limit(150).lean();
+    for (const r of rows) {
+      const c = (r.doc && r.doc.customer) || {};
+      const name = c.company || c.contact;
+      if (!name || seen.has(name.toLowerCase())) continue;
+      seen.add(name.toLowerCase());
+      customers.push({ name, address: r.doc.jobsite || [c.address, c.city].filter(Boolean).join(", "), phone: c.phone || "", email: c.email || "" });
+      if (customers.length >= 40) break;
+    }
+    res.json({ ok: true, templates: F.catalog(), company: await letterhead(), next: await nextFormNumber(), customers });
+  }));
+
+  router.post("/forms/list", wrap(async (req, res) => {
+    const rows = await Proposal.find({ kind: "form" }).sort({ updatedAt: -1 }).limit(100).lean();
+    res.json({ ok: true, next: await nextFormNumber(), items: rows.map((r) => {
+      const f = F.normalizeForm(r.doc);
+      return { id: r._id, number: r.number, template: r.type, property: r.customer, updatedAt: r.updatedAt, photoCount: f.photos.length, ...F.progress(f) };
+    }) });
+  }));
+
+  router.post("/forms/get", wrap(async (req, res) => {
+    if (!mongoose.isValidObjectId(req.body.id)) return bad(res, "Not found.", 404);
+    const r = await Proposal.findOne({ _id: req.body.id, kind: "form" }).lean();
+    if (!r) return bad(res, "Not found.", 404);
+    res.json({ ok: true, id: r._id, form: F.normalizeForm(r.doc) });
+  }));
+
+  router.post("/forms/save", wrap(async (req, res) => {
+    const f = F.normalizeForm(req.body.form);
+    if (!f.number) f.number = await nextFormNumber();
+    const set = { number: f.number, type: f.template, customer: f.values.propertyName || "", totalCents: 0, doc: f };
+    let row;
+    if (req.body.id && mongoose.isValidObjectId(req.body.id)) row = await Proposal.findOneAndUpdate({ _id: req.body.id, kind: "form" }, set, { new: true });
+    if (!row) row = await Proposal.create({ kind: "form", ...set });
+    res.json({ ok: true, id: row._id, number: row.number, ...F.progress(f) });
+  }));
+
+  router.post("/forms/delete", wrap(async (req, res) => {
+    if (!mongoose.isValidObjectId(req.body.id)) return bad(res, "Not found.", 404);
+    await Proposal.deleteOne({ _id: req.body.id, kind: "form" });
+    res.json({ ok: true });
+  }));
+
+  router.post("/forms/pdf", wrap(async (req, res) => {
+    const f = F.normalizeForm(req.body.form);
+    const pdf = await renderNfpaPdf(f, await letterhead());
+    res.set("Content-Type", "application/pdf");
+    res.set("Content-Disposition", `inline; filename="${formFile(f)}"`);
+    res.send(pdf);
+  }));
+
+  router.post("/forms/email", wrap(async (req, res) => {
+    const mailer = require("../services/mailer");
+    const to = String(req.body.to || "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) return bad(res, "Add the email address.");
+    if (!mailer.emailReady()) return bad(res, "Email isn't set up on the server yet. Download the PDF and send it yourself for now.", 503);
+    const f = F.normalizeForm(req.body.form);
+    const co = await letterhead();
+    const t = F.TEMPLATES[f.template];
+    const pdf = await renderNfpaPdf(f, co);
+    const note = String(req.body.message || "").trim().slice(0, 2000);
+    const where = [f.values.propertyName, f.values.propertyAddress].filter(Boolean).join(", ");
+    const text = [
+      "Hello,", "",
+      note || `Attached is the ${t.form} ${t.title.toLowerCase()}${where ? ` for ${where}` : ""}.`, "",
+      co.name, [co.office && `Office ${co.office}`, co.cell && `Cell ${co.cell}`, co.fax && `Fax ${co.fax}`].filter(Boolean).join("  |  "),
+    ].join("\n");
+    const ok = await mailer.sendEmail(to, `${co.name}: ${t.form} ${t.short}${f.values.propertyName ? ` - ${f.values.propertyName}` : ""}`, text, {
+      fromName: co.name, replyTo: req.owner.owner_email || co.email,
+      attachments: [{ filename: formFile(f), content: pdf, contentType: "application/pdf" }],
+    });
+    if (!ok) return bad(res, "The email didn't go through. Download the PDF and send it yourself, or try again.", 502);
+    res.json({ ok: true, sentTo: to });
+  }));
 
   router.post("/list", wrap(async (req, res) => {
     const rows = await Proposal.find({ kind: "doc" }).sort({ updatedAt: -1 }).limit(100).lean();

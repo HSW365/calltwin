@@ -1,10 +1,12 @@
 # Keeps the live New Ark site (ark-hvac.com, served from the newark-site branch) in step with newark/ on main.
 # New articles land in newark/blog on main; this restyles them and publishes them to the live site.
+# Phone number and SEO data are already applied on main by tools/newark_seo.py, so no chat-only pass here
+# (it stripped 908-454-4043 and broke page titles).
 name: Sync New Ark site
 on:
   push:
     branches: [main]
-    paths: ["newark/**", "tools/restyle_newark.py", "tools/newark_chat_only.py"]
+    paths: ["newark/**", "tools/restyle_newark.py", "tools/newark_seo.py"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -21,7 +23,6 @@ jobs:
         run: |
           cp -a main/newark/. site/newark-site/
           python3 main/tools/restyle_newark.py site/newark-site
-          python3 main/tools/newark_chat_only.py site/newark-site
       - name: Publish
         working-directory: site
         run: |

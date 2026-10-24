@@ -154,7 +154,7 @@ def main():
             open(p, "w", encoding="utf-8").write(make_town(tpl, t, c))
 
     for f in sorted(os.listdir(ROOT)):
-        if not f.endswith(".html") or f in ("index.html", "forms.html", "proposal.html"): continue
+        if not f.endswith(".html") or f in ("index.html", "forms.html", "proposal.html") or f.startswith("google"): continue
         p = os.path.join(ROOT, f); s = open(p, encoding="utf-8").read()
         if f in SERVICES:
             name, title, desc = SERVICES[f]
@@ -239,7 +239,7 @@ def sitemap(today):
     sp = os.path.join(ROOT, "sitemap.xml")
     if os.path.exists(sp):
         for u, d in re.findall(r"<loc>([^<]+)</loc><lastmod>([^<]+)</lastmod>", open(sp).read()): old[u] = d
-    urls = [SITE + "/"] + [f"{SITE}/{f}" for f in sorted(os.listdir(ROOT)) if f.endswith(".html") and f not in ("index.html", "forms.html", "proposal.html")]
+    urls = [SITE + "/"] + [f"{SITE}/{f}" for f in sorted(os.listdir(ROOT)) if f.endswith(".html") and f not in ("index.html", "forms.html", "proposal.html") and not f.startswith("google")]
     urls += [SITE + "/blog/"] + [f"{SITE}/blog/{f}" for f in sorted(os.listdir(os.path.join(ROOT, "blog"))) if f.endswith(".html") and f != "index.html"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
         f"  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n" for u in sorted(urls)) + "</urlset>\n"

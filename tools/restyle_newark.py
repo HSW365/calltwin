@@ -10,7 +10,7 @@ DOMAIN = "https://ark-hvac.com/"
 OLD_BASES = ["https://hsw365.github.io/calltwin/newark/", "https://newark-ark.onrender.com/"]
 SKIP = {"index.html", "activate.html", "proposal.html", "forms.html"}  # owner pages keep their own styles and stay out of the sitemap
 
-pages = [p for p in list(root.glob("*.html")) + list(root.glob("blog/*.html")) if not (p.parent == root and p.name in SKIP)]
+pages = [p for p in list(root.glob("*.html")) + list(root.glob("blog/*.html")) if not (p.parent == root and (p.name in SKIP or p.name.startswith("google")))]  # google*.html = Search Console verification file
 for p in pages:
     s = p.read_text()
     up = "../" if p.parent.name == "blog" else ""

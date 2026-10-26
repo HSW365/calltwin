@@ -3,22 +3,6 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "State Farm Insurance: Ann Lin",
-      "pushed": false
-    },
-    {
-      "businessName": "Allstate",
-      "pushed": false
-    },
-    {
-      "businessName": "Northpoint360",
-      "pushed": false
-    },
-    {
-      "businessName": "Volpe Real Estate",
-      "pushed": false
-    },
-    {
       "businessName": "Ufberg Dental P.C.",
       "pushed": false
     },
@@ -31,11 +15,23 @@
       "pushed": false
     },
     {
-      "businessName": "Joseph Hart, Inc. Plumbing",
+      "businessName": "Pete's Auto Service",
       "pushed": false
     },
     {
-      "businessName": "John C. Ciervo & Son",
+      "businessName": "Exton Collision",
+      "pushed": false
+    },
+    {
+      "businessName": "Tri-Point Electric",
+      "pushed": false
+    },
+    {
+      "businessName": "John's Tree Service",
+      "pushed": false
+    },
+    {
+      "businessName": "Bill Johnston Landscape Co.",
       "pushed": false
     },
     {
@@ -51,15 +47,7 @@
       "pushed": false
     },
     {
-      "businessName": "Jefferson Roofing and Exterior",
-      "pushed": false
-    },
-    {
-      "businessName": "Murphy Roofing",
-      "pushed": false
-    },
-    {
-      "businessName": "Garcia Family Roofing",
+      "businessName": "The UPS Store",
       "pushed": false
     }
   ]

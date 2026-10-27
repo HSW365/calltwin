@@ -197,6 +197,18 @@ def run():
     all_leads = []
     seen_phones = set()
     seen_names = set()
+    # Skip businesses already sent on earlier runs (CallTwin rejects repeat phone numbers),
+    # so each run's quota goes to new businesses.
+    import glob
+    for old in glob.glob(os.path.join(os.path.dirname(__file__) or ".", "leads_*.csv")):
+        try:
+            with open(old, newline="") as f:
+                for row in csv.DictReader(f):
+                    if row.get("phone"):
+                        seen_phones.add(row["phone"])
+        except Exception:
+            pass
+    print(f"  {len(seen_phones)} businesses already sent on earlier runs; skipping those")
 
     print(f"\n{'='*60}")
     print(f"  CALLTWIN LEAD HUNTER (free/OSM) — {timestamp}")
@@ -210,7 +222,9 @@ def run():
             total_found += len(elements)
             count = 0
 
-            for el in elements[:MAX_RESULTS_PER_CATEGORY]:
+            for el in elements:
+                if count >= MAX_RESULTS_PER_CATEGORY:
+                    break
                 tags = el.get("tags", {})
                 name = tags.get("name")
                 if not name or name in seen_names:

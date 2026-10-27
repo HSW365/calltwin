@@ -22,6 +22,11 @@ router.post("/", requireAuth, async (req, res) => {
     });
     res.json(lead);
   } catch (err) {
+    if (err && err.code === 11000) {
+      // Same phone already on this owner's list: return the existing lead instead of an error.
+      const existing = await Lead.findOne({ owner: req.user._id, phone: req.body.phone });
+      if (existing) return res.json({ ...existing.toObject(), duplicate: true });
+    }
     res.status(400).json({ error: err.message });
   }
 });

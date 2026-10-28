@@ -3,48 +3,372 @@
   "calltwin_campaign_configured": true,
   "results": [
     {
-      "businessName": "Ufberg Dental P.C.",
-      "pushed": false
+      "businessName": "Michael VanBuskirk, Esq.",
+      "pushed": true
     },
     {
-      "businessName": "Bear-Glasgow Dental",
-      "pushed": false
+      "businessName": "Law Offices of John J. Fioravanti Jr.",
+      "pushed": true
     },
     {
-      "businessName": "Franklinville Family Dentistry",
-      "pushed": false
+      "businessName": "W F Watson",
+      "pushed": true
     },
     {
-      "businessName": "Pete's Auto Service",
-      "pushed": false
+      "businessName": "Barber Law Offices",
+      "pushed": true
     },
     {
-      "businessName": "Exton Collision",
-      "pushed": false
+      "businessName": "Law Office of William J. Shehwen III",
+      "pushed": true
     },
     {
-      "businessName": "Deptford Cuts and Color s",
-      "pushed": false
+      "businessName": "Law Office of Eric Ring",
+      "pushed": true
     },
     {
-      "businessName": "Surfs Up Salon",
-      "pushed": false
+      "businessName": "Ezra's Auto Repair & Collision",
+      "pushed": true
     },
     {
-      "businessName": "John's Tree Service",
-      "pushed": false
+      "businessName": "West Automotive & Tire",
+      "pushed": true
     },
     {
-      "businessName": "Bill Johnston Landscape Co.",
-      "pushed": false
+      "businessName": "Angelo's Automotive Service",
+      "pushed": true
     },
     {
-      "businessName": "Gamble's Newark Florist",
-      "pushed": false
+      "businessName": "Frankford Auto & Truck",
+      "pushed": true
+    },
+    {
+      "businessName": "Fante's Auto Body Inc",
+      "pushed": true
+    },
+    {
+      "businessName": "Pep Boys",
+      "pushed": true
+    },
+    {
+      "businessName": "Premier Auto & Tire",
+      "pushed": true
+    },
+    {
+      "businessName": "Shellman's Auto Body",
+      "pushed": true
+    },
+    {
+      "businessName": "Fred Poehner Automotive Services",
+      "pushed": true
+    },
+    {
+      "businessName": "Cooper's Auto Detailing",
+      "pushed": true
+    },
+    {
+      "businessName": "Rich's Auto Repair",
+      "pushed": true
+    },
+    {
+      "businessName": "Johnny's Auto",
+      "pushed": true
+    },
+    {
+      "businessName": "McCullough's Auto Repair",
+      "pushed": true
+    },
+    {
+      "businessName": "Pat's Superior Auto Repair",
+      "pushed": true
+    },
+    {
+      "businessName": "Lampert's Garage",
+      "pushed": true
+    },
+    {
+      "businessName": "Cullen's Auto Repaair",
+      "pushed": true
+    },
+    {
+      "businessName": "CleanPRO Detail Center",
+      "pushed": true
+    },
+    {
+      "businessName": "Autoshow Collision Center",
+      "pushed": true
+    },
+    {
+      "businessName": "Eagle Eye Collision",
+      "pushed": true
+    },
+    {
+      "businessName": "Tint City",
+      "pushed": true
+    },
+    {
+      "businessName": "Harbor Auto Repair",
+      "pushed": true
+    },
+    {
+      "businessName": "Get It Done Towing & Recovery",
+      "pushed": true
+    },
+    {
+      "businessName": "Morgans Auto",
+      "pushed": true
+    },
+    {
+      "businessName": "Sheridan Auto Body",
+      "pushed": true
+    },
+    {
+      "businessName": "B&B Auto Repair",
+      "pushed": true
+    },
+    {
+      "businessName": "Tip Top Toe Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Pearl Nail Spa",
+      "pushed": true
+    },
+    {
+      "businessName": "Starlight Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "The Nail Stop",
+      "pushed": true
+    },
+    {
+      "businessName": "Tantini Tanning Bar",
+      "pushed": true
+    },
+    {
+      "businessName": "Red Lotus Spa & Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Entity Nails & Spa",
+      "pushed": true
+    },
+    {
+      "businessName": "Kim's Nail Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "Kim's Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "BeBe Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Best Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Viva Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "Brinton Lake Nails & Spa",
+      "pushed": true
+    },
+    {
+      "businessName": "TMJ Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Trilogy Salon & Day Spa",
+      "pushed": true
+    },
+    {
+      "businessName": "Diamond Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Mary's Nail Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "Rosmetta Salon & Spa",
+      "pushed": true
+    },
+    {
+      "businessName": "Nail Works",
+      "pushed": true
+    },
+    {
+      "businessName": "Rani Fashion & Beauty Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "L&K Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Lotus Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "East Bradford Nail & Day Spa",
+      "pushed": true
+    },
+    {
+      "businessName": "Annie's Nails",
+      "pushed": true
+    },
+    {
+      "businessName": "Nail Expo",
+      "pushed": true
+    },
+    {
+      "businessName": "Orangetheory Fitness",
+      "pushed": true
+    },
+    {
+      "businessName": "The Awareness Center",
+      "pushed": true
+    },
+    {
+      "businessName": "Fusion Fitness",
+      "pushed": true
+    },
+    {
+      "businessName": "Empowered Yoga",
+      "pushed": true
+    },
+    {
+      "businessName": "Rowan Fitness Center",
+      "pushed": true
+    },
+    {
+      "businessName": "L&M Studio",
+      "pushed": true
+    },
+    {
+      "businessName": "Planet Fitness",
+      "pushed": true
+    },
+    {
+      "businessName": "Jack's Kick boxing Gym",
+      "pushed": true
+    },
+    {
+      "businessName": "Royal Fitness",
+      "pushed": true
+    },
+    {
+      "businessName": "Positive Force Karate",
+      "pushed": true
+    },
+    {
+      "businessName": "Retro Fitness",
+      "pushed": true
+    },
+    {
+      "businessName": "Virtua Health & Wellness Center - Moorestown",
+      "pushed": true
+    },
+    {
+      "businessName": "Body Dynamics Fitness Center",
+      "pushed": true
+    },
+    {
+      "businessName": "Club Pilates",
+      "pushed": true
+    },
+    {
+      "businessName": "Terrignos Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Las Alondras Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Hong Kong Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Eli's Pasteleria Bakery Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "Cakes & Candies By Maryellen",
+      "pushed": true
+    },
+    {
+      "businessName": "Bakery 502",
+      "pushed": true
+    },
+    {
+      "businessName": "Ramona Susan's Bake Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "New June Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Moon Star Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Universal Bread Bakers",
+      "pushed": true
+    },
+    {
+      "businessName": "McMillan's Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Fractured Prune",
+      "pushed": true
+    },
+    {
+      "businessName": "Sweet Spice Bake Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "Ry's Bagels",
+      "pushed": true
+    },
+    {
+      "businessName": "New York Bakery",
+      "pushed": true
+    },
+    {
+      "businessName": "Pasteles Rojas",
+      "pushed": true
+    },
+    {
+      "businessName": "Cranberry Blossom Floral Co",
+      "pushed": true
+    },
+    {
+      "businessName": "Zena Florist",
+      "pushed": true
+    },
+    {
+      "businessName": "Garden of Eden Flower Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "Mailbag Design & Copy Center",
+      "pushed": true
+    },
+    {
+      "businessName": "Sunny Hill Products",
+      "pushed": true
     },
     {
       "businessName": "The UPS Store",
-      "pushed": false
+      "pushed": true
     }
   ]
 }

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Get your AI call free | CallTwin by HSW365</title>
+<meta name="description" content="Drop in your website. In seconds our AI calls your phone as your business's receptionist so you can hear it for yourself. Free.">
+<meta name="theme-color" content="#06070b">
+<link rel="canonical" href="https://hsw365.github.io/calltwin/call.html">
+<meta property="og:title" content="Hear your own AI receptionist. Free call in seconds.">
+<meta property="og:description" content="Enter your business website and your cell. CallTwin's AI calls you, already trained on your business.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20rx%3D%278%27%20fill%3D%27%2322d3ee%27/%3E%3Ctext%20x%3D%2732%27%20y%3D%2747%27%20font-family%3D%27Arial%27%20font-weight%3D%27900%27%20font-size%3D%2744%27%20text-anchor%3D%27middle%27%20fill%3D%27%230a0a0f%27%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="site/fonts/barlow-condensed-latin-900-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="site/fonts/inter-latin-wght-normal.woff2" crossorigin>
+<style>
+@font-face{font-family:"Barlow Condensed";font-weight:900;font-display:swap;src:url(site/fonts/barlow-condensed-latin-900-normal.woff2) format("woff2")}
+@font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(site/fonts/inter-latin-wght-normal.woff2) format("woff2")}
+:root{--bg:#06070b;--panel:#0d0f16;--line:#1d2130;--ink:#f4f6fb;--mute:#9aa1b4;--dim:#5f6578;--acc:#22d3ee;--acc2:#7c3aed;--ok:#34d399;--bad:#fb7185}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100svh;overflow-x:hidden}
+a{color:inherit}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(900px 520px at 85% -10%,rgba(34,211,238,.18),transparent 60%),radial-gradient(700px 500px at -10% 110%,rgba(124,58,237,.18),transparent 60%),var(--bg)}
+.bg:after{content:"";position:absolute;inset:0;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{width:min(1120px,100% - 32px);margin:auto}
+header{padding:20px 0}
+header .wrap{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;gap:10px;align-items:center;text-decoration:none;font-weight:800;letter-spacing:.01em}
+.logo i{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--acc);color:#06070b;font:900 22px "Barlow Condensed";font-style:normal}
+.logo small{display:block;font-weight:500;color:var(--dim);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+header nav a{color:var(--mute);text-decoration:none;font-size:14px}
+header nav a:hover{color:var(--ink)}
+
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:36px 0 72px}
+.kicker{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);border:1px solid rgba(34,211,238,.35);padding:6px 12px;border-radius:99px;background:rgba(34,211,238,.06)}
+.kicker b{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px var(--acc);animation:blink 1.6s infinite}
+h1{font:900 clamp(56px,9vw,112px)/.86 "Barlow Condensed",Impact,sans-serif;text-transform:uppercase;letter-spacing:-.01em;margin:22px 0 22px}
+h1 em{font-style:normal;color:transparent;-webkit-text-stroke:2px var(--acc);text-shadow:0 0 40px rgba(34,211,238,.35)}
+.lede{font-size:clamp(17px,2vw,20px);color:var(--mute);max-width:33ch}
+.lede strong{color:var(--ink);font-weight:600}
+.proof{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap}
+.proof div{border-left:2px solid var(--line);padding-left:14px}
+.proof b{display:block;font:900 30px/1 "Barlow Condensed";color:var(--ink)}
+.proof span{font-size:13px;color:var(--dim)}
+
+.card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 40px 120px -40px rgba(34,211,238,.35),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(8px)}
+.card:before{content:"";position:absolute;inset:-1px;border-radius:23px;padding:1px;background:linear-gradient(140deg,rgba(34,211,238,.6),transparent 35%,transparent 70%,rgba(124,58,237,.5));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.card h2{font:900 30px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.01em}
+.card .sub{color:var(--dim);font-size:14px;margin:6px 0 20px}
+label{display:block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:14px 0 6px}
+input[type=text],input[type=tel],input[type=email],input[type=url]{width:100%;background:#080a10;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:14px 15px;font:inherit;font-size:16px;transition:border-color .2s,box-shadow .2s}
+input::placeholder{color:#454b5c}
+input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 4px rgba(34,211,238,.12)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.consent{text-transform:none;letter-spacing:0;font-weight:400;display:flex;gap:11px;align-items:flex-start;margin:18px 0 0;font-size:12px;line-height:1.5;color:var(--dim);cursor:pointer}
+.consent input{flex:none;width:20px;height:20px;margin-top:1px;accent-color:var(--acc)}
+.consent a{color:var(--mute)}
+.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+button{width:100%;margin-top:20px;border:0;border-radius:14px;padding:18px;font:900 22px/1 "Barlow Condensed";letter-spacing:.06em;text-transform:uppercase;color:#06070b;background:var(--acc);cursor:pointer;position:relative;overflow:hidden;box-shadow:0 14px 40px -12px rgba(34,211,238,.8);transition:transform .15s}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(1px)}
+button:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:sheen 3.2s infinite}
+button[disabled]{opacity:.6;cursor:wait}
+.err{color:var(--bad);font-size:14px;margin-top:12px;min-height:1px}
+
+.ringing{display:none;text-align:center;padding:16px 0 6px}
+.card.on form{display:none}.card.on .ringing{display:block}
+.phone{position:relative;width:96px;height:96px;margin:6px auto 22px;border-radius:50%;background:var(--acc);display:grid;place-items:center;animation:shake 1.1s infinite}
+.phone svg{width:42px;height:42px}
+.phone:before,.phone:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--acc);animation:ring 1.8s infinite}
+.phone:after{animation-delay:.9s}
+.ringing h3{font:900 34px/1 "Barlow Condensed";text-transform:uppercase}
+.ringing p{color:var(--mute);margin:10px auto 0;max-width:30ch}
+.steps{list-style:none;padding:0;margin:22px 0 0;text-align:left;display:grid;gap:10px}
+.steps li{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--dim);transition:color .3s}
+.steps li i{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:12px}
+.steps li.done{color:var(--ink)}.steps li.done i{background:var(--ok);border-color:var(--ok);color:#06070b}
+.steps li.now{color:var(--ink)}.steps li.now i{border-color:var(--acc);border-top-color:transparent;animation:spin .8s linear infinite}
+
+.how{border-top:1px solid var(--line);padding:64px 0 80px}
+.how h2{font:900 clamp(38px,5vw,56px)/.95 "Barlow Condensed";text-transform:uppercase;margin-bottom:34px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid div{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.grid b{font:900 44px/1 "Barlow Condensed";color:var(--acc)}
+.grid h3{font-size:18px;margin:10px 0 6px}
+.grid p{color:var(--mute);font-size:15px}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{color:var(--mute)}
+
+@keyframes blink{50%{opacity:.3}}
+@keyframes sheen{0%,60%{left:-60%}100%{left:140%}}
+@keyframes ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.9);opacity:0}}
+@keyframes shake{0%,40%,100%{transform:rotate(0)}5%,15%,25%{transform:rotate(-12deg)}10%,20%,30%{transform:rotate(12deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@media (max-width:880px){.hero{grid-template-columns:1fr;gap:34px;padding-top:12px}.grid{grid-template-columns:1fr}header nav{display:none}}
+@media (max-width:440px){.row{grid-template-columns:1fr;gap:0}.card{padding:22px}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<header><div class="wrap">
+  <a class="logo" href="./"><i>C</i><span>CallTwin<small>by HSW365 Media</small></span></a>
+  <nav><a href="./">How CallTwin works</a></nav>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <span class="kicker"><b></b>Live demo · free</span>
+      <h1>Hear your<br>AI receptionist.<br><em>Right now.</em></h1>
+      <p class="lede">Drop in your website and your cell. In seconds our AI <strong>calls you as your business's receptionist</strong>, already trained on what you do. Play the customer. Hear exactly what your callers would.</p>
+      <div class="proof">
+        <div><b>~30 sec</b><span>until your phone rings</span></div>
+        <div><b>24/7</b><span>answers every call</span></div>
+        <div><b>$0</b><span>to try it</span></div>
+      </div>
+    </div>
+
+    <div class="card" id="card">
+      <form id="f" novalidate>
+        <h2>Get your AI call</h2>
+        <p class="sub">Takes 20 seconds. No card.</p>
+        <div class="row">
+          <div><label for="name">Your name</label><input id="name" name="name" type="text" autocomplete="given-name" placeholder="Joe" required></div>
+          <div><label for="business">Business name</label><input id="business" name="business" type="text" autocomplete="organization" placeholder="Ark Plumbing" required></div>
+        </div>
+        <label for="website">Business website</label>
+        <input id="website" name="website" type="url" inputmode="url" autocomplete="url" placeholder="yourbusiness.com">
+        <div class="row">
+          <div><label for="phone">Cell to call</label><input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(856) 555-0123" required></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></div>
+        </div>
+        <div class="hp" aria-hidden="true"><input name="company_url_2" tabindex="-1" autocomplete="off"></div>
+        <label class="consent"><input id="consent" type="checkbox"><span id="consentText">By tapping Call me now, I agree that HSW365 Media (CallTwin) may call me at the number above using an AI-generated voice, now and to follow up about CallTwin and QUEENEE. Consent is not a condition of any purchase. I can say "stop" on any call or reply STOP to opt out.</span></label>
+        <button id="go" type="submit">Call me now</button>
+        <p class="err" id="err" role="alert"></p>
+      </form>
+
+      <div class="ringing" aria-live="polite">
+        <div class="phone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#06070b"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.3.2 2.5.57 3.6a1 1 0 0 1-.25 1z"/></svg></div>
+        <h3 id="rtitle">Calling you now</h3>
+        <p id="rtext">Pick up. Pretend you're a customer calling <span id="rbiz">your business</span>.</p>
+        <ul class="steps">
+          <li class="done" id="s1"><i>✓</i>Request received</li>
+          <li class="now" id="s2"><i></i>Reading your website</li>
+          <li id="s3"><i></i>Dialing your cell</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="how">
+    <h2>What happens on the call</h2>
+    <div class="grid">
+      <div><b>01</b><h3>It already knows you</h3><p>The AI reads your website before it dials, so it answers like it works at your front desk.</p></div>
+      <div><b>02</b><h3>You play the customer</h3><p>Describe a job, ask about hours or service area. It takes the name, number and job like a pro.</p></div>
+      <div><b>03</b><h3>Go live the same day</h3><p>Like it? You get the sign-up link by email. Keep your number, forward it to CallTwin, done.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <span>CallTwin is a product of HSW365 Media LLC.</span>
+  <span><a href="https://calltwin.onrender.com/privacy" target="_blank" rel="noopener">Privacy</a> · <a href="https://calltwin.onrender.com/terms" target="_blank" rel="noopener">Terms</a></span>
+</div></footer>
+
+<script>
+const API = "https://calltwin.onrender.com/api/demo-call";
+fetch("https://calltwin.onrender.com/health").catch(() => {});
+fetch(API + "/consent").then(r => r.json()).then(j => { if (j.text) document.getElementById("consentText").textContent = j.text; }).catch(() => {});
+const $ = (id) => document.getElementById(id);
+const p = new URLSearchParams(location.search);
+for (const k of ["name", "business", "website", "phone", "email"]) if (p.get(k)) $(k).value = p.get(k);
+
+$("phone").addEventListener("input", (e) => {
+  const d = e.target.value.replace(/\D/g, "").replace(/^1/, "").slice(0, 10);
+  e.target.value = d.length > 6 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0,3)}) ${d.slice(3)}` : d;
+});
+
+$("f").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("err"); err.textContent = "";
+  const body = Object.fromEntries(new FormData(e.target));
+  body.consent = $("consent").checked;
+  if (!body.name.trim() || !body.business.trim()) return err.textContent = "Enter your name and your business name.";
+  if (body.phone.replace(/\D/g, "").replace(/^1/, "").length !== 10) return err.textContent = "Enter a 10-digit US cell number.";
+  if (!body.consent) return err.textContent = "Check the box so we're allowed to call you.";
+  const btn = $("go"); btn.disabled = true; btn.textContent = "Starting your call…";
+  try {
+    const r = await fetch(API + "/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok) throw new Error(j.error || "Something went wrong. Try again in a minute.");
+    $("rbiz").textContent = body.business.trim();
+    $("card").classList.add("on");
+    setTimeout(() => { $("s2").className = "done"; $("s2").querySelector("i").textContent = "✓"; $("s3").className = "now"; }, 3500);
+    setTimeout(() => { $("s3").className = "done"; $("s3").querySelector("i").textContent = "✓"; $("rtitle").textContent = "Your phone is ringing"; }, 9000);
+  } catch (x) {
+    err.textContent = x.message; btn.disabled = false; btn.textContent = "Call me now";
+  }
+});
+</script>
+</body>
+</html>

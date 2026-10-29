@@ -47,7 +47,9 @@ function clientFallbackXml(c, callerId) {
   const d10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
   const lines = [c.businessPhone, ...(c.forwardedLines || [])].map(d10);
   const loops = !!d10(c.ownerCell) && lines.includes(d10(c.ownerCell));
-  const dial = c.ownerCell && !loops ? `<Dial timeout="20" answerOnBridge="true" callerId="${xml(callerId)}">${xml(c.ownerCell)}</Dial>` : "";
+  // statusCallback tells CallTwin when the owner picks up, so only calls nobody answered become "missed call" alerts.
+  const cb = xml(BASE() + "/api/clients/owner-answered?c=" + c._id);
+  const dial = c.ownerCell && !loops ? `<Dial timeout="20" answerOnBridge="true" callerId="${xml(callerId)}"><Number statusCallbackEvent="answered" statusCallback="${cb}" statusCallbackMethod="POST">${xml(c.ownerCell)}</Number></Dial>` : "";
   return `<?xml version="1.0" encoding="UTF-8"?><Response>${dial}${vm}</Response>`;
 }
 
@@ -79,9 +81,17 @@ function aiDroppedCall(p) {
 const voiceAiOff = (to) => String(process.env.VOICE_AI_OFF_NUMBERS === undefined ? "8565943303" : process.env.VOICE_AI_OFF_NUMBERS)
   .split(",").map((n) => n.replace(/\D/g, "").slice(-10)).filter(Boolean).includes(String(to || "").replace(/\D/g, "").slice(-10));
 
-async function handleClientCall(c, from, to, res) {
+// Every call that goes to "ring the owner, then voicemail" is logged as a possible missed call right away.
+// It is cleared if the owner answers, upgraded if the caller leaves a voicemail, and otherwise emailed as a missed call.
+function trackMissed(c, sid, from) {
+  if (!sid) return;
+  require("./clients").trackMissedCall(c, sid, from).catch((e) => console.error("[inbound] missed-call log:", e.message));
+}
+
+async function handleClientCall(c, from, to, res, sid) {
   if (voiceAiOff(to) || !c.inService() || !c.aiEnabled || !c.elPhoneId) {
     console.log(`[inbound] client ${c.businessName}: ring owner (inService=${c.inService()} ai=${c.aiEnabled} sip=${!!c.elPhoneId})`);
+    trackMissed(c, sid, from);
     return res.type("text/xml").send(clientFallbackXml(c, to));
   }
   const d10 = String(to).replace(/\D/g, "").slice(-10);
@@ -108,7 +118,7 @@ async function handleInbound(req, res) {
   } catch (e) { console.error("[inbound] signup line:", e.message); }
   try {
     const c = await require("./clients").clientForNumber(to);
-    if (c) return handleClientCall(c, from, to, res);
+    if (c) return handleClientCall(c, from, to, res, p.CallSid);
   } catch (e) { console.error("[inbound] client lookup:", e.message); }
   if (voiceAiOff(to)) return fallback(res, "no AI on this line: ring the owner, then voicemail", to);
   const agentId = agentFor(to);
@@ -164,7 +174,7 @@ router.post("/after-dial", async (req, res) => {
   }
   if (p.c) {
     const c = await require("../models/Client").findById(p.c).catch(() => null);
-    if (c) return res.type("text/xml").send(clientFallbackXml(c, p.To || ""));
+    if (c) { trackMissed(c, p.CallSid, p.From); return res.type("text/xml").send(clientFallbackXml(c, p.To || "")); }
   }
   await fallback(res, "SIP leg " + (dropped ? "dropped at once" : st || "failed"), p.To || "");
 });

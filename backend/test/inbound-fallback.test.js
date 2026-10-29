@@ -28,7 +28,7 @@ test("instant AI drop rings the owner then takes a voicemail", async () => {
   try {
     markHandoff("CA-drop");
     const xml = await post(port, "/api/inbound/after-dial?c=abc123", { CallSid: "CA-drop", DialCallStatus: "completed", DialCallDuration: "0", To: "+18565550133" });
-    assert.match(xml, /<Dial[^>]*>\+12015550111<\/Dial>/);
+    assert.match(xml, /<Dial[^>]*><Number[^>]*>\+12015550111<\/Number><\/Dial>/);
     assert.match(xml, /<Record /);
     assert.doesNotMatch(xml, /^<\?xml[^>]*><Response><Hangup\/><\/Response>$/);
   } finally { srv.close(); }
@@ -60,7 +60,7 @@ test("New Ark's line never dials the AI: owner's cell, then voicemail", async ()
   try {
     const off = await post(srv.address().port, "/api/inbound/voice", { CallSid: "CA-na", From: "+19085550100", To: "+18565943303" });
     assert.doesNotMatch(off, /<Sip>/);
-    assert.match(off, /<Dial[^>]*>\+12015550111<\/Dial>/);
+    assert.match(off, /<Dial[^>]*><Number[^>]*>\+12015550111<\/Number><\/Dial>/);
     assert.match(off, /<Record /);
     const on = await post(srv.address().port, "/api/inbound/voice", { CallSid: "CA-other", From: "+19085550100", To: "+18565550133" });
     assert.match(on, /<Sip>/);

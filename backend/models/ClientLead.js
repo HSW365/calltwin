@@ -17,6 +17,13 @@ const clientLeadSchema = new mongoose.Schema(
     conversationId: String,
     status: { type: String, enum: ["new", "contacted", "booked", "done", "lost"], default: "new" },
     notified: { type: Boolean, default: false },
+    // Missed-call / voicemail delivery tracking: the alert is kept so a failed email can be re-sent later.
+    callSid: { type: String, index: true },
+    from: String,
+    ownerAnswered: { type: Boolean, default: false },
+    alertBody: String,
+    alertAttempts: { type: Number, default: 0 },
+    lastAlertError: String,
   },
   { timestamps: true }
 );

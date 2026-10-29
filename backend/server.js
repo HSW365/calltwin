@@ -76,6 +76,7 @@ async function start() {
   await mongoose.connect(mongoUri);
   console.log("[server] Connected to MongoDB.");
   startScheduler();
+  require("./routes/clients").startAlertSweeper();
   startEstimateScheduler();
   app.listen(PORT, () => {
     console.log(`[server] CallTwin listening on ${PORT}`);

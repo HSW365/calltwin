@@ -326,21 +326,110 @@ router.post("/voicemail", async (req, res) => {
   if (!p.RecordingUrl || !p.c) return;
   const c = await Client.findById(p.c).catch(() => null);
   if (!c) return;
+  // A voicemail turns the call's "missed call" entry into a voicemail job, so the owner gets one alert, not two.
+  let lead = p.CallSid ? await ClientLead.findOne({ client: c._id, callSid: p.CallSid }).catch(() => null) : null;
+  if (lead) { lead.source = "voicemail"; await lead.save().catch(() => {}); }
   // Write the voicemail out and pull the job details so the alert reads like a ticket (name, number, address, service).
   const vm = require("../services/voicemailNotes");
   const n = await vm.notesFor(p.RecordingUrl);
-  const lead = await ClientLead.create({
-    client: c._id, source: "voicemail",
+  const fields = {
+    client: c._id, source: "voicemail", callSid: p.CallSid || undefined, from: p.From || "",
     name: n.name || "Voicemail caller",
     phone: n.phone ? vm.fmtPhone(n.phone) : (p.From || ""),
     address: n.address || "",
     service: n.service || "",
     summary: `${n.service ? n.service + ". " : ""}Voicemail (${p.RecordingDuration || "?"}s)${n.transcript ? `: "${n.transcript.slice(0, 600)}"` : ""} Listen: ${p.RecordingUrl}.mp3`,
-  });
-  const sent = await alertOwner(c, vm.alertText(c.businessName, p.From, p.RecordingUrl, n));
-  lead.notified = sent.texted || sent.emailed;
+    alertBody: vm.alertText(c.businessName, p.From, p.RecordingUrl, n),
+  };
+  if (lead) lead.set(fields); else lead = new ClientLead(fields);
   await lead.save();
+  await deliverLead(c, lead);
   require("../estimate/service").fromCallTwinLead(c, lead);
+});
+
+// ---------- missed calls + guaranteed delivery ----------
+/** Log a call that is ringing the owner. If nobody answers and no voicemail is left, it is emailed as a missed call. */
+async function trackMissedCall(c, sid, from) {
+  if (!sid || !c) return null;
+  const exists = await ClientLead.findOne({ client: c._id, callSid: sid });
+  if (exists) return exists;
+  return ClientLead.create({ client: c._id, source: "missed-call", callSid: sid, from: from || "", phone: from || "", name: "Missed caller", summary: `Missed call from ${from || "unknown number"} (no voicemail left).` });
+}
+// SignalWire: the owner's cell picked up -> that call was handled, no missed-call alert.
+router.post("/owner-answered", async (req, res) => {
+  res.status(204).end();
+  const p = { ...req.query, ...req.body };
+  const sid = p.ParentCallSid || p.CallSid;
+  if (!sid) return;
+  await ClientLead.updateOne({ callSid: sid, source: "missed-call" }, { $set: { ownerAnswered: true, notified: true, status: "contacted" } }).catch(() => {});
+});
+
+function missedText(c, from) {
+  const vm = require("../services/voicemailNotes");
+  const d = String(from || "").replace(/\D/g, "").slice(-10);
+  const lines = [`Missed call for ${c.businessName}: ${vm.fmtPhone(from) || "unknown number"}`, "They hung up without leaving a voicemail.", `Time: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`];
+  if (d.length === 10) lines.push(`Call back: tel:${d}`);
+  return lines.join("\n");
+}
+function bodyFor(c, lead) {
+  if (lead.alertBody) return lead.alertBody;
+  if (lead.source === "missed-call") return missedText(c, lead.from || lead.phone);
+  // Older voicemail jobs saved before alerts were stored: rebuild the ticket from what was saved.
+  const rec = (String(lead.summary || "").match(/Listen: (\S+?)\.mp3/) || [])[1] || "";
+  const said = (String(lead.summary || "").match(/: "([\s\S]*)"/) || [])[1];
+  return require("../services/voicemailNotes").alertText(c.businessName, lead.phone, rec, { name: lead.name && lead.name !== "Voicemail caller" ? lead.name : "", phone: lead.phone, address: lead.address, service: lead.service, transcript: said });
+}
+/** Send one lead's alert and record the result. */
+async function deliverLead(c, lead) {
+  const body = bodyFor(c, lead);
+  if (lead.source === "missed-call" && !lead.alertBody) lead.alertBody = body;
+  const sent = await alertOwner(c, body).catch(() => ({ texted: false, emailed: false }));
+  lead.alertAttempts = (lead.alertAttempts || 0) + 1;
+  lead.notified = !!(sent.texted || sent.emailed);
+  lead.lastAlertError = lead.notified ? "" : (mailer().status().last_error || {}).message || "not delivered";
+  await lead.save().catch((e) => console.error("[clients] lead save:", e.message));
+  console.log(`[alerts] ${lead.source} ${lead._id} for ${c.businessName}: ${lead.notified ? `delivered (email=${sent.emailed} text=${sent.texted})` : `NOT delivered, try ${lead.alertAttempts}`}`);
+  return lead.notified;
+}
+/**
+ * Runs every 2 minutes: sends missed-call alerts once the caller had time to leave a voicemail, and re-sends any
+ * voicemail/missed-call alert that failed (up to 8 tries over 3 days), so no job is ever silently dropped.
+ */
+let sweeping = false;
+async function deliverPending() {
+  if (sweeping) return;
+  sweeping = true;
+  try {
+    const now = Date.now();
+    const leads = await ClientLead.find({
+      notified: false, ownerAnswered: { $ne: true }, alertAttempts: { $lt: 8 },
+      source: { $in: ["voicemail", "missed-call"] }, createdAt: { $gt: new Date(now - 3 * 864e5) },
+    }).sort({ createdAt: 1 }).limit(25);
+    for (const lead of leads) {
+      const age = now - lead.createdAt.getTime();
+      // Missed calls wait 5 minutes (time to leave a voicemail); voicemails are only retried after their first try failed.
+      if (lead.source === "missed-call" && age < 5 * 60e3) continue;
+      if (lead.source === "voicemail" && !(lead.alertAttempts > 0) && age < 10 * 60e3) continue;
+      if (lead.alertAttempts > 0 && now - lead.updatedAt.getTime() < Math.min(60, 5 * 2 ** (lead.alertAttempts - 1)) * 60e3) continue;
+      const c = await Client.findById(lead.client).catch(() => null);
+      if (c) await deliverLead(c, lead);
+    }
+  } catch (e) { console.error("[alerts] sweep:", e.message); }
+  finally { sweeping = false; }
+}
+function startAlertSweeper() {
+  setTimeout(deliverPending, 30e3);
+  setInterval(deliverPending, 2 * 60e3).unref();
+}
+
+// Ops: CallTwin alert delivery status (no addresses or secrets). Protected by NEWARK_HOOK_KEY.
+router.get("/alert-status", async (req, res) => {
+  const key = process.env.NEWARK_HOOK_KEY;
+  if (!key || (req.get("x-newark-key") || req.query.k) !== key) return res.status(401).json({ ok: false });
+  const since = new Date(Date.now() - 7 * 864e5);
+  const leads = await ClientLead.find({ source: { $in: ["voicemail", "missed-call"] }, createdAt: { $gt: since } }).sort({ createdAt: -1 }).limit(50)
+    .select("source name phone service notified ownerAnswered alertAttempts lastAlertError createdAt");
+  res.json({ ok: true, mailer: mailer().status(), leads });
 });
 
 // Ops check: run the newest voicemail on the account through the job-ticket step and show the result.
@@ -473,4 +562,4 @@ async function clientForNumber(to) {
   return Client.findOne({ aiNumber: "+1" + d });
 }
 
-module.exports = { router, clientForNumber, stripeEvent, alertOwner };
+module.exports = { router, clientForNumber, stripeEvent, alertOwner, trackMissedCall, deliverPending, startAlertSweeper };

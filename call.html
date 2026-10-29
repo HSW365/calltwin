@@ -62,6 +62,7 @@ button:hover{transform:translateY(-1px)}
 button:active{transform:translateY(1px)}
 button:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:sheen 3.2s infinite}
 button[disabled]{opacity:.6;cursor:wait}
+.skip{display:block;text-align:center;margin-top:14px;font-size:14px;font-weight:600;color:var(--acc);text-decoration:none}.skip:hover{text-decoration:underline}
 .err{color:var(--bad);font-size:14px;margin-top:12px;min-height:1px}
 
 .ringing{display:none;text-align:center;padding:16px 0 6px}
@@ -137,6 +138,7 @@ footer a{color:var(--mute)}
         <label class="consent"><input id="consent" type="checkbox"><span id="consentText">By tapping Call me now, I agree that HSW365 Media (CallTwin) may call me at the number above using an AI-generated voice, now and to follow up about CallTwin and QUEENEE. Consent is not a condition of any purchase. I can say "stop" on any call or reply STOP to opt out.</span></label>
         <button id="go" type="submit">Call me now</button>
         <p class="err" id="err" role="alert"></p>
+        <a class="skip" href="signup.html?src=call">Already sold? Skip the demo and sign up now →</a>
       </form>
 
       <div class="ringing" aria-live="polite">

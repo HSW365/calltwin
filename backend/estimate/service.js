@@ -9,7 +9,7 @@ const { applyRules, computeTotals, autoFees, money } = require("./pricing");
 const { analyzeJob } = require("./ai");
 
 const SITE = () => (process.env.CALLTWIN_SITE || "https://hsw365.github.io/calltwin").replace(/\/$/, "");
-const TRIAL_DAYS = () => Number(process.env.ESTIMATE_TRIAL_DAYS || 14);
+const TRIAL_DAYS = () => Number(process.env.ESTIMATE_TRIAL_DAYS || 3);
 const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];
 const { PROMOS, promoFor } = require("../services/promos");
 /** Apply a business's custom deal to the Estimate add-on once. estimate:"comp" = free; else trialDays starts a trial. */

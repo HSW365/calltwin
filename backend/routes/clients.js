@@ -27,7 +27,7 @@ router.use((req, res, next) => {
 });
 
 const PRICE_CENTS = Number(process.env.CALLTWIN_PRICE_CENTS || 9900);
-const TRIAL_DAYS = Number(process.env.CALLTWIN_TRIAL_DAYS || 14);
+const TRIAL_DAYS = Number(process.env.CALLTWIN_TRIAL_DAYS || 3);
 const SETUP_CENTS = Number(process.env.CALLTWIN_SETUP_CENTS || 50000); // one-time setup fee, paid at signup
 const SITE = (process.env.CALLTWIN_SITE || "https://hsw365.github.io/calltwin").replace(/\/$/, "");
 const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];

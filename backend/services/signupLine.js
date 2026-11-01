@@ -40,7 +40,7 @@ async function saveCfg(cfg) {
 function pricing() {
   const setup = Number(process.env.CALLTWIN_SETUP_CENTS || 50000) / 100;
   const monthly = Number(process.env.CALLTWIN_PRICE_CENTS || 9900) / 100;
-  const days = Number(process.env.CALLTWIN_TRIAL_DAYS || 14);
+  const days = Number(process.env.CALLTWIN_TRIAL_DAYS || 3);
   const est = Number(process.env.ESTIMATE_ADDON_PRICE_CENTS || 4900) / 100;
   return { setup, monthly, days, est };
 }

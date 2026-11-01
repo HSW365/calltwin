@@ -55,7 +55,7 @@ services:
       - key: ESTIMATE_ADDON_PRICE_CENTS
         value: "4900"
       - key: ESTIMATE_TRIAL_DAYS
-        value: "14"
+        value: "3"
       - key: SENDGRID_API_KEY
         sync: false
       - key: ESTIMATE_FROM_EMAIL

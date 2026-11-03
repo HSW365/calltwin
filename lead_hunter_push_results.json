@@ -1,5 +1,214 @@
 {
   "calltwin_token_configured": true,
   "calltwin_campaign_configured": true,
-  "results": []
+  "results": [
+    {
+      "businessName": "Al's Auto Care",
+      "pushed": true
+    },
+    {
+      "businessName": "Deuces Barbershop",
+      "pushed": true
+    },
+    {
+      "businessName": "The Classics Unisex Salon and Hub",
+      "pushed": true
+    },
+    {
+      "businessName": "Star Hair Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "Annie\u2019s Studio Hair & Beauty Salon",
+      "pushed": true
+    },
+    {
+      "businessName": "Holly's Hair Studio",
+      "pushed": true
+    },
+    {
+      "businessName": "J Stlyz",
+      "pushed": true
+    },
+    {
+      "businessName": "Maxamillion's Gentlemen's Quarters Barbor Parlor",
+      "pushed": true
+    },
+    {
+      "businessName": "House of Kings",
+      "pushed": true
+    },
+    {
+      "businessName": "Nubian African Hair Brading",
+      "pushed": true
+    },
+    {
+      "businessName": "House Of Beauty",
+      "pushed": true
+    },
+    {
+      "businessName": "Thee Essenze",
+      "pushed": true
+    },
+    {
+      "businessName": "Mitchell's Hair Situations",
+      "pushed": true
+    },
+    {
+      "businessName": "Cost Cutters",
+      "pushed": true
+    },
+    {
+      "businessName": "Bill Spinnrakers Family Barber Shop and Styling",
+      "pushed": true
+    },
+    {
+      "businessName": "Just Cutt-N-Up",
+      "pushed": true
+    },
+    {
+      "businessName": "Aces of Fades Barber Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "Jen's Barber Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "Major League Cuts",
+      "pushed": true
+    },
+    {
+      "businessName": "Beauty Trends",
+      "pushed": true
+    },
+    {
+      "businessName": "Rose of Sharon Hair by Leiry",
+      "pushed": true
+    },
+    {
+      "businessName": "Exquisite Designs",
+      "pushed": true
+    },
+    {
+      "businessName": "215 Hair Lab",
+      "pushed": true
+    },
+    {
+      "businessName": "Shades Palace",
+      "pushed": true
+    },
+    {
+      "businessName": "Headlines by Ren\u00e9e",
+      "pushed": true
+    },
+    {
+      "businessName": "Aisha's Hair Braiding",
+      "pushed": true
+    },
+    {
+      "businessName": "Kim's Crab House",
+      "pushed": true
+    },
+    {
+      "businessName": "Happy House",
+      "pushed": true
+    },
+    {
+      "businessName": "Two J's Sandwich Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "Frank's Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "All Aboard Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "B\u00e1nh Street",
+      "pushed": true
+    },
+    {
+      "businessName": "Mezzogiorno",
+      "pushed": true
+    },
+    {
+      "businessName": "Mister Ricks Hoagies",
+      "pushed": true
+    },
+    {
+      "businessName": "Michael's Family Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "El Ranchero",
+      "pushed": true
+    },
+    {
+      "businessName": "China Kitchen",
+      "pushed": true
+    },
+    {
+      "businessName": "SuTao Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "Twelves Grill & Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "West Grove Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Spring Garden Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Wave Noodle",
+      "pushed": true
+    },
+    {
+      "businessName": "Jasmine Asian Cuisine",
+      "pushed": true
+    },
+    {
+      "businessName": "Miller\u2019s Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "Ruby Buffet",
+      "pushed": true
+    },
+    {
+      "businessName": "Siu Kee Duck House",
+      "pushed": true
+    },
+    {
+      "businessName": "Ming River Side Walk House",
+      "pushed": true
+    },
+    {
+      "businessName": "Xun Yu Si Kao",
+      "pushed": true
+    },
+    {
+      "businessName": "Red Kings B.B.Q. Bar",
+      "pushed": true
+    },
+    {
+      "businessName": "Nai Brother Chinese Sauerkraut Fish",
+      "pushed": true
+    },
+    {
+      "businessName": "Ocean Harmony",
+      "pushed": true
+    },
+    {
+      "businessName": "Orangetheory Fitness",
+      "pushed": true
+    }
+  ]
 }

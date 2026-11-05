@@ -293,6 +293,25 @@ async function ownerPin(req, res, next) {
   next();
 }
 router.use("/estimates-access", siteCors);
+// SignalWire <Dial action> for the 888 line: if the owner didn't pick up, text him the caller's number.
+router.post("/missed-call", async (req, res) => {
+  const p = { ...req.query, ...req.body };
+  const status = String(p.DialCallStatus || "").toLowerCase();
+  res.type("text/xml");
+  if (status === "completed" || status === "answered") return res.send("<Response><Hangup/></Response>");
+  res.send(`<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Matthew">Sorry we missed your call. New Ark will call you right back.</Say><Hangup/></Response>`);
+  try {
+    const owner = await ownerContact();
+    const to = e164((owner && owner.owner_cell) || process.env.NEWARK_OWNER_CELL);
+    if (!to) return console.error("[newark] missed-call: no owner cell");
+    const d = String(p.From || "").replace(/\D/g, "").slice(-10);
+    const caller = d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : (p.From || "unknown number");
+    const when = new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" });
+    await sendSms(to, `New Ark missed call: ${caller} at ${when}. Call them back${d.length === 10 ? `: tel:${d}` : "."}`);
+    console.log(`[newark] missed-call text sent (${status || "no status"})`);
+  } catch (e) { console.error("[newark] missed-call sms:", e.message); }
+});
+
 router.post("/estimates-access", ownerPin, async (req, res) => {
   try {
     const hit = await require("../estimate/routes").settingsBySite("newark");

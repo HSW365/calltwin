@@ -1,5 +1,106 @@
 {
   "calltwin_token_configured": true,
   "calltwin_campaign_configured": true,
-  "results": []
+  "results": [
+    {
+      "businessName": "Aquarius Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Los Machetes",
+      "pushed": true
+    },
+    {
+      "businessName": "Poke-Man",
+      "pushed": true
+    },
+    {
+      "businessName": "Gourmay Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Ackee Tree",
+      "pushed": true
+    },
+    {
+      "businessName": "Makeneh Kamara African Food Market",
+      "pushed": true
+    },
+    {
+      "businessName": "China House",
+      "pushed": true
+    },
+    {
+      "businessName": "M Kee",
+      "pushed": true
+    },
+    {
+      "businessName": "Los Parientes",
+      "pushed": true
+    },
+    {
+      "businessName": "Dominick's Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Sabor Latino",
+      "pushed": true
+    },
+    {
+      "businessName": "Crab House Bar & Grill",
+      "pushed": true
+    },
+    {
+      "businessName": "KimChi Korean BBQ",
+      "pushed": true
+    },
+    {
+      "businessName": "Best Food In Town",
+      "pushed": true
+    },
+    {
+      "businessName": "Taste of the Islands",
+      "pushed": true
+    },
+    {
+      "businessName": "El Combo Loco",
+      "pushed": true
+    },
+    {
+      "businessName": "Lou's Sandwich Shop",
+      "pushed": true
+    },
+    {
+      "businessName": "Trejo American & Mexican Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Nataly's",
+      "pushed": true
+    },
+    {
+      "businessName": "Miyako Japanese Sushi & Steakhouse",
+      "pushed": true
+    },
+    {
+      "businessName": "Bocca Coal Fired Bistro",
+      "pushed": true
+    },
+    {
+      "businessName": "Hot Bagels & More",
+      "pushed": true
+    },
+    {
+      "businessName": "The Original Red Zepi's South End Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Barrels of Margate",
+      "pushed": true
+    },
+    {
+      "businessName": "Primo Hoagies",
+      "pushed": true
+    }
+  ]
 }

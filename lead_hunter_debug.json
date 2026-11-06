@@ -2,109 +2,127 @@
   {
     "query": "auto repair shop",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:26:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:27:14"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:48:21Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:49:23"
   },
   {
     "query": "hair salon",
-    "status_code": 502,
-    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:27:17"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:48:21Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:50:05"
   },
   {
     "query": "nail salon",
-    "status_code": 502,
-    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:27:21"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:49:21Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:50:46"
   },
   {
     "query": "restaurant",
-    "status_code": 502,
-    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:27:24"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:50:24Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:51:34"
+  },
+  {
+    "query": "plumber",
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:50:24Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:52:10"
   },
   {
     "query": "electrician",
     "status_code": 502,
     "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:28:13"
+    "checked_at": "2026-11-06 19:52:13"
+  },
+  {
+    "query": "landscaping",
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:51:28Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:52:57"
   },
   {
     "query": "daycare center",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:28:05Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:29:41"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:52:33Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:53:34"
   },
   {
     "query": "tax preparer",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:29:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:30:15"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:52:33Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:54:07"
   },
   {
     "query": "insurance agency",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:29:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:30:58"
+    "status_code": 502,
+    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
+    "checked_at": "2026-11-06 19:54:10"
   },
   {
     "query": "real estate agent",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:30:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:31:40"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:53:33Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:54:43"
   },
   {
     "query": "law office",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:31:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:32:15"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:53:33Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:55:23"
   },
   {
     "query": "dentist",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:32:05Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:33:00"
+    "status_code": 502,
+    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
+    "checked_at": "2026-11-06 19:55:26"
   },
   {
     "query": "gym",
-    "status_code": 502,
-    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:33:03"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:54:36Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:56:00"
   },
   {
     "query": "bakery",
-    "status_code": 502,
-    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:33:07"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:55:35Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:56:42"
   },
   {
     "query": "florist",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:32:05Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:33:54"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:55:35Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:57:23"
   },
   {
     "query": "photographer",
-    "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:33:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:34:28"
+    "status_code": 502,
+    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
+    "checked_at": "2026-11-06 19:57:26"
   },
   {
     "query": "funeral home",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:34:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:35:04"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:56:36Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:58:00"
+  },
+  {
+    "query": "printing shop",
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:57:35Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:58:32"
   },
   {
     "query": "alterations tailor",
-    "status_code": 502,
-    "response_snippet": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F",
-    "checked_at": "2026-11-05 20:35:53"
+    "status_code": 200,
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:57:35Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:59:02"
   },
   {
     "query": "roofing contractor",
     "status_code": 200,
-    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-05T20:35:06Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
-    "checked_at": "2026-11-05 20:36:27"
+    "response_snippet": "{\n  \"version\": 0.6,\n  \"generator\": \"Overpass API 0.7.62.11 87bfad18\",\n  \"osm3s\": {\n    \"timestamp_osm_base\": \"2026-11-06T19:58:36Z\",\n    \"copyright\": \"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.\"\n  },\n  \"elements\": [\n\n{\n  \"type\": \"node\",\n ",
+    "checked_at": "2026-11-06 19:59:45"
   }
 ]

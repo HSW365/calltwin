@@ -224,7 +224,7 @@ def footer(s):
       <div>{logo(s)}<p>{s['foot_about']}</p></div>
       <div><h4>{E(s['name'])}</h4><ul>{prod}</ul></div>
       <div><h4>More from HSW365</h4><ul>{fam}</ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:hsw365media@gmail.com">hsw365media@gmail.com</a></li><li><a href="https://hsw365.co">hsw365.co</a></li>{s.get('foot_contact','')}</ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:hsw365media@gmail.com">hsw365media@gmail.com</a></li><li><a href="https://hsw365.net">hsw365.net</a></li>{s.get('foot_contact','')}</ul></div>
     </div>
     <div class="legal"><p>{s.get('legal','')}</p><p>&copy; 2026 HSW365 Media LLC. Turn negative into positive.</p></div>
   </div>

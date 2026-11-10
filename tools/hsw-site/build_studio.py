@@ -126,25 +126,25 @@ pricing = (sec_head("Your first 3 projects are free. Then pick a plan.", "Each p
            + plan("Starter", "The full studio", "$15", "a month",
                   ["Unlimited projects", "Record over your beat with as many vocal tracks as the song needs", "Key detection and pitch correction",
                    "Mixing console with live meters, EQ, compressor, de-esser, reverb and echo", "Editing tools: arrow, range, split, eraser, cut, copy, paste, fades, undo",
-                   "Mastering to streaming loudness, WAV and MP3 export"], buy("Get Starter", "starter", "https://hsw365.co/cart/47998395744417:1", "line"))
+                   "Mastering to streaming loudness, WAV and MP3 export"], buy("Get Starter", "starter", "https://hsw365.net/cart/47998395744417:1", "line"))
            + plan("Plus", "For stacked, tuned vocals", "$20", "a month",
                   ["Everything in Starter", "Tune Pro: place notes by hand in the pitch editor, plus humanize, flex, transpose and voice character",
                    "Vocal stacks: wide doubles and in-key harmonies built from your own take", "Six more vocal presets, from R&amp;B silk to drill"],
-                  buy("Get Plus", "plus", "https://hsw365.co/cart/47998395777185:1", "acc"), main=True)
+                  buy("Get Plus", "plus", "https://hsw365.net/cart/47998395777185:1", "acc"), main=True)
            + plan("Pro", "For records you are releasing", "$25", "a month",
                   ["Everything in Plus", "A&amp;R365 record check: a score and plain fixes before you release",
                    "Release pack: masters, tagged MP3, 3000 px cover and a release sheet in one ZIP", "Session backup files, so a song can move to another computer"],
-                  buy("Get Pro", "pro", "https://hsw365.co/cart/47998395809953:1", "line"))
+                  buy("Get Pro", "pro", "https://hsw365.net/cart/47998395809953:1", "line"))
            + '</div>'
            + '<p class="plan-note"><a href="studio.html" id="btnGoPro">Start your 3 free projects</a> &nbsp; <button type="button" id="btnHaveKey">I have a key</button></p>'
-           + '<p class="plan-note" id="proNote" style="margin-top:10px">Checkout is on hsw365.co. Your key is emailed to the address on your order. Tap the link in that email and your plan turns on.</p>')
+           + '<p class="plan-note" id="proNote" style="margin-top:10px">Checkout is on hsw365.net. Your key is emailed to the address on your order. Tap the link in that email and your plan turns on.</p>')
 
 qa = [
     ("What do I need to start?", "A computer, a browser, and a microphone. A USB mic or an interface is best, but a headset mic works for writing sessions. Wear headphones while you record so the beat doesn't bleed into your vocal."),
     ("Is the tuning real pitch correction?", "Yes. HSW365studio tracks the pitch of your take, finds the nearest note in your key, and shifts the audio to it. Retune speed and strength control how obvious it is, from a hard, stepped effect to light, invisible correction."),
     ("Where are my sessions stored?", "In your browser's storage on the device you used. They stay there until you delete them or clear site data. Export anything you want to keep forever. Pro adds session backup files, so you can save a whole session and open it on another computer."),
     ("Can I release what I make?", "Yes. The master WAV is 24-bit and loudness-matched for streaming, which is what distributors ask for. Your music is yours. HSW365studio claims no rights to anything you record."),
-    ("What does it cost?", "Your first 3 projects are free. After that, buy a month of Starter, Plus or Pro at hsw365.co. Your key is emailed to the address on your order. Tap the link in that email and your plan turns on. Nothing is billed automatically. When your month ends your sessions stay on your device, and you can add another month whenever you like."),
+    ("What does it cost?", "Your first 3 projects are free. After that, buy a month of Starter, Plus or Pro at hsw365.net. Your key is emailed to the address on your order. Tap the link in that email and your plan turns on. Nothing is billed automatically. When your month ends your sessions stay on your device, and you can add another month whenever you like."),
     ("Does it work on my phone?", "It opens and plays back on phones, but recording on a phone depends on the browser's mic handling. For sessions you plan to release, use a laptop or tablet with headphones."),
     ("My recording is out of time with the beat.", "Bluetooth headphones add delay the browser can't always measure. Use wired headphones, or drag the take with the Move tool, or nudge it with the Vocal timing fader on the Vocal channel, until it sits on the grid."),
 ]

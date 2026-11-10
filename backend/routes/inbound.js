@@ -191,6 +191,23 @@ router.post("/signup-voicemail", async (req, res) => {
 });
 
 // Quick check in a browser: which agent a number routes to, and whether keys are present.
+// Inbound TEXTS on a CallTwin number -> forwarded to the owner's cell (default: New Ark / Joe).
+// SignalWire: Phone Numbers > the number > Messaging route > cXML Webhook > POST https://calltwin.onrender.com/api/inbound/sms-forward
+// Target: env SMS_FORWARD_TO, else the New Ark owner cell, else Joe's cell. The text is sent back out from the number that received it.
+async function smsForward(req, res) {
+  const b = Object.assign({}, req.query, req.body);
+  const e164 = (n) => { const d = String(n || "").replace(/\D/g, ""); return d.length === 10 ? "+1" + d : d.length === 11 && d[0] === "1" ? "+" + d : ""; };
+  const oc = await ownerContact().catch(() => null);
+  const target = e164(process.env.SMS_FORWARD_TO) || e164(oc && oc.owner_cell) || "+12013498663";
+  const from = e164(b.To);
+  const text = `Text from ${b.From || "unknown"}: ${String(b.Body || "").trim() || "(no text)"}`.slice(0, 1400);
+  console.log("[inbound] sms-forward", b.From, "->", target);
+  if (!from || from === target) return res.type("text/xml").send('<?xml version="1.0" encoding="UTF-8"?><Response/>');
+  res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Message from="${xml(from)}" to="${xml(target)}">${xml(text)}</Message></Response>`);
+}
+router.post("/sms-forward", smsForward);
+router.get("/sms-forward", smsForward);
+
 router.get("/status", async (req, res) => {
   if (req.query.refresh === "1") await ensureInboundRouting().catch(() => {});
   const to = req.query.to || process.env.SIGNALWIRE_PHONE_NUMBER || "";

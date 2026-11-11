@@ -1,5 +1,106 @@
 {
   "calltwin_token_configured": true,
   "calltwin_campaign_configured": true,
-  "results": []
+  "results": [
+    {
+      "businessName": "The Tasty Toast",
+      "pushed": true
+    },
+    {
+      "businessName": "Idea Asian",
+      "pushed": true
+    },
+    {
+      "businessName": "Roti Junction",
+      "pushed": true
+    },
+    {
+      "businessName": "El Changarro",
+      "pushed": true
+    },
+    {
+      "businessName": "Alarz Restaurant & Grill",
+      "pushed": true
+    },
+    {
+      "businessName": "Aldo's Pizzeria and Ristorante",
+      "pushed": true
+    },
+    {
+      "businessName": "Sakura",
+      "pushed": true
+    },
+    {
+      "businessName": "Keven Parker's Soul Food Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "Nanee's Kitchen",
+      "pushed": true
+    },
+    {
+      "businessName": "Pesce Ristorante",
+      "pushed": true
+    },
+    {
+      "businessName": "New York Fried Chicken",
+      "pushed": true
+    },
+    {
+      "businessName": "Buffalo Wild Wings",
+      "pushed": true
+    },
+    {
+      "businessName": "Philly Sunnyside Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Italian Express",
+      "pushed": true
+    },
+    {
+      "businessName": "Wonder",
+      "pushed": true
+    },
+    {
+      "businessName": "Dimension Latin Grill",
+      "pushed": true
+    },
+    {
+      "businessName": "Lee's Hoagie House",
+      "pushed": true
+    },
+    {
+      "businessName": "Mr P Pizza and Pasta",
+      "pushed": true
+    },
+    {
+      "businessName": "Fishtown Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Fat Moon Restaurant & Ba4",
+      "pushed": true
+    },
+    {
+      "businessName": "Amalfi Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Yogo Factory Rowan",
+      "pushed": true
+    },
+    {
+      "businessName": "Mr. Rice Chinese Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Joe's Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Stacey's Pizza",
+      "pushed": true
+    }
+  ]
 }

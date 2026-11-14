@@ -1,6 +1,7 @@
 {
   "name": "queenee-assistant",
   "version": "1.0.0",
+  "license": "UNLICENSED",
   "description": "QUEENEE.io 24/7 AI Virtual Front Desk - answers calls, qualifies leads, books callbacks",
   "main": "server.js",
   "engines": {

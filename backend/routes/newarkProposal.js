@@ -33,7 +33,7 @@ const mongoose = require("mongoose");
 const M = require("../services/newarkProposalMath");
 const { renderProposalPdf } = require("../services/newarkProposalPdf");
 const multer = require("multer");
-const { analyzeJob } = require("../services/newarkJobAnalyze");
+const { analyzeJob, transcribe } = require("../services/newarkJobAnalyze");
 const F = require("../services/newarkNfpaForms");
 const { renderNfpaPdf } = require("../services/newarkNfpaPdf");
 const { fillForm } = require("../services/newarkNfpaAnalyze");
@@ -95,6 +95,20 @@ const fileName = (d) => `${d.company.name} ${M.TYPES[d.type]} ${d.number || d.da
 module.exports = function proposalRouter(ownerPin) {
   const router = express.Router();
   router.use(express.json({ limit: "8mb" }));
+
+  // Dictation fallback: a short voice clip -> typed text (for phones that can't dictate in the browser). Multipart, PIN read after parse.
+  router.post("/transcribe", upload.single("audio"), ownerPin, wrap(async (req, res) => {
+    const f = req.file;
+    if (!f || !AUD.test(f.mimetype) || f.size < 800) return bad(res, "I didn't catch anything. Tap the mic and try again.");
+    try {
+      const text = await transcribe(f);
+      if (!text) return bad(res, "I didn't catch anything. Tap the mic and try again.");
+      res.json({ ok: true, text });
+    } catch (e) {
+      console.error("[newark proposal] transcribe failed:", e.message);
+      return bad(res, "Talking to type isn't working right now. Type it instead.", 502);
+    }
+  }));
 
   // Photos / video / voice note -> drafted estimate. Multipart, so the PIN is read after the upload is parsed.
   router.post("/analyze", upload.fields([{ name: "photos", maxCount: 12 }, { name: "audio", maxCount: 3 }]), ownerPin, wrap(async (req, res) => {

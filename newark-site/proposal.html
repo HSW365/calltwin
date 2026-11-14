@@ -252,7 +252,7 @@ details.co[open] summary::before{content:"–"}
           <span id="recInfo">Say what you see and what the job needs.</span>
           <button class="btn-quiet" type="button" id="recDel" hidden>Delete voice note</button>
         </div>
-        <label for="notes" style="margin-top:16px">Or type a few words <em>(optional)</em></label>
+        <label for="notes" style="margin-top:16px">Type it, or tap the mic and just talk <em>(optional)</em></label>
         <textarea id="notes" name="notes" placeholder="50 gal gas water heater leaking from the bottom, basement, replace. haul away old one."></textarea>
         <button class="btn btn-red build" type="button" id="buildBtn">Build my estimate</button>
         <div class="msg" id="buildMsg" role="status"></div>
@@ -725,5 +725,6 @@ $("#showPhotos").addEventListener("change", recalc);
 // ---- start ----
 if (PIN) load().catch((e) => { if (e.message !== "signed out") showGate(e.message); }); else showGate();
 </script>
+<script src="dictate.js" defer></script>
 </body>
 </html>

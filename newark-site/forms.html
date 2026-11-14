@@ -243,7 +243,7 @@ details.note p{white-space:pre-line;padding:6px 0}
         <span id="recInfo">Say what you checked and the readings, like "main drain static 72, residual 58".</span>
         <button class="btn-quiet" type="button" id="recDel" hidden>Delete voice note</button>
       </div>
-      <label for="notes" style="margin-top:16px">Or type a few words <em>(optional)</em></label>
+      <label for="notes" style="margin-top:16px">Type it, or tap the mic and just talk <em>(optional)</em></label>
       <textarea id="notes" placeholder="Annual. All valves open, chained and locked. FDC left cap missing. Main drain 72 static 58 residual. Gong works."></textarea>
       <button class="btn btn-red build" type="button" id="buildBtn">Fill my form</button>
       <div class="msg" id="buildMsg" role="status"></div>
@@ -685,5 +685,6 @@ $("#showPhotos").addEventListener("change", changed);
 
 if (PIN) load().catch((e) => { if (e.message !== "signed out") showGate(e.message); }); else showGate();
 </script>
+<script src="dictate.js" defer></script>
 </body>
 </html>

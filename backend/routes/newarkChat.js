@@ -150,9 +150,22 @@ async function saveTicket(a) {
       "Call back: tel:" + digits.slice(-10),
       "Saved in the CallTwin job system."
     ].join("\n");
-    const emailed = ownerEmail ? await mailer.alertEmail(ownerEmail, "New Ark Website Request", emailBody) : false;
+    // Text and email go out together, so one outage (e.g. a rejected Gmail app password) never hides a request from the owner.
+    const smsBody = `New Ark website request: ${String(a.name || "").slice(0, 60)}, ${String(a.phone || "").slice(0, 40)}. ${String(a.service || "Other").slice(0, 40)} (${String(a.urgency || "Within 48 hours").slice(0, 40)}). ${String(a.address || "").slice(0, 80)} Call back: tel:${digits.slice(-10)}`.slice(0, 600);
+    const texted = (async () => {
+      try {
+        const nk = require("./newark"); // lazy: newark.js loads this file
+        const owner = await nk.ownerContact();
+        const d = String((owner && owner.owner_cell) || process.env.NEWARK_OWNER_CELL || "").replace(/\D/g, "").slice(-10);
+        if (d.length !== 10 || !nk.smsReady()) return false;
+        return !!(await nk.sendSms("+1" + d, smsBody));
+      } catch (e) { console.error("[newark chat] owner text failed:", e.message); return false; }
+    })();
+    const emailedP = ownerEmail ? mailer.alertEmail(ownerEmail, "New Ark Website Request", emailBody).catch(() => false) : Promise.resolve(false);
+    const [emailed, sms] = await Promise.all([emailedP, texted]);
     if (!emailed) console.error("[newark chat] ticket saved, but owner email notification was not sent; check NEWARK_OWNER_EMAIL and mail settings.");
-    return { ok: true, ticket: r.data.ticket, emailed };
+    if (!emailed && !sms) console.error("[newark chat] ticket saved but NEITHER text nor email reached the owner.");
+    return { ok: true, ticket: r.data.ticket, emailed, texted: sms };
   } catch (e) {
     console.error("[newark chat] ticket save failed:", e.message);
     return { ok: false, error: "The ticket did not save. Ask the visitor to try sending their details again in a moment, or to use the Request a visit form on the page." };

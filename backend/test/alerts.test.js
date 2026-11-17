@@ -111,3 +111,13 @@ test("Gmail sender: app password with spaces is accepted and the mailbox is the 
   assert.strictEqual(mailer.emailReady(), true);
   delete process.env.GMAIL_USER; delete process.env.GMAIL_APP_PASSWORD;
 });
+
+test("New Ark notify: a text SignalWire accepts then fails (not SMS-capable) is reported as not texted", async () => {
+  reset(); mailOn(); process.env.NEWARK_OWNER_EMAIL = "owner@newark.test";
+  const realGet = axios.get;
+  axios.get = async () => ({ data: { status: "failed", error_code: "21601", error_message: "From number is not a valid SMS-capable phone number." } });
+  try {
+    const r = await notify({ to: "2015550111", body: JOB });
+    assert.deepStrictEqual(r.body, { ok: true, sid: "SM1", texted: false, emailed: true });
+  } finally { axios.get = realGet; delete process.env.NEWARK_OWNER_EMAIL; }
+});

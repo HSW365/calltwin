@@ -64,6 +64,31 @@ async function sendSms(to, body) {
   }
 }
 
+// SignalWire accepts a text (returns a sid) before the carrier verdict is known; a number that is not SMS-capable
+// or not yet verified only shows up seconds later as status "failed"/"undelivered". Look that verdict up so
+// "texted" means delivered-or-in-flight, never a text SignalWire already rejected.
+async function smsOutcome(sid) {
+  if (!sid || !smsReady()) return { ok: !!sid };
+  const wait = Number(process.env.SMS_CONFIRM_MS || 3500);
+  await new Promise((r) => setTimeout(r, wait));
+  try {
+    const pid = process.env.SIGNALWIRE_PROJECT_ID;
+    const r = await axios.get(`https://${space()}/api/laml/2010-04-01/Accounts/${pid}/Messages/${sid}.json`, {
+      auth: { username: pid, password: process.env.SIGNALWIRE_API_TOKEN }, timeout: 8000,
+    });
+    const st = String((r.data && r.data.status) || "").toLowerCase();
+    if (st === "failed" || st === "undelivered") {
+      const code = r.data.error_code || r.data.code || "";
+      const msg = String(r.data.error_message || "").slice(0, 160);
+      lastSmsError = { at: new Date().toISOString(), status: st, code, message: msg };
+      return { ok: false, status: st, code, message: msg };
+    }
+    return { ok: true, status: st };
+  } catch (e) {
+    return { ok: true, status: "unknown" }; // can't verify: don't claim a failure we haven't seen
+  }
+}
+
 // ---- Voice alert: when a text can't be delivered, call the owner and read the alert out loud. ----
 const voiceAlerts = new Map(); // token -> { speech, at }  (in-memory; a call fetches its script within seconds)
 const sayDigits = (n) => {
@@ -214,10 +239,15 @@ router.post("/notify", async (req, res) => {
     to ? sendSms(to, body).catch((e) => { smsError = e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message; return null; }) : null,
     require("../services/mailer").alertEmail(email, (req.body && req.body.business) || "New Ark", body).catch(() => false),
   ]);
+  let smsOk = !!sid;
+  if (sid) {
+    const o = await smsOutcome(sid);
+    if (!o.ok) { smsOk = false; smsError = `${o.status} ${o.code} ${o.message}`.trim(); }
+  }
   if (smsError && to) console.error("[newark] sms failed:", smsError);
   // Text and email only: the owner is never phoned with an alert. The job stays saved in the portal.
-  if (!sid && !emailed) return res.status(502).json({ ok: false, error: smsError || "not delivered" });
-  res.json({ ok: true, sid: sid || undefined, texted: !!sid, emailed });
+  if (!smsOk && !emailed) return res.status(502).json({ ok: false, error: smsError || "not delivered" });
+  res.json({ ok: true, sid: sid || undefined, texted: smsOk, emailed });
 });
 
 // Email check: sends one test message so the mail setup can be confirmed end to end.
@@ -314,7 +344,9 @@ router.post("/missed-call", async (req, res) => {
       to ? sendSms(to, body).catch((e) => { console.error("[newark] missed-call sms:", e.message); return null; }) : null,
       email ? require("../services/mailer").alertEmail(email, "New Ark", body).catch((e) => { console.error("[newark] missed-call email:", e.message); return false; }) : false,
     ]);
-    console.log(`[newark] missed-call alert (${status || "no status"}): texted=${!!sid} emailed=${!!emailed}`);
+    let texted = !!sid;
+    if (sid) { const o = await smsOutcome(sid); if (!o.ok) { texted = false; console.error(`[newark] missed-call text FAILED: ${o.status} ${o.code} ${o.message}`); } }
+    console.log(`[newark] missed-call alert (${status || "no status"}): texted=${texted} emailed=${!!emailed}`);
   } catch (e) { console.error("[newark] missed-call alert:", e.message); }
 });
 

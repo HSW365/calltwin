@@ -5,6 +5,7 @@
 const path = require("path");
 const fs = require("fs");
 const PDFDocument = require("pdfkit");
+const { withRunningHead, HEAD_BOTTOM: TOP } = require("./newarkLetterhead");
 const { TYPES, DEFAULT_TERMS, money, prettyDate, addDays } = require("./newarkProposalMath");
 
 const NAVY = "#0b2a4a", RED = "#c4161c", INK = "#16212e", MUT = "#5a6878", RULE = "#c9d2dc";
@@ -15,6 +16,7 @@ function renderProposalPdf(doc) {
   return new Promise((resolve, reject) => {
     const pdf = new PDFDocument({ size: "LETTER", margins: { top: M, bottom: 64, left: M, right: M }, bufferPages: true,
       info: { Title: `${TYPES[doc.type]} ${doc.number}`.trim(), Author: doc.company.name, Subject: doc.customer.company || doc.customer.contact || "" } });
+    withRunningHead(pdf, doc.company, { M, W, right: `${TYPES[doc.type]} ${doc.number || ""}`.trim() });
     const chunks = [];
     pdf.on("data", (c) => chunks.push(c));
     pdf.on("end", () => resolve(Buffer.concat(chunks)));
@@ -94,7 +96,7 @@ function draw(pdf, d) {
     y += 20;
     pdf.moveTo(M, y).lineTo(W - M, y).lineWidth(0.6).strokeColor(NAVY).stroke();
   };
-  const ensure = (need, table) => { if (y + need > H - 80) { pdf.addPage(); y = M; if (table) header(); } };
+  const ensure = (need, table) => { if (y + need > H - 80) { pdf.addPage(); y = TOP; if (table) header(); } };
   header();
   if (!d.items.length) {
     pdf.fillColor(MUT).font("Helvetica-Oblique").fontSize(10).text("No line items.", M + 4, y + 8);
@@ -172,7 +174,7 @@ function draw(pdf, d) {
   // ---------- job photos ----------
   const pics = d.showPhotos ? (d.photos || []) : [];
   if (pics.length) {
-    pdf.addPage(); y = M;
+    pdf.addPage(); y = TOP;
     pdf.fillColor(NAVY).font("Helvetica-Bold").fontSize(16).text("JOB PHOTOS", M, y, { characterSpacing: 1 });
     pdf.fillColor(MUT).font("Helvetica").fontSize(9).text(`${TYPES[d.type]} ${d.number}${d.jobsite ? `  ·  ${d.jobsite}` : ""}`, M, pdf.y + 2);
     y = pdf.y + 12;
@@ -182,7 +184,7 @@ function draw(pdf, d) {
     pics.forEach((p, i) => {
       const col = i % 2;
       if (col === 0 && i > 0) y += ch + 34;
-      if (y + ch + 30 > H - 80) { pdf.addPage(); y = M; }
+      if (y + ch + 30 > H - 80) { pdf.addPage(); y = TOP; }
       const x = M + col * (cw + gap);
       try {
         const buf = Buffer.from(String(p.src).split(",")[1], "base64");

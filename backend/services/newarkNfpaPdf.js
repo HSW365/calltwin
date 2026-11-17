@@ -6,6 +6,7 @@
 const path = require("path");
 const fs = require("fs");
 const PDFDocument = require("pdfkit");
+const { withRunningHead, HEAD_BOTTOM: TOP } = require("./newarkLetterhead");
 const { TEMPLATES } = require("./newarkNfpaForms");
 
 const NAVY = "#0b2a4a", RED = "#c4161c", INK = "#111a24", MUT = "#5a6878", RULE = "#b8c2cd", GREY = "#7d8794";
@@ -17,6 +18,7 @@ function renderNfpaPdf(doc, company) {
     const t = TEMPLATES[doc.template];
     const pdf = new PDFDocument({ size: "LETTER", margins: { top: M, bottom: 64, left: M, right: M }, bufferPages: true,
       info: { Title: `${t.form} ${t.title}`, Author: company.name, Subject: doc.values.propertyName || "" } });
+    withRunningHead(pdf, company, { M, W, right: `${t.form}${doc.number ? " · No. " + doc.number : ""}` });
     const chunks = [];
     pdf.on("data", (c) => chunks.push(c));
     pdf.on("end", () => resolve(Buffer.concat(chunks)));
@@ -29,7 +31,7 @@ function renderNfpaPdf(doc, company) {
 function draw(pdf, t, d, co) {
   const v = d.values;
   let y = M;
-  const ensure = (need) => { if (y + need > BOT) { pdf.addPage(); y = M; } };
+  const ensure = (need) => { if (y + need > BOT) { pdf.addPage(); y = TOP; } };
   const box = (x, by, on) => {
     pdf.rect(x, by, 9, 9).lineWidth(0.8).strokeColor(INK).stroke();
     if (on) pdf.moveTo(x + 1.5, by + 1.5).lineTo(x + 7.5, by + 7.5).moveTo(x + 7.5, by + 1.5).lineTo(x + 1.5, by + 7.5).lineWidth(1.4).strokeColor(INK).stroke();
@@ -275,7 +277,7 @@ function draw(pdf, t, d, co) {
   // ---------- job photos ----------
   const pics = d.showPhotos ? (d.photos || []) : [];
   if (pics.length) {
-    pdf.addPage(); y = M;
+    pdf.addPage(); y = TOP;
     pdf.fillColor(NAVY).font("Helvetica-Bold").fontSize(15).text("JOB PHOTOS", M, y, { characterSpacing: 1 });
     pdf.fillColor(MUT).font("Helvetica").fontSize(9).text(`${t.form} · ${t.short}${v.propertyName ? `  ·  ${v.propertyName}` : ""}${v.propertyAddress ? `, ${v.propertyAddress}` : ""}`, M, pdf.y + 2, { width: CW });
     y = pdf.y + 10;
@@ -285,7 +287,7 @@ function draw(pdf, t, d, co) {
     pics.forEach((p, i) => {
       const col = i % 2;
       if (col === 0 && i > 0) y += ch + 34;
-      if (y + ch + 30 > BOT) { pdf.addPage(); y = M; }
+      if (y + ch + 30 > BOT) { pdf.addPage(); y = TOP; }
       const x = M + col * (cw + gap);
       try { pdf.image(Buffer.from(String(p.src).split(",")[1], "base64"), x, y, { fit: [cw, ch], align: "center", valign: "center" }); }
       catch (e) { pdf.fillColor(MUT).font("Helvetica-Oblique").fontSize(9).text("Photo could not be shown.", x, y + ch / 2, { width: cw, align: "center" }); }

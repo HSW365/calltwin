@@ -303,13 +303,19 @@ router.post("/missed-call", async (req, res) => {
   try {
     const owner = await ownerContact();
     const to = e164((owner && owner.owner_cell) || process.env.NEWARK_OWNER_CELL);
-    if (!to) return console.error("[newark] missed-call: no owner cell");
+    const email = String((owner && owner.owner_email) || process.env.NEWARK_OWNER_EMAIL || "joehernandez5556@gmail.com").trim();
+    if (!to && !email) return console.error("[newark] missed-call: no owner cell or email");
     const d = String(p.From || "").replace(/\D/g, "").slice(-10);
     const caller = d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : (p.From || "unknown number");
     const when = new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" });
-    await sendSms(to, `New Ark missed call: ${caller} at ${when}. Call them back${d.length === 10 ? `: tel:${d}` : "."}`);
-    console.log(`[newark] missed-call text sent (${status || "no status"})`);
-  } catch (e) { console.error("[newark] missed-call sms:", e.message); }
+    const body = `New Ark missed call: ${caller} at ${when}. Call them back${d.length === 10 ? `: tel:${d}` : "."}`;
+    // Text AND email at the same time. Either one landing counts, so Joe still hears about the call while texting awaits carrier approval.
+    const [sid, emailed] = await Promise.all([
+      to ? sendSms(to, body).catch((e) => { console.error("[newark] missed-call sms:", e.message); return null; }) : null,
+      email ? require("../services/mailer").alertEmail(email, "New Ark", body).catch((e) => { console.error("[newark] missed-call email:", e.message); return false; }) : false,
+    ]);
+    console.log(`[newark] missed-call alert (${status || "no status"}): texted=${!!sid} emailed=${!!emailed}`);
+  } catch (e) { console.error("[newark] missed-call alert:", e.message); }
 });
 
 router.post("/estimates-access", ownerPin, async (req, res) => {

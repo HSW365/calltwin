@@ -31,6 +31,7 @@ const { router: demoCallRoutes } = require("./routes/demoCall");
 const { startScheduler } = require("./services/scheduler");
 const { router: estimateRoutes } = require("./estimate/routes");
 const { startEstimateScheduler } = require("./estimate/service");
+const { router: ownerRoutes } = require("./routes/owner");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -47,6 +48,10 @@ app.use("/api/estimates", estimateRoutes);
 // Mail relay for the HSW365 Sales Autopilot on iRun (sends/reads through this server's Gmail). Auth: x-relay-token.
 app.use("/api/relay", relayRoutes);
 app.use("/api/demo-call", demoCallRoutes);
+// Owner sign in shared by every HSW365 app (email code -> 12h token).
+app.use("/api/owner", ownerRoutes);
+// Drop-in Owner Sign In tab script used by every app.
+app.get("/owner-signin.js", (req, res) => { res.set("Cache-Control", "public, max-age=300"); res.type("application/javascript").sendFile(path.join(__dirname, "public/owner-signin.js")); });
 app.use(express.json());
 app.use("/audio", express.static(path.join(__dirname, "public/audio")));
 app.use("/", legalRoutes);

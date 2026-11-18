@@ -32,6 +32,7 @@ const { startScheduler } = require("./services/scheduler");
 const { router: estimateRoutes } = require("./estimate/routes");
 const { startEstimateScheduler } = require("./estimate/service");
 const { router: ownerRoutes } = require("./routes/owner");
+const { router: estimatorRoutes } = require("./estimator/routes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -45,6 +46,8 @@ app.use("/api/newark", newarkRoutes);
 app.use("/api/clients", clientRoutes);
 // HSW365 AI Estimate add-on (estimates, proposals, e-sign, deposits, follow-ups).
 app.use("/api/estimates", estimateRoutes);
+// HSW365 AI Estimate, the standalone service (accounts, pay-per-conversion, plans). Front end: estimate.hsw365.net.
+app.use("/api/estimator", estimatorRoutes);
 // Mail relay for the HSW365 Sales Autopilot on iRun (sends/reads through this server's Gmail). Auth: x-relay-token.
 app.use("/api/relay", relayRoutes);
 app.use("/api/demo-call", demoCallRoutes);

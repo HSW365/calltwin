@@ -25,6 +25,12 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
       if (["invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"].includes(event.type)) await require("./clients").stripeEvent(event.type, o);
       if (event.type === "checkout.session.completed" && o.metadata && o.metadata.client === "calltwin") { await require("./clients").stripeEvent(event.type, o); return res.json({ received: true }); }
     } catch (e) { console.error("[webhooks] clients:", e.message); }
+    // HSW365 AI Estimate standalone service (plans, packs, top-ups)
+    try {
+      if (["checkout.session.completed", "invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"].includes(event.type)) {
+        if (await require("../estimator/routes").stripeEvent(event.type, event.data.object || {})) return res.json({ received: true });
+      }
+    } catch (e) { console.error("[webhooks] estimator:", e.message); }
     // Estimate add-on: customer deposits + add-on subscription
     try {
       const o = event.data.object || {};

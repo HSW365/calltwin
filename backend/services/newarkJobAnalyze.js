@@ -56,6 +56,7 @@ async function transcribe(file) {
 const SEE = `You are looking at photos a plumbing, heating, air conditioning and fire sprinkler contractor took at a job.
 Describe only what you can actually see that matters for pricing the work: the equipment and fixtures, their type, size and condition,
 brand and model if a label is readable, damage, leaks, corrosion, pipe material and size if clear, counts you can actually count, and access problems.
+Some images may be pages of plans or drawings instead of photos. For those, read the title block, scale, dimensions, room and fixture labels, schedules and notes, and count the fixtures and equipment the drawing shows.
 Say "unclear" rather than guess. Do not suggest prices. Short plain sentences, one photo after another.`;
 
 async function seePhotos(images, notes) {

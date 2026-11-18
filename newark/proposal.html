@@ -245,6 +245,7 @@ details.co[open] summary::before{content:"–"}
         <div class="cap">
           <label class="btn btn-ink" for="camIn">Take photos or video<input id="camIn" type="file" accept="image/*,video/*" capture="environment" multiple></label>
           <label class="btn btn-line" for="pickIn">Choose from my phone<input id="pickIn" type="file" accept="image/*,video/*" multiple></label>
+          <label class="btn btn-line" for="planIn">Upload plans (PDF or picture)<input id="planIn" type="file" accept="application/pdf,.pdf,image/*" multiple></label>
         </div>
         <div class="shots" id="shots"></div>
         <div class="voice">
@@ -634,6 +635,32 @@ function frames(file, n = 3) {
     };
   });
 }
+// Plans: each PDF page becomes a picture the estimate builder can read. pdf.js loads only when a PDF is added.
+let PDFJS = null;
+function loadPdfJs() {
+  if (PDFJS) return Promise.resolve(PDFJS);
+  return new Promise((ok, bad) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; PDFJS = window.pdfjsLib; ok(PDFJS); };
+    s.onerror = () => bad(new Error("Couldn't open PDF plans right now. Send a picture of the plan instead."));
+    document.head.appendChild(s);
+  });
+}
+async function pdfPages(file, room) {
+  const lib = await loadPdfJs();
+  const pdf = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
+  const out = [];
+  for (let n = 1; n <= Math.min(pdf.numPages, room); n++) {
+    const page = await pdf.getPage(n), v1 = page.getViewport({ scale: 1 });
+    const vp = page.getViewport({ scale: Math.min(3, 1600 / Math.max(v1.width, v1.height)) });
+    const c = document.createElement("canvas"); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: g, viewport: vp }).promise;
+    out.push(c.toDataURL("image/jpeg", 0.8));
+  }
+  return { pages: out, total: pdf.numPages };
+}
 async function addFiles(list) {
   const msg = $("#buildMsg"); say(msg, "Adding…", true);
   for (const f of list) {
@@ -644,6 +671,10 @@ async function addFiles(list) {
         fr.slice(0, MAX_SHOTS - SHOTS.length).forEach((src, i) => SHOTS.push({ src, caption: "", frame: true, clip: f.name + i }));
         if (f.size <= AUDIO_MAX && CLIPS.length < 2) CLIPS.push(f); // its sound (you talking) is used too
         if (!fr.length) say(msg, "Couldn't take pictures from that video. Try photos, or a shorter clip.", false);
+      } else if (f.type === "application/pdf" || /\.pdf$/i.test(f.name)) {
+        const { pages, total } = await pdfPages(f, MAX_SHOTS - SHOTS.length);
+        pages.forEach((src, i) => SHOTS.push({ src, caption: "Plan page " + (i + 1) }));
+        if (total > pages.length) say(msg, `Used the first ${pages.length} of ${total} plan pages (that's the most it can use).`, false);
       } else if (f.type.startsWith("image/")) {
         const url = URL.createObjectURL(f);
         try { SHOTS.push({ src: await shrink(url), caption: "" }); } finally { URL.revokeObjectURL(url); }
@@ -658,7 +689,7 @@ function drawShots() {
   $$("#shots [data-del]").forEach((b) => (b.onclick = () => { SHOTS.splice(+b.dataset.del, 1); drawShots(); recalc(); }));
   $$("#shots [data-cap]").forEach((inp) => (inp.oninput = () => { SHOTS[+inp.dataset.cap].caption = inp.value.slice(0, 120); }));
 }
-["#camIn", "#pickIn"].forEach((id) => $(id).addEventListener("change", (e) => { const fl = [...e.target.files]; e.target.value = ""; addFiles(fl); }));
+["#camIn", "#pickIn", "#planIn"].forEach((id) => $(id).addEventListener("change", (e) => { const fl = [...e.target.files]; e.target.value = ""; addFiles(fl); }));
 
 // voice note
 let rec = null, recT = 0, recTimer = null;

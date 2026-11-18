@@ -1,0 +1,20 @@
+# HSW365 AI Estimate
+
+> AI estimate software for contractors. Take photos or a short video of a job and talk through it; the app drafts the heading, scope and line items and produces a priced PDF estimate, proposal or invoice on the contractor's own letterhead. The AI never writes a price: every price comes from the contractor's own price book or typing.
+
+Made by HSW365 Media LLC (New Jersey). Contact: hsw365media@gmail.com. Brand site: https://hsw365.net
+
+## Pricing (USD)
+- Solo (Jobs under $5K): $49/month, 30 estimates included, $1.50 each after, no setup fee
+- Crew (Jobs $5K to $25K): $147/month, 100 estimates included, $1.25 each after, $250 setup
+- Pro (Jobs $25K to $100K): $297/month, 300 estimates included, $1 each after, $500 setup
+- Commercial (Jobs $100K and up): $795/month, 1000 estimates included, $0.75 each after, $1,500 setup
+- Pay per estimate, small jobs (Under $5K): $9 each, packs of 10
+- Pay per estimate, mid jobs ($5K to $25K): $19 each, packs of 10
+- Pay per estimate, large jobs ($25K to $100K): $39 each, packs of 5
+- Pay per estimate, major jobs ($100K and up): $79 each, packs of 5
+- Free trial: 3 estimates, no card.
+
+## Pages
+- [Home, how it works, pricing, FAQ](https://hsw365-ai-estimate.onrender.com/)
+- [Sign in or start free](https://hsw365-ai-estimate.onrender.com/app.html)

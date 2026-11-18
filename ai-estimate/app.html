@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0a0f">
+<title>HSW365 AI Estimate | Your workspace</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" as="font" type="font/woff2" href="fonts/barlow-condensed-latin-900-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/inter-latin-wght-normal.woff2" crossorigin>
+<style>
+@font-face{font-family:"Barlow Condensed";src:url("fonts/barlow-condensed-latin-900-normal.woff2") format("woff2");font-weight:900;font-display:swap}
+@font-face{font-family:"Barlow Condensed";src:url("fonts/barlow-condensed-latin-800-normal.woff2") format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:"Inter";src:url("fonts/inter-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Space Mono";src:url("fonts/space-mono-latin-400-normal.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Space Mono";src:url("fonts/space-mono-latin-700-normal.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{
+  --bg:#0a0a0f;--bg2:#10111a;--card:#12131d;--card2:#171926;--line:#242637;--line2:#33364d;
+  --text:#eceef6;--text2:#b4b8cc;--mut:#8a8ea6;
+  --cyan:#22d3ee;--violet:#a855f7;--red:#ef4444;--yellow:#fbbf24;--green:#34d399;
+  --disp:"Barlow Condensed","Arial Narrow",Impact,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"Space Mono",ui-monospace,monospace;
+  --gut:clamp(16px,3.4vw,40px)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;
+  background-image:radial-gradient(900px 420px at 85% -80px,rgba(168,85,247,.16),transparent 70%),radial-gradient(800px 380px at 5% -60px,rgba(34,211,238,.12),transparent 70%)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:rgba(10,10,15,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar-in{display:flex;align-items:center;gap:14px;padding:12px var(--gut);max-width:1320px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.mark{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;color:#0a0a0f;font:900 26px/1 var(--disp)}
+.logo b{display:block;font:900 24px/1 var(--disp);letter-spacing:.02em;text-transform:uppercase}
+.logo small{display:block;font:400 11px/1.2 var(--mono);color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
+.sp{flex:1}
+.credit{display:flex;align-items:center;gap:10px;border:1px solid var(--line2);border-radius:999px;padding:6px 8px 6px 14px;background:var(--card);cursor:pointer;color:var(--text)}
+.credit b{font:700 15px/1 var(--mono);color:var(--cyan)}
+.credit span{font-size:13px;color:var(--text2)}
+.credit i{font-style:normal;font:800 13px/1 var(--disp);letter-spacing:.08em;text-transform:uppercase;background:var(--cyan);color:#0a0a0f;border-radius:999px;padding:8px 12px}
+.bar .out{background:none;border:1px solid var(--line2);color:var(--text2);border-radius:8px;height:40px;padding:0 14px;font-size:14px;font-weight:600;cursor:pointer}
+.bar .out:hover{border-color:var(--text2);color:var(--text)}
+@media (max-width:640px){.logo small,.credit span{display:none}.bar .out{padding:0 10px}}
+
+/* buttons + fields */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;border-radius:10px;font-weight:700;font-size:16px;border:1px solid transparent;cursor:pointer;transition:transform .12s,background .15s,border-color .15s,color .15s;white-space:nowrap;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn-go{background:linear-gradient(135deg,var(--cyan),#6ee7f9);color:#04141a}.btn-go:hover{filter:brightness(1.08)}
+.btn-vio{background:linear-gradient(135deg,var(--violet),#c084fc);color:#fff}.btn-vio:hover{filter:brightness(1.08)}
+.btn-line{background:transparent;border-color:var(--line2);color:var(--text)}.btn-line:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-quiet{background:none;border:0;color:var(--cyan);font-weight:600;font-size:15px;min-height:40px;padding:0 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.btn-x{background:none;border:1px solid var(--line2);color:var(--mut);width:46px;height:46px;border-radius:9px;cursor:pointer;font-size:22px;line-height:1;flex:none}
+.btn-x:hover{border-color:var(--red);color:var(--red)}
+label,.lab{display:block;font-size:13.5px;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:.01em}
+label em{font-style:normal;font-weight:400;color:var(--mut)}
+input,select,textarea{width:100%;min-width:0;min-height:52px;border-radius:10px;background:var(--bg2);border:1px solid var(--line2);padding:0 14px;font-size:16.5px;outline:none;transition:border-color .15s,box-shadow .15s;color:var(--text)}
+textarea{padding:12px 14px;resize:vertical;line-height:1.45;min-height:92px}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.16)}
+input::placeholder,textarea::placeholder{color:#5d6179}
+input[type=color]{padding:4px;height:52px;cursor:pointer}
+input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--cyan)}
+.money{position:relative}
+.money::before{content:"$";position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mut);font-weight:600;pointer-events:none}
+.money input{padding-left:28px;text-align:right;font-family:var(--mono);font-size:16px}
+.msg{font-size:15px;padding:12px 15px;border-radius:10px;margin-top:12px}
+.msg.ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.4);color:#8ff0c8}
+.msg.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.45);color:#fca5a5}
+.msg:empty{display:none}
+
+/* layout */
+.page{max-width:1320px;margin:0 auto;padding:22px var(--gut) 140px;display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:26px;align-items:start}
+@media (max-width:1000px){.page{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,2.6vw,28px);margin-bottom:18px}
+.step{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.step i{font:900 30px/1 var(--disp);font-style:normal;color:var(--cyan);min-width:22px}
+.step h2{font:900 30px/1 var(--disp);letter-spacing:.01em;text-transform:uppercase}
+.step p{font-size:13.5px;color:var(--mut);margin-left:auto;font-family:var(--mono)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.grid .full{grid-column:1/-1}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--bg2)}
+.seg.four{grid-template-columns:repeat(4,1fr)}
+.seg label{margin:0;display:flex}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;min-height:0}
+.seg span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;padding:6px 4px;font-weight:800;font-size:15.5px;color:var(--text2);cursor:pointer;border-left:1px solid var(--line2);text-align:center;line-height:1.15}
+.seg span small{font:400 11.5px/1.1 var(--mono);color:var(--mut)}
+.seg label:first-child span{border-left:0}
+.seg input:checked+span{background:linear-gradient(135deg,rgba(34,211,238,.22),rgba(168,85,247,.22));color:#fff;box-shadow:inset 0 0 0 1px var(--cyan)}
+.seg input:checked+span small{color:var(--cyan)}
+.seg input:focus-visible+span{outline:2px solid var(--cyan);outline-offset:-3px}
+@media (max-width:520px){.seg.four span{font-size:13.5px}.seg.four span small{font-size:10px}}
+
+/* line items */
+.lines{display:grid;gap:12px}
+.line{display:grid;grid-template-columns:34px minmax(0,1fr) 92px 150px 46px;gap:10px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}
+.line .n{font:900 26px/1 var(--disp);color:var(--line2);padding-top:14px;text-align:center}
+.line textarea{min-height:52px;height:52px}
+.line .amt{grid-column:2/-1;display:flex;justify-content:flex-end;font-size:14px;color:var(--mut);margin-top:-2px}
+.line .amt b{color:var(--text);margin-left:8px;font-family:var(--mono)}
+.line .lab{font:400 11.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+@media (max-width:700px){.line{grid-template-columns:1fr 1fr 46px}.line .n{display:none}.line .d{grid-column:1/-1}.line .amt{grid-column:1/-1}}
+.pays{display:grid;gap:10px}
+.pay{display:grid;grid-template-columns:minmax(0,1fr) 170px 46px;gap:10px}
+@media (max-width:560px){.pay{grid-template-columns:1fr 130px 46px}}
+.addrow{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+.line.need{border-color:rgba(251,191,36,.6);background:rgba(251,191,36,.06)}
+.line .flag{display:none;grid-column:2/-1;font:700 12.5px/1.3 var(--mono);color:var(--yellow);letter-spacing:.03em}
+.line.need .flag{display:block}
+@media (max-width:700px){.line .flag{grid-column:1/-1}}
+
+/* totals */
+.side{position:sticky;top:78px}
+@media (max-width:1000px){.side{position:static}}
+.totals{background:linear-gradient(160deg,#141629,#0f1020);border:1px solid var(--line2);border-radius:16px;padding:24px;box-shadow:0 20px 60px -30px rgba(168,85,247,.5)}
+.totals h3{font:700 12px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.trow{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:16px;font-family:var(--mono)}
+.trow.sub{color:var(--text2)}
+.trow.big{border-top:1px solid var(--line2);margin-top:6px;padding-top:12px;font-weight:700;font-size:18px}
+.trow.due{border-top:1px solid var(--cyan);margin-top:8px;padding-top:14px}
+.trow.due b{font:900 48px/.9 var(--disp);letter-spacing:.01em;background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.trow.due span{font-weight:700;align-self:flex-end;color:var(--text2)}
+.taxrow{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.taxrow label{margin:0;font-size:14px;flex:1}
+.taxrow input{width:110px;min-height:44px;text-align:right}
+.calc-note{font-size:12.5px;color:var(--mut);margin-top:12px;line-height:1.45}
+.acts{display:grid;gap:10px;margin-top:16px}
+.acts .btn{width:100%}
+.acts .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* saved */
+.saved{max-height:380px;overflow:auto;margin:0 -6px;padding:0 6px}
+.srow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.srow div{flex:1 1 100%;min-width:0}
+.srow b{display:block;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow small{color:var(--mut);font-size:13px}
+.srow .tag{font:700 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--violet);margin-right:6px}
+.srow button{flex:1;font-size:14px;font-weight:700;height:38px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--text);cursor:pointer}
+.srow button:hover{border-color:var(--cyan);color:var(--cyan)}
+.srow button.use{background:var(--card2)}
+.empty{color:var(--mut);font-size:15px;padding:8px 0}
+details.co summary{cursor:pointer;font-weight:700;color:var(--text);font-size:15.5px;list-style:none;display:flex;align-items:center;gap:8px;min-height:44px}
+details.co summary::before{content:"+";font:900 26px/1 var(--disp);color:var(--cyan);width:16px}
+details.co[open] summary::before{content:"–"}
+
+/* dialogs */
+.ov{position:fixed;inset:0;background:rgba(4,4,9,.78);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;z-index:50}
+.dlg{background:var(--card);border:1px solid var(--line2);border-radius:18px;width:min(620px,100%);padding:26px;max-height:92vh;overflow:auto}
+.dlg.wide{width:min(980px,100%)}
+.dlg h3{font:900 36px/1 var(--disp);text-transform:uppercase;margin-bottom:6px}
+.dlg p.s{color:var(--mut);font-size:15px;margin-bottom:18px}
+.dlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+
+/* gate */
+.gate{max-width:480px;margin:7vh auto;padding:0 var(--gut)}
+.gate .card{padding:30px}
+.gate h2{font:900 42px/1 var(--disp);text-transform:uppercase;margin-bottom:8px}
+.gate p{color:var(--text2);margin-bottom:20px;font-size:15.5px}
+.gate input.pin{font:700 26px/1 var(--mono);letter-spacing:.3em;text-align:center}
+.gate .btn{width:100%;margin-top:14px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line2);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.tabs button{background:var(--bg2);border:0;color:var(--text2);min-height:48px;font-weight:700;font-size:15px;cursor:pointer}
+.tabs button[aria-selected=true]{background:linear-gradient(135deg,rgba(34,211,238,.22),rgba(168,85,247,.22));color:#fff}
+.gate .fine{font-size:13px;color:var(--mut);margin-top:14px;text-align:center}
+.pinshow{font:700 40px/1 var(--mono);letter-spacing:.22em;text-align:center;padding:22px 10px;border:1px dashed var(--cyan);border-radius:12px;color:var(--cyan);margin:14px 0;background:rgba(34,211,238,.06)}
+
+/* dock */
+.dock{display:none}
+@media (max-width:1000px){
+  .dock{display:flex;align-items:center;gap:12px;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(10,10,15,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line2);padding:10px var(--gut) calc(10px + env(safe-area-inset-bottom))}
+  .dock div{flex:1;min-width:0}
+  .dock small{display:block;font:700 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .dock b{font:900 34px/1 var(--disp);letter-spacing:.01em}
+  .dock .btn{min-height:50px;padding:0 18px}
+}
+@media (max-width:600px){.step h2{font-size:26px}.step p{display:none}}
+
+/* start card */
+.start{border:1px solid rgba(34,211,238,.5);background:linear-gradient(180deg,rgba(34,211,238,.06),var(--card) 40%)}
+.cap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.cap{grid-template-columns:1fr}}
+.cap label.btn{margin:0}
+.cap input[type=file]{position:absolute;width:1px;height:1px;opacity:0;min-height:0}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.shot{position:relative;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--bg2)}
+.shot img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.shot input{min-height:40px;border:0;border-top:1px solid var(--line);border-radius:0;font-size:14px;padding:0 10px}
+.shot button{position:absolute;top:6px;right:6px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(4,4,9,.8);color:#fff;font-size:20px;cursor:pointer;line-height:1}
+.shot .vid{position:absolute;left:6px;top:6px;background:var(--violet);color:#fff;font:700 10px/1 var(--mono);letter-spacing:.08em;padding:4px 7px;border-radius:5px}
+.voice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border:1px dashed var(--line2);border-radius:12px}
+.voice .btn.rec{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(239,68,68,.2)}}
+.voice span{font-size:15px;color:var(--text2)}
+.build{width:100%;margin-top:16px;min-height:62px;font-size:18px}
+.chk{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:15px;font-weight:600;color:var(--text2)}
+.checks{margin-top:10px;padding-left:20px;font-size:15px;color:var(--text2)}
+.sizebox{margin-bottom:16px}
+.sizebox .hint{font-size:13px;color:var(--mut);margin-top:8px}
+
+/* plans in dialog */
+.pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.pgrid{grid-template-columns:1fr}}
+.pc{border:1px solid var(--line2);border-radius:14px;padding:16px;background:var(--card2);display:flex;flex-direction:column;gap:6px}
+.pc.hot{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan)}
+.pc h4{font:900 24px/1 var(--disp);text-transform:uppercase}
+.pc .for{font:400 12px/1.3 var(--mono);color:var(--cyan)}
+.pc .pr{font:900 40px/1 var(--disp)}.pc .pr small{font:400 13px var(--body);color:var(--mut)}
+.pc p{font-size:13.5px;color:var(--text2);line-height:1.4}
+.pc ul{list-style:none;font-size:13.5px;color:var(--text2);display:grid;gap:4px;margin:4px 0 8px}
+.pc ul li::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-right:8px;vertical-align:middle}
+.pc .btn{min-height:46px;margin-top:auto;font-size:15px;padding:0 14px}
+.sub-h{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:20px 0 10px}
+.me-line{font-size:14.5px;color:var(--text2);margin-bottom:6px}
+.me-line b{color:var(--text)}
+</style>
+</head>
+<body>
+
+<header class="bar"><div class="bar-in">
+  <a class="logo" href="./" aria-label="HSW365 AI Estimate home"><span class="mark" aria-hidden="true">E</span><span><b>AI Estimate</b><small>by HSW365</small></span></a>
+  <span class="sp"></span>
+  <button class="credit" id="creditBtn" type="button" hidden aria-label="Estimates left. Open plans and billing"><span>Estimates left</span><b id="creditN">0</b><i>Get more</i></button>
+  <button class="out" id="outBtn" type="button" hidden>Sign out</button>
+</div></header>
+
+<!-- sign in / sign up -->
+<section class="gate" id="gate" hidden>
+  <div class="card">
+    <div class="tabs" role="tablist"><button type="button" role="tab" id="tabIn" aria-selected="true">Sign in</button><button type="button" role="tab" id="tabUp" aria-selected="false">Start free</button></div>
+
+    <form id="inForm" novalidate>
+      <h2>Welcome back</h2>
+      <p>Enter your PIN. That is all it takes.</p>
+      <label for="gPin" class="sr">PIN</label>
+      <input id="gPin" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8" placeholder="8 digits" required>
+      <button class="btn btn-go" type="submit">Sign in</button>
+      <div class="msg" id="inMsg" role="status"></div>
+      <p class="fine"><button class="btn-quiet" type="button" id="forgotBtn">Forgot PIN? Email me a new one</button></p>
+    </form>
+
+    <form id="upForm" novalidate hidden>
+      <h2>3 free estimates</h2>
+      <p>No card. Make an account, take photos or a short video of any job, and get a finished estimate and PDF.</p>
+      <div class="grid">
+        <div class="full"><label for="uBiz">Business name</label><input id="uBiz" autocomplete="organization" placeholder="Acme Plumbing and Heating"></div>
+        <div class="full"><label for="uEmail">Email <em>(your PIN is sent here)</em></label><input id="uEmail" type="email" inputmode="email" autocomplete="email"></div>
+        <div><label for="uTrade">Trade <em>(optional)</em></label><input id="uTrade" placeholder="Roofing, HVAC, electrical…"></div>
+        <div><label for="uPhone">Phone <em>(optional)</em></label><input id="uPhone" type="tel" autocomplete="tel"></div>
+      </div>
+      <button class="btn btn-go" type="submit">Create my account</button>
+      <div class="msg" id="upMsg" role="status"></div>
+      <p class="fine">You get a PIN to sign in. No password to remember.</p>
+    </form>
+
+    <div id="pinDone" hidden>
+      <h2>You are in</h2>
+      <p>This is your PIN. It is also in your email. Keep it, it is how you sign in.</p>
+      <div class="pinshow" id="pinBig"></div>
+      <button class="btn btn-go" type="button" id="pinGo">Make my first estimate</button>
+    </div>
+  </div>
+</section>
+
+<main class="page" id="app" hidden>
+  <div>
+    <form id="f" novalidate autocomplete="off">
+      <section class="card start">
+        <div class="step"><i>1</i><h2>Start from the job</h2><p>Photos, video, your voice</p></div>
+        <div class="sizebox">
+          <span class="lab">How big is this job?</span>
+          <div class="seg four" role="radiogroup" aria-label="Job size">
+            <label><input type="radio" name="size" value="small" checked><span>Small<small>under $5K</small></span></label>
+            <label><input type="radio" name="size" value="mid"><span>Mid<small>$5K to $25K</small></span></label>
+            <label><input type="radio" name="size" value="large"><span>Large<small>$25K to $100K</small></span></label>
+            <label><input type="radio" name="size" value="major"><span>Major<small>$100K+</small></span></label>
+          </div>
+          <div class="hint" id="sizeHint"></div>
+        </div>
+        <div class="cap">
+          <label class="btn btn-go" for="camIn">Take photos or video<input id="camIn" type="file" accept="image/*,video/*" capture="environment" multiple></label>
+          <label class="btn btn-line" for="pickIn">Choose from my phone<input id="pickIn" type="file" accept="image/*,video/*" multiple></label>
+        </div>
+        <div class="shots" id="shots"></div>
+        <div class="voice">
+          <button class="btn btn-line" type="button" id="recBtn">Tap to talk about the job</button>
+          <span id="recInfo">Say what you see and what the job needs.</span>
+          <button class="btn-quiet" type="button" id="recDel" hidden>Delete voice note</button>
+        </div>
+        <label for="notes" style="margin-top:16px">Type it, or tap the mic and just talk <em>(optional)</em></label>
+        <textarea id="notes" name="notes" placeholder="50 gal gas water heater leaking from the bottom, basement, replace. haul away old one."></textarea>
+        <button class="btn btn-vio build" type="button" id="buildBtn">Build my estimate</button>
+        <div class="msg" id="buildMsg" role="status"></div>
+        <ul class="checks" id="checks" hidden></ul>
+        <label class="chk"><input type="checkbox" id="showPhotos" checked> Put the job photos in the PDF</label>
+      </section>
+
+      <section class="card">
+        <div class="step"><i>2</i><h2>What are you sending?</h2></div>
+        <div class="seg" role="radiogroup" aria-label="Type of form">
+          <label><input type="radio" name="type" value="proposal" checked><span>Proposal</span></label>
+          <label><input type="radio" name="type" value="estimate"><span>Estimate</span></label>
+          <label><input type="radio" name="type" value="invoice"><span>Invoice</span></label>
+        </div>
+        <div class="grid" style="margin-top:16px">
+          <div><label for="number">Number</label><input id="number" name="number" placeholder="Filled in for you"></div>
+          <div><label for="date">Date</label><input id="date" name="date" type="date"></div>
+          <div id="validWrap"><label for="validDays">Good for <em>(days)</em></label><input id="validDays" name="validDays" type="number" min="1" max="365" inputmode="numeric" value="30"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step"><i>3</i><h2>Customer</h2><p>Bill to</p></div>
+        <div class="grid">
+          <div><label for="cCompany">Company</label><input id="cCompany" name="c.company"></div>
+          <div><label for="cContact">Attention <em>(person)</em></label><input id="cContact" name="c.contact"></div>
+          <div><label for="cAddress">Street address</label><input id="cAddress" name="c.address"></div>
+          <div><label for="cCity">Town, state, ZIP</label><input id="cCity" name="c.city"></div>
+          <div><label for="cPhone">Phone</label><input id="cPhone" name="c.phone" type="tel"></div>
+          <div><label for="cFax">Fax</label><input id="cFax" name="c.fax" type="tel"></div>
+          <div class="full"><label for="cEmail">Email <em>(the PDF is sent here)</em></label><input id="cEmail" name="c.email" type="email" inputmode="email"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step"><i>4</i><h2>The job</h2></div>
+        <div class="grid">
+          <div class="full"><label for="jobsite">Jobsite address</label><input id="jobsite" name="jobsite"></div>
+          <div class="full">
+            <div class="addrow" style="margin-top:0"><button class="btn btn-line" type="button" id="aiBtn">Rewrite heading and scope</button></div>
+            <div class="msg" id="aiMsg" role="status"></div>
+          </div>
+          <div class="full"><label for="title">Heading</label><input id="title" name="title"></div>
+          <div class="full"><label for="scope">Scope of work</label><textarea id="scope" name="scope" style="min-height:120px"></textarea></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step"><i>5</i><h2>Work and prices</h2><p>You put the numbers in</p></div>
+        <div class="lines" id="lines"></div>
+        <div class="addrow"><button class="btn btn-line" type="button" id="addLine">+ Add a line</button></div>
+      </section>
+
+      <section class="card">
+        <div class="step"><i>6</i><h2>Payments received</h2><p>Deposits already paid</p></div>
+        <div class="pays" id="pays"></div>
+        <div class="addrow"><button class="btn btn-line" type="button" id="addPay">+ Add a payment</button></div>
+      </section>
+
+      <section class="card">
+        <div class="step"><i>7</i><h2>Terms</h2></div>
+        <label for="terms" class="sr">Terms</label>
+        <textarea id="terms" name="terms" style="min-height:110px"></textarea>
+        <button class="btn-quiet" type="button" id="resetTerms">Use the standard terms</button>
+      </section>
+    </form>
+  </div>
+
+  <aside class="side">
+    <div class="totals" aria-live="polite">
+      <h3 id="tKind">Proposal total</h3>
+      <div class="trow sub"><span>Subtotal</span><span id="tSub">$0.00</span></div>
+      <div class="trow sub" id="tTaxRow" hidden><span id="tTaxL">Tax</span><span id="tTax">$0.00</span></div>
+      <div class="trow big" id="tTotalRow"><span>Total</span><span id="tTotal">$0.00</span></div>
+      <div id="tPaidRow" hidden><div class="trow sub"><span>Paid</span><span id="tPaid">$0.00</span></div></div>
+      <div class="trow due"><span id="tDueL">Total</span><b id="tDue">$0.00</b></div>
+      <div class="taxrow"><label for="taxPct">Sales tax %</label><input id="taxPct" form="f" name="taxPct" inputmode="decimal" placeholder="0"></div>
+      <p class="calc-note">Totals are worked out to the penny from your lines. The AI never writes a price. Every number is yours.</p>
+    </div>
+    <div class="acts">
+      <button class="btn btn-go" type="button" id="emailBtn">Email to customer</button>
+      <div class="two"><button class="btn btn-line" type="button" id="viewBtn">See PDF</button><button class="btn btn-line" type="button" id="printBtn">Print</button></div>
+      <button class="btn btn-line" type="button" id="saveBtn">Save</button>
+      <div class="msg" id="actMsg" role="status"></div>
+    </div>
+    <section class="card" style="margin-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <h2 style="font:900 26px/1 var(--disp);text-transform:uppercase">Saved</h2>
+        <button class="btn btn-line" type="button" id="newBtn" style="min-height:42px;font-size:14px;padding:0 16px">New blank</button>
+      </div>
+      <div class="saved" id="saved"><div class="empty">Loading…</div></div>
+    </section>
+    <section class="card">
+      <details class="co" id="coBox">
+        <summary>Your letterhead</summary>
+        <form id="coForm" class="grid" style="margin-top:12px" novalidate>
+          <div class="full"><label>Business name</label><input name="name"></div>
+          <div class="full"><label>Line under the name</label><input name="tagline"></div>
+          <div class="full"><label>Street</label><input name="address"></div>
+          <div class="full"><label>Town, state, ZIP</label><input name="city"></div>
+          <div><label>Office</label><input name="office" type="tel"></div>
+          <div><label>Cell</label><input name="cell" type="tel"></div>
+          <div><label>Fax</label><input name="fax" type="tel"></div>
+          <div><label>Permit no.</label><input name="permit"></div>
+          <div class="full"><label>Licenses</label><input name="licenses"></div>
+          <div class="full"><label>Email</label><input name="email" type="email"></div>
+          <div class="full"><label>Brand color <em>(your headers and rules on the PDF)</em></label><input name="brand" type="color" value="#0b2a4a"></div>
+          <div class="full"><button class="btn btn-go" type="submit" style="width:100%">Save letterhead</button><div class="msg" id="coMsg" role="status"></div></div>
+        </form>
+      </details>
+    </section>
+    <section class="card">
+      <div class="me-line" id="planLine"></div>
+      <button class="btn btn-line" type="button" id="billBtn" style="width:100%">Plans and billing</button>
+      <p class="calc-note" style="margin-top:12px">Questions or something broken? <a href="mailto:hsw365media@gmail.com?subject=HSW365%20AI%20Estimate">hsw365media@gmail.com</a></p>
+    </section>
+  </aside>
+</main>
+
+<div class="dock" id="dock" hidden><div><small id="dKind">Total</small><b id="dDue">$0.00</b></div><button class="btn btn-go" type="button" id="dockGo">Finish</button></div>
+
+<!-- email dialog -->
+<div class="ov" id="mailOv" hidden role="dialog" aria-modal="true" aria-labelledby="mailH">
+  <div class="dlg">
+    <h3 id="mailH">Email to customer</h3>
+    <p class="s">The PDF is attached. When they reply, it comes to your email.</p>
+    <form id="mailForm" novalidate>
+      <label for="mTo">Send to</label><input id="mTo" type="email" inputmode="email" required>
+      <label for="mMsg" style="margin-top:14px">Message <em>(optional)</em></label>
+      <textarea id="mMsg" placeholder="Attached is our estimate for the work at your property."></textarea>
+      <div class="msg" id="mailMsg" role="status"></div>
+      <div class="row"><button class="btn btn-line" type="button" id="mailCancel">Cancel</button><button class="btn btn-go" type="submit">Send now</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- plans and billing -->
+<div class="ov" id="planOv" hidden role="dialog" aria-modal="true" aria-labelledby="planH">
+  <div class="dlg wide">
+    <h3 id="planH">Plans and billing</h3>
+    <p class="s" id="planWhy">Pick what fits your jobs. Cancel any time.</p>
+    <div class="sub-h">Monthly plans, sized to your jobs</div>
+    <div class="pgrid" id="planGrid"></div>
+    <div class="sub-h">No subscription? Pay per estimate</div>
+    <div class="pgrid" id="packGrid"></div>
+    <div id="topupBox" hidden><div class="sub-h">Need extra this month</div><div class="pgrid" id="topupGrid"></div></div>
+    <div class="msg" id="planMsg" role="status"></div>
+    <div class="row"><button class="btn btn-line" type="button" id="portalBtn" hidden>Manage billing</button><button class="btn btn-line" type="button" id="planClose">Close</button></div>
+  </div>
+</div>
+
+<script>
+const API = "https://calltwin.onrender.com/api/estimator";
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const ls = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} }, del(k) { try { localStorage.removeItem(k); } catch {} } };
+const store = (k, v) => { try { v === undefined ? null : v === null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); return JSON.parse(localStorage.getItem(k) || "null"); } catch { return null; } };
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const say = (el, text, ok) => { el.textContent = text || ""; el.className = "msg " + (text ? (ok ? "ok" : "err") : ""); };
+const TYPES = { proposal: "Proposal", estimate: "Estimate", invoice: "Invoice" };
+const SIZE_LABEL = { small: "Small jobs", mid: "Mid jobs", large: "Large jobs", major: "Major jobs" };
+const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
+const usd = (c) => "$" + (c / 100).toLocaleString("en-US", { minimumFractionDigits: c % 100 ? 2 : 0, maximumFractionDigits: 2 });
+
+function cents(v) {
+  const s = String(v ?? "").replace(/[$,\s]/g, ""); const n = parseFloat(s.replace(/[()\-]/g, ""));
+  if (!isFinite(n)) return 0; return Math.round(n * 100) * (/^\(.*\)$/.test(s) || s.startsWith("-") ? -1 : 1);
+}
+const qty = (v) => { if (v === "" || v == null) return 1; const n = parseFloat(String(v).replace(/,/g, "")); return isFinite(n) && n >= 0 ? Math.round(n * 100) / 100 : 1; };
+function money(c) { const a = Math.abs(Math.round(c)); const s = "$" + Math.floor(a / 100).toLocaleString("en-US") + "." + String(a % 100).padStart(2, "0"); return c < 0 ? `(${s})` : s; }
+
+let SHOTS = [], CLIPS = [], VOICE = null, LOADED = false, TOKEN = ls.get("est_token"), CURRENT = null, DEFAULTS = {}, COMPANY = {}, NEXT = "", ME = null, PLANS = null;
+
+async function call(path, body, raw) {
+  const r = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json", ...(TOKEN ? { Authorization: "Bearer " + TOKEN } : {}) }, body: JSON.stringify(body || {}) });
+  if (r.status === 401) { const j = await r.json().catch(() => ({})); signOut(j.error || "Please sign in again."); throw new Error("signed out"); }
+  if (raw && r.ok) return r.blob();
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+  if (!r.ok || !j.ok) { const e = new Error(j.error || "That didn't work. Try again."); e.status = r.status; e.data = j; throw e; }
+  return j;
+}
+async function pub(path, body) {
+  const r = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+  if (!r.ok || !j.ok) throw new Error(j.error || "That didn't work. Try again.");
+  return j;
+}
+
+// ---- gate: sign in / sign up ----
+function showTab(up) {
+  $("#tabIn").setAttribute("aria-selected", String(!up)); $("#tabUp").setAttribute("aria-selected", String(up));
+  $("#inForm").hidden = up; $("#upForm").hidden = !up; $("#pinDone").hidden = true; $(".tabs").hidden = false;
+}
+function showGate(m) {
+  $("#app").hidden = true; $("#dock").hidden = true; $("#creditBtn").hidden = true; $("#outBtn").hidden = true; $("#gate").hidden = false;
+  say($("#inMsg"), m || "", false); setTimeout(() => $("#gPin").focus(), 50);
+}
+function signOut(msg) { ls.del("est_token"); TOKEN = null; LOADED = false; ME = null; showTab(false); showGate(msg || ""); }
+$("#tabIn").onclick = () => showTab(false); $("#tabUp").onclick = () => showTab(true);
+$("#outBtn").onclick = () => signOut("");
+$("#inForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); const pin = $("#gPin").value.replace(/\s+/g, "");
+  if (!/^\d{8}$/.test(pin)) return say($("#inMsg"), "Your PIN is 8 digits.", false);
+  const btn = $("button[type=submit]", e.target); btn.disabled = true;
+  try { const j = await pub("/login", { pin }); TOKEN = j.token; ls.set("est_token", TOKEN); $("#gPin").value = ""; await load(); }
+  catch (err) { if (err.message !== "signed out") say($("#inMsg"), err.message, false); } finally { btn.disabled = false; }
+});
+$("#forgotBtn").onclick = async () => {
+  const email = prompt("What email did you sign up with?"); if (!email) return;
+  try { const j = await pub("/reset", { email: email.trim() }); say($("#inMsg"), j.message, true); } catch (e) { say($("#inMsg"), e.message, false); }
+};
+$("#upForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); const btn = $("button[type=submit]", e.target); btn.disabled = true;
+  try {
+    const j = await pub("/signup", { business: $("#uBiz").value, email: $("#uEmail").value, trade: $("#uTrade").value, phone: $("#uPhone").value, source: new URLSearchParams(location.search).get("src") || document.referrer.slice(0, 60) });
+    TOKEN = j.token; ls.set("est_token", TOKEN);
+    $("#upForm").hidden = true; $(".tabs").hidden = true; $("#pinDone").hidden = false; $("#pinBig").textContent = j.pin;
+  } catch (err) { say($("#upMsg"), err.message, false); } finally { btn.disabled = false; }
+});
+$("#pinGo").onclick = () => load().catch((e) => { if (e.message !== "signed out") showGate(e.message); });
+
+// ---- credits ----
+function drawMe() {
+  if (!ME) return;
+  $("#creditBtn").hidden = false; $("#outBtn").hidden = false;
+  $("#creditN").textContent = ME.unlimited ? "∞" : ME.left;
+  const bits = [];
+  if (ME.unlimited) bits.push("<b>Owner account</b>, every feature, no limits.");
+  else {
+    if (ME.planName) bits.push(`<b>${esc(ME.planName)}</b> plan: ${ME.planLeft} of ${ME.planIncluded} left this month${ME.topups ? `, +${ME.topups} top-up` : ""}`);
+    if (ME.trialLeft) bits.push(`${ME.trialLeft} free trial estimate${ME.trialLeft > 1 ? "s" : ""} left`);
+    if (ME.packTotal) bits.push(`${ME.packTotal} pay-per-estimate credit${ME.packTotal > 1 ? "s" : ""} left`);
+    if (!bits.length) bits.push("No estimates left. Pick a plan or a pack.");
+  }
+  $("#planLine").innerHTML = bits.join("<br>");
+  $("#portalBtn").hidden = !ME.plan || ME.unlimited;
+}
+function sizeHint() {
+  const s = $("#f").elements.size.value; const el = $("#sizeHint"); if (!ME || ME.unlimited) { el.textContent = ""; return; }
+  const order = ["small", "mid", "large", "major"];
+  const covered = ME.plan && order.indexOf(s) <= order.indexOf(ME.maxSize);
+  const pk = ME.packs || {}; const packOk = order.slice(order.indexOf(s)).some((k) => pk[k] > 0);
+  const trialOk = ME.trialLeft > 0 && order.indexOf(s) <= 1;
+  el.textContent = covered || packOk || trialOk ? "" : ME.plan ? `${ME.planName} covers jobs up to ${SIZE_LABEL[ME.maxSize].toLowerCase()}. Bigger jobs need a bigger plan or a pack.` : "";
+}
+$$("#f [name=size]").forEach((r) => r.addEventListener("change", () => { ls.set("est_size", r.value); sizeHint(); }));
+
+// ---- plans dialog ----
+async function loadPlans() { if (!PLANS) { const r = await fetch(API + "/plans"); PLANS = await r.json(); } return PLANS; }
+async function openPlans(why) {
+  await loadPlans();
+  $("#planWhy").textContent = why || "Pick what fits your jobs. Cancel any time.";
+  $("#planGrid").innerHTML = PLANS.plans.map((p, i) => `<div class="pc${p.key === "crew" ? " hot" : ""}"><h4>${esc(p.name)}</h4><div class="for">${esc(p.jobs)}</div>
+    <div class="pr">${usd(p.monthlyCents)}<small>/mo</small></div><p>${esc(p.blurb)}</p>
+    <ul><li>${p.included} estimates a month</li><li>${usd(p.overCents)} each after that</li><li>${p.users === 99 ? "Unlimited" : p.users} user${p.users > 1 ? "s" : ""}</li><li>${p.setupCents ? usd(p.setupCents) + " one-time setup" : "No setup fee"}</li>${p.key === "solo" ? "<li>Small footer line on PDFs</li>" : "<li>No HSW365 line on your PDFs</li>"}</ul>
+    <button class="btn ${p.key === "crew" ? "btn-go" : "btn-line"}" data-buy="plan:${p.key}" ${ME && ME.plan === p.key ? "disabled" : ""}>${ME && ME.plan === p.key ? "Your plan" : "Start " + esc(p.name)}</button></div>`).join("");
+  $("#packGrid").innerHTML = PLANS.packs.map((k) => `<div class="pc"><h4>${esc(k.name)}</h4><div class="for">${esc(k.jobs)}</div>
+    <div class="pr">${usd(k.unitCents)}<small>/estimate</small></div><p>${k.qty} estimates for ${usd(k.priceCents)}. No subscription, no expiry.</p>
+    <button class="btn btn-line" data-buy="pack:${k.key}">Buy ${k.qty} for ${usd(k.priceCents)}</button></div>`).join("");
+  const live = ME && ME.plan && !ME.unlimited; $("#topupBox").hidden = !live;
+  if (live) { const p = PLANS.plans.find((x) => x.key === ME.plan); $("#topupGrid").innerHTML = `<div class="pc"><h4>${PLANS.topupQty} extra</h4><div class="pr">${usd(p.overCents * PLANS.topupQty)}</div><p>${PLANS.topupQty} more estimates at your plan rate (${usd(p.overCents)} each).</p><button class="btn btn-line" data-buy="topup:${p.key}">Add ${PLANS.topupQty}</button></div>`; }
+  $$("#planOv [data-buy]").forEach((b) => (b.onclick = async () => {
+    const [kind, key] = b.dataset.buy.split(":"); b.disabled = true; say($("#planMsg"), "Opening secure checkout…", true);
+    try { const j = await call("/checkout", { kind, key }); location.href = j.url; } catch (e) { say($("#planMsg"), e.message, false); b.disabled = false; }
+  }));
+  say($("#planMsg"), ""); $("#planOv").hidden = false;
+}
+$("#creditBtn").onclick = () => openPlans(); $("#billBtn").onclick = () => openPlans();
+$("#planClose").onclick = () => ($("#planOv").hidden = true);
+$("#planOv").addEventListener("click", (e) => { if (e.target.id === "planOv") $("#planOv").hidden = true; });
+$("#portalBtn").onclick = async () => { try { const j = await call("/portal", {}); location.href = j.url; } catch (e) { say($("#planMsg"), e.message, false); } };
+
+// ---- lines ----
+function lineRow(it = {}) {
+  const el = document.createElement("div"); el.className = "line";
+  el.innerHTML = `<div class="n"></div>
+    <div class="d"><span class="lab">Description</span><textarea data-k="desc" rows="1" aria-label="Description">${esc(it.desc)}</textarea></div>
+    <div><span class="lab">Qty</span><input data-k="qty" inputmode="decimal" value="${esc(it.qty ?? 1)}" aria-label="Quantity"></div>
+    <div><span class="lab">Price each</span><div class="money"><input data-k="price" inputmode="decimal" value="${esc(it.price ?? "")}" placeholder="0.00" aria-label="Price each"></div></div>
+    <button class="btn-x" type="button" aria-label="Remove line" style="margin-top:22px">×</button>
+    <div class="flag">Needs your price</div>
+    <div class="amt">Line total <b>$0.00</b></div>`;
+  if (it.need) el.classList.add("need");
+  el.querySelector("[data-k=price]").addEventListener("input", (e) => { if (cents(e.target.value)) el.classList.remove("need"); });
+  el.querySelector(".btn-x").onclick = () => { el.remove(); if (!$$("#lines .line").length) addLine(); recalc(); };
+  const ta = el.querySelector("textarea"); const grow = () => { ta.style.height = "52px"; ta.style.height = Math.max(52, ta.scrollHeight + 2) + "px"; };
+  ta.addEventListener("input", grow); setTimeout(grow);
+  return el;
+}
+function addLine(it) { const el = lineRow(it); $("#lines").appendChild(el); renumber(); recalc(); return el; }
+function renumber() { $$("#lines .line").forEach((l, i) => (l.querySelector(".n").textContent = i + 1)); }
+function payRow(p = {}) {
+  const el = document.createElement("div"); el.className = "pay";
+  el.innerHTML = `<input data-k="label" value="${esc(p.label || "Deposit received")}" aria-label="What the payment was">
+    <div class="money"><input data-k="amount" inputmode="decimal" value="${esc(p.amount ?? "")}" placeholder="0.00" aria-label="Amount paid"></div>
+    <button class="btn-x" type="button" aria-label="Remove payment">×</button>`;
+  el.querySelector(".btn-x").onclick = () => { el.remove(); recalc(); };
+  return el;
+}
+$("#addLine").onclick = () => addLine().querySelector("textarea").focus();
+$("#addPay").onclick = () => { const el = payRow(); $("#pays").appendChild(el); el.querySelector("[data-k=amount]").focus(); recalc(); };
+
+// ---- read / fill the form ----
+function read() {
+  const f = $("#f"), v = (n) => (f.elements[n] ? f.elements[n].value.trim() : "");
+  const customer = {}; for (const k of ["company", "contact", "address", "city", "phone", "fax", "email"]) customer[k] = v("c." + k);
+  return {
+    type: f.elements.type.value, number: v("number"), date: v("date") || today(), validDays: v("validDays"),
+    customer, jobsite: v("jobsite"), notes: v("notes"), title: v("title"), scope: v("scope"), terms: v("terms"),
+    taxPct: $("#taxPct").value.trim(),
+    items: $$("#lines .line").map((l) => ({ desc: l.querySelector("[data-k=desc]").value.trim(), qty: l.querySelector("[data-k=qty]").value.trim(), price: l.querySelector("[data-k=price]").value.trim() })).filter((i) => i.desc || i.price),
+    payments: $$("#pays .pay").map((p) => ({ label: p.querySelector("[data-k=label]").value.trim(), amount: p.querySelector("[data-k=amount]").value.trim() })).filter((p) => cents(p.amount)),
+    photos: SHOTS.slice(0, 8).map((x) => ({ src: x.src, caption: x.caption || "" })),
+    showPhotos: $("#showPhotos").checked,
+  };
+}
+function fill(d) {
+  const f = $("#f"); d = d || {};
+  f.elements.type.value = TYPES[d.type] ? d.type : "proposal";
+  f.elements.number.value = d.number || ""; f.elements.date.value = d.date || today(); f.elements.validDays.value = d.validDays || 30;
+  for (const k of ["company", "contact", "address", "city", "phone", "fax", "email"]) f.elements["c." + k].value = (d.customer || {})[k] || "";
+  for (const k of ["jobsite", "notes", "title", "scope"]) f.elements[k].value = d[k] || "";
+  f.elements.terms.value = d.terms || DEFAULTS[f.elements.type.value] || "";
+  $("#taxPct").value = d.taxPct ? String(d.taxPct) : "";
+  $("#lines").innerHTML = ""; (d.items && d.items.length ? d.items : [{}]).forEach((it) => addLine({ desc: it.desc, qty: it.qty, price: it.price ?? (it.priceCents != null ? (it.priceCents / 100).toFixed(2) : "") }));
+  $("#pays").innerHTML = ""; (d.payments || []).forEach((p) => $("#pays").appendChild(payRow({ label: p.label, amount: p.amount ?? (p.amountCents != null ? (p.amountCents / 100).toFixed(2) : "") })));
+  SHOTS = (d.photos || []).map((p) => ({ src: p.src, caption: p.caption || "" })); VOICE = null; CLIPS = []; drawShots(); drawVoice();
+  $("#showPhotos").checked = d.showPhotos !== false; say($("#buildMsg"), ""); $("#checks").hidden = true;
+  typeChanged(); recalc();
+}
+
+// ---- live totals ----
+function recalc() {
+  const d = read(); const t = { sub: 0 };
+  $$("#lines .line").forEach((l) => {
+    const c = Math.round(qty(l.querySelector("[data-k=qty]").value) * cents(l.querySelector("[data-k=price]").value));
+    l.querySelector(".amt b").textContent = money(c); t.sub += c;
+  });
+  const pct = Math.min(Math.max(parseFloat(String(d.taxPct).replace(/[%\s]/g, "")) || 0, 0), 25);
+  const tax = Math.round((t.sub * pct) / 100), total = t.sub + tax;
+  const paid = d.payments.reduce((a, p) => a + Math.abs(cents(p.amount)), 0);
+  $("#tSub").textContent = money(t.sub);
+  $("#tTaxRow").hidden = !pct; $("#tTaxL").textContent = `Tax (${pct}%)`; $("#tTax").textContent = money(tax);
+  $("#tTotal").textContent = money(total);
+  $("#tPaidRow").hidden = !paid; $("#tTotalRow").hidden = !paid; $("#tPaid").textContent = money(-paid);
+  $("#tDueL").textContent = paid ? "Balance due" : "Total"; $("#tDue").textContent = money(paid ? total - paid : total);
+  $("#tKind").textContent = TYPES[d.type] + " total";
+  $("#dKind").textContent = paid ? "Balance due" : TYPES[d.type] + " total"; $("#dDue").textContent = $("#tDue").textContent;
+  store("est_draft", { id: CURRENT, doc: { ...d, photos: undefined } });
+}
+function typeChanged() {
+  const t = $("#f").elements.type.value;
+  $("#validWrap").hidden = t === "invoice";
+  const terms = $("#terms"); if (!terms.value.trim() || Object.values(DEFAULTS).includes(terms.value.trim())) terms.value = DEFAULTS[t] || "";
+}
+$("#f").addEventListener("input", recalc);
+$("#taxPct").addEventListener("input", recalc);
+$$("#f [name=type]").forEach((r) => r.addEventListener("change", () => { typeChanged(); recalc(); }));
+$("#resetTerms").onclick = () => { $("#terms").value = DEFAULTS[$("#f").elements.type.value] || ""; recalc(); };
+
+// ---- saved list ----
+function renderSaved(items) {
+  $("#saved").innerHTML = items.length ? items.map((r) => `<div class="srow"><div><b><span class="tag">${esc(TYPES[r.type] || "")}</span>${esc(r.customer || "No name")}</b><small>No. ${esc(r.number)} · ${money(r.totalCents || 0)} · ${new Date(r.updatedAt).toLocaleDateString()}${r.photoCount ? ` · ${r.photoCount} photo${r.photoCount > 1 ? "s" : ""}` : ""}</small></div>
+    <button type="button" data-open="${r.id}">Open</button><button type="button" class="use" data-use="${r.id}" title="Start a new one from this">Use again</button></div>`).join("")
+    : `<div class="empty">Nothing saved yet. Fill in the form and press Save.</div>`;
+  const byId = Object.fromEntries(items.map((r) => [r.id, r]));
+  $$("#saved [data-open]").forEach((b) => (b.onclick = () => busy(b, async () => { const r = byId[b.dataset.open]; const j = r.photoCount ? await call("/get", { id: r.id }) : { doc: r.doc }; CURRENT = r.id; fill(j.doc); say($("#actMsg"), `Opened ${TYPES[r.type]} ${r.number}.`, true); scrollTo({ top: 0, behavior: "smooth" }); })));
+  $$("#saved [data-use]").forEach((b) => (b.onclick = () => { const r = byId[b.dataset.use]; CURRENT = null; fill({ ...r.doc, number: "", date: today(), payments: [] }); say($("#actMsg"), "Copied as a new form. Change what you need, then Save.", true); scrollTo({ top: 0, behavior: "smooth" }); }));
+}
+function fillCompany() { for (const [k, v] of Object.entries(COMPANY)) { const el = $("#coForm").elements[k]; if (el) el.value = v || (k === "brand" ? "#0b2a4a" : ""); } }
+async function load() {
+  const j = await call("/list", {});
+  ME = j.me; DEFAULTS = j.defaults || {}; COMPANY = j.company || {}; NEXT = j.next || "";
+  $("#number").placeholder = NEXT ? `${NEXT} (filled in for you)` : "Filled in for you";
+  renderSaved(j.items || []); fillCompany(); drawMe();
+  $("#gate").hidden = true; $("#app").hidden = false; $("#dock").hidden = false;
+  const sz = ls.get("est_size"); if (sz && $("#f").elements.size) $("#f").elements.size.value = sz; sizeHint();
+  if (!LOADED) { LOADED = true; const dr = store("est_draft"); CURRENT = (dr && dr.id) || null; fill(dr && dr.doc); }
+  const q = new URLSearchParams(location.search);
+  if (q.get("paid")) { history.replaceState(null, "", "app.html"); say($("#buildMsg"), "Payment received. Your estimates are ready.", true); }
+}
+$("#newBtn").onclick = () => { if (!confirm("Start a new blank form? Anything not saved on this one will be cleared.")) return; CURRENT = null; fill({}); say($("#actMsg"), "", true); scrollTo({ top: 0, behavior: "smooth" }); };
+
+// ---- actions ----
+function check(d) {
+  if (!d.items.length || !d.items.some((i) => cents(i.price))) return "Add at least one line with a price.";
+  if (!d.customer.company && !d.customer.contact) return "Add the customer's company or name.";
+  return "";
+}
+async function save(quiet) {
+  const d = read(); const why = check(d); if (why) throw new Error(why);
+  const j = await call("/save", { id: CURRENT, doc: d });
+  CURRENT = j.id; $("#number").value = j.number; recalc();
+  const l = await call("/list", {}); NEXT = l.next; ME = l.me; drawMe(); renderSaved(l.items || []);
+  if (!quiet) say($("#actMsg"), `Saved ${TYPES[d.type]} ${j.number}.`, true);
+  return j;
+}
+async function busy(btn, fn) { const t = btn.textContent; btn.disabled = true; btn.textContent = "Working…"; try { await fn(); } catch (e) { if (e.message !== "signed out") say($("#actMsg"), e.message, false); } finally { btn.disabled = false; btn.textContent = t; } }
+$("#dockGo").onclick = () => $(".totals").scrollIntoView({ behavior: "smooth", block: "start" });
+$("#saveBtn").onclick = () => busy($("#saveBtn"), () => save());
+async function openPdf(print) {
+  const w = window.open("", "_blank");
+  try {
+    await save(true);
+    const blob = await call("/pdf", { doc: read() }, true);
+    const url = URL.createObjectURL(blob);
+    if (w) { w.location.href = url; if (print) setTimeout(() => { try { w.print(); } catch {} }, 1200); } else location.href = url;
+    say($("#actMsg"), print ? "PDF opened. Print it from there." : "PDF opened in a new tab.", true);
+  } catch (e) { if (w) w.close(); throw e; }
+}
+$("#viewBtn").onclick = () => busy($("#viewBtn"), () => openPdf(false));
+$("#printBtn").onclick = () => busy($("#printBtn"), () => openPdf(true));
+$("#emailBtn").onclick = () => {
+  const d = read(); const why = check(d); if (why) return say($("#actMsg"), why, false);
+  $("#mTo").value = d.customer.email; say($("#mailMsg"), "", true); $("#mailOv").hidden = false; setTimeout(() => ($("#mTo").value ? $("#mMsg") : $("#mTo")).focus(), 50);
+};
+$("#mailCancel").onclick = () => ($("#mailOv").hidden = true);
+$("#mailOv").addEventListener("click", (e) => { if (e.target.id === "mailOv") $("#mailOv").hidden = true; });
+addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#mailOv").hidden = true; $("#planOv").hidden = true; } });
+$("#mailForm").addEventListener("submit", (e) => {
+  e.preventDefault(); const btn = $("button[type=submit]", e.target);
+  const to = $("#mTo").value.trim(); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) return say($("#mailMsg"), "Check the email address.", false);
+  busy(btn, async () => {
+    try {
+      const s = await save(true);
+      await call("/email", { doc: read(), to, message: $("#mMsg").value.trim() });
+      $("#mailOv").hidden = true; $("#mMsg").value = "";
+      if (!$("#cEmail").value) { $("#cEmail").value = to; recalc(); }
+      say($("#actMsg"), `Sent ${s.number} to ${to}.`, true);
+    } catch (err) { say($("#mailMsg"), err.message, false); throw err; }
+  });
+});
+$("#aiBtn").onclick = () => busy($("#aiBtn"), async () => {
+  const d = read();
+  if (!d.notes && !d.items.some((i) => i.desc)) return say($("#aiMsg"), "Type a few words about the job first.", false);
+  try {
+    const j = await call("/writeup", { type: d.type, notes: d.notes, items: d.items.map((i) => ({ desc: i.desc })) });
+    if (j.title) $("#title").value = j.title; if (j.scope) $("#scope").value = j.scope; recalc();
+    say($("#aiMsg"), "Written. Read it over and change anything. Prices come only from your lines.", true);
+  } catch (e) { say($("#aiMsg"), e.message, false); }
+});
+$("#coForm").addEventListener("submit", (e) => {
+  e.preventDefault(); const btn = $("button[type=submit]", e.target);
+  busy(btn, async () => { const c = Object.fromEntries(new FormData(e.target)); const j = await call("/letterhead", { company: c }); COMPANY = j.company; say($("#coMsg"), "Saved. Every PDF uses this now.", true); });
+});
+
+// ---- photos, video, voice ----
+const MAX_SHOTS = 12, AUDIO_MAX = 24 * 1024 * 1024;
+function shrink(src, max = 1280, q = 0.74) {
+  return new Promise((ok, bad) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", q));
+    };
+    img.onerror = () => bad(new Error("That photo couldn't be opened."));
+    img.src = src;
+  });
+}
+function frames(file, n = 3) {
+  return new Promise((ok) => {
+    const v = document.createElement("video"), url = URL.createObjectURL(file), out = [];
+    v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+    const done = () => { URL.revokeObjectURL(url); ok(out); };
+    const stop = setTimeout(done, 20000);
+    v.onerror = () => { clearTimeout(stop); done(); };
+    v.onloadeddata = async () => {
+      const dur = isFinite(v.duration) && v.duration > 0 ? v.duration : 1;
+      for (let i = 0; i < n; i++) {
+        await new Promise((r) => { v.onseeked = r; v.currentTime = Math.min(dur - 0.05, dur * (0.15 + (0.7 * i) / Math.max(1, n - 1))); setTimeout(r, 3000); });
+        const k = Math.min(1, 1280 / Math.max(v.videoWidth || 1280, v.videoHeight || 720));
+        const c = document.createElement("canvas"); c.width = Math.round((v.videoWidth || 1280) * k); c.height = Math.round((v.videoHeight || 720) * k);
+        try { c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); out.push(c.toDataURL("image/jpeg", 0.74)); } catch {}
+      }
+      clearTimeout(stop); done();
+    };
+  });
+}
+async function addFiles(list) {
+  const msg = $("#buildMsg"); say(msg, "Adding…", true);
+  for (const f of list) {
+    if (SHOTS.length >= MAX_SHOTS) { say(msg, `That's the most it can use (${MAX_SHOTS} pictures). Remove some to add more.`, false); break; }
+    try {
+      if (f.type.startsWith("video/")) {
+        const fr = await frames(f);
+        fr.slice(0, MAX_SHOTS - SHOTS.length).forEach((src, i) => SHOTS.push({ src, caption: "", frame: true, clip: f.name + i }));
+        if (f.size <= AUDIO_MAX && CLIPS.length < 2) CLIPS.push(f);
+        if (!fr.length) say(msg, "Couldn't take pictures from that video. Try photos, or a shorter clip.", false);
+      } else if (f.type.startsWith("image/")) {
+        const url = URL.createObjectURL(f);
+        try { SHOTS.push({ src: await shrink(url), caption: "" }); } finally { URL.revokeObjectURL(url); }
+      }
+    } catch (e) { say(msg, e.message, false); }
+  }
+  if (msg.textContent === "Adding…") say(msg, "");
+  drawShots(); recalc();
+}
+function drawShots() {
+  $("#shots").innerHTML = SHOTS.map((x, i) => `<div class="shot">${x.frame ? '<span class="vid">VIDEO</span>' : ""}<img src="${x.src}" alt="Job photo ${i + 1}"><button type="button" data-del="${i}" aria-label="Remove photo">×</button><input data-cap="${i}" value="${esc(x.caption)}" placeholder="What is this? (optional)" aria-label="Caption for photo ${i + 1}"></div>`).join("");
+  $$("#shots [data-del]").forEach((b) => (b.onclick = () => { SHOTS.splice(+b.dataset.del, 1); drawShots(); recalc(); }));
+  $$("#shots [data-cap]").forEach((inp) => (inp.oninput = () => { SHOTS[+inp.dataset.cap].caption = inp.value.slice(0, 120); }));
+}
+["#camIn", "#pickIn"].forEach((id) => $(id).addEventListener("change", (e) => { const fl = [...e.target.files]; e.target.value = ""; addFiles(fl); }));
+
+let rec = null, recT = 0, recTimer = null;
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+function drawVoice() {
+  const b = $("#recBtn"), info = $("#recInfo");
+  if (rec) { b.textContent = "Stop recording"; b.classList.add("rec"); info.textContent = `Recording ${fmt(recT)}`; $("#recDel").hidden = true; return; }
+  b.classList.remove("rec");
+  b.textContent = VOICE ? "Record again" : "Tap to talk about the job";
+  info.textContent = VOICE ? `Voice note ready (${fmt(VOICE.secs)})` : "Say what you see and what the job needs.";
+  $("#recDel").hidden = !VOICE;
+}
+$("#recBtn").onclick = async () => {
+  if (rec) { rec.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) return say($("#buildMsg"), "This phone can't record here. Type a few words instead.", false);
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { return say($("#buildMsg"), "Allow the microphone to record a voice note, or type a few words instead.", false); }
+  const type = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || "";
+  const chunks = [];
+  rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.onstop = () => {
+    stream.getTracks().forEach((t) => t.stop()); clearInterval(recTimer);
+    const blob = new Blob(chunks, { type: (rec.mimeType || type || "audio/webm").split(";")[0] });
+    VOICE = blob.size > 1000 ? { blob, secs: recT } : null; rec = null; drawVoice();
+  };
+  recT = 0; rec.start(1000); drawVoice();
+  recTimer = setInterval(() => { recT++; drawVoice(); if (recT >= 180) rec && rec.stop(); }, 1000);
+};
+$("#recDel").onclick = () => { VOICE = null; drawVoice(); };
+
+// build: photos + video + voice -> drafted estimate (one conversion)
+$("#buildBtn").onclick = () => busy($("#buildBtn"), async () => {
+  const msg = $("#buildMsg"), d = read();
+  if (!SHOTS.length && !VOICE && !CLIPS.length && !d.notes) return say(msg, "Take a few photos or a video, or tap to talk about the job first.", false);
+  const hasLines = d.items.some((i) => i.desc || i.price);
+  if (hasLines && !confirm("Replace the heading, scope and lines on this form with a new draft from the photos?")) return;
+  say(msg, "Looking at the job… this can take up to a minute.", true);
+  const fd = new FormData();
+  fd.append("type", d.type); fd.append("notes", d.notes || ""); fd.append("size", $("#f").elements.size.value);
+  for (const x of SHOTS.slice(0, 12)) fd.append("photos", await (await fetch(x.src)).blob(), "photo.jpg");
+  if (VOICE) fd.append("audio", VOICE.blob, "note." + (VOICE.blob.type.includes("mp4") ? "m4a" : VOICE.blob.type.includes("ogg") ? "ogg" : "webm"));
+  CLIPS.forEach((c) => fd.append("audio", c, "clip.mp4"));
+  const r = await fetch(API + "/analyze", { method: "POST", headers: { Authorization: "Bearer " + TOKEN }, body: fd });
+  const j = await r.json().catch(() => ({ ok: false, error: "Server error. Try again." }));
+  if (r.status === 401) { signOut(j.error); return; }
+  if (r.status === 402) { if (j.me) { ME = j.me; drawMe(); } say(msg, "", true); openPlans("You are out of estimates for this job size. Pick a plan or a pack to keep going."); return; }
+  if (!r.ok || !j.ok) return say(msg, j.error || "That didn't work. Try again.", false);
+  if (j.me) { ME = j.me; drawMe(); sizeHint(); }
+  if (j.title) $("#title").value = j.title;
+  if (j.scope) $("#scope").value = j.scope;
+  $("#lines").innerHTML = "";
+  (j.items.length ? j.items : [{}]).forEach((it) => addLine({ desc: it.desc, qty: it.qty, price: it.priceCents != null ? (it.priceCents / 100).toFixed(2) : "", need: it.priceCents == null && !!it.desc }));
+  recalc();
+  const parts = [`Drafted ${j.items.length} line${j.items.length === 1 ? "" : "s"}.`];
+  if (j.priced) parts.push(`${j.priced} priced from your past jobs.`);
+  if (j.unpriced) parts.push(`${j.unpriced} need${j.unpriced === 1 ? "s" : ""} your price (in yellow).`);
+  parts.push("Check it over, then send.");
+  say(msg, parts.join(" "), true);
+  $("#checks").innerHTML = (j.check || []).map((c) => `<li>${esc(c)}</li>`).join(""); $("#checks").hidden = !(j.check || []).length;
+  const first = $("#lines .line.need"); if (first) setTimeout(() => first.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+});
+$("#showPhotos").addEventListener("change", recalc);
+
+// ---- start ----
+if (new URLSearchParams(location.search).get("signup")) showTab(true);
+if (TOKEN) load().catch((e) => { if (e.message !== "signed out") showGate(e.message); }); else { showGate(); if (new URLSearchParams(location.search).get("signup")) showTab(true); }
+</script>
+<script src="dictate.js" defer></script>
+</body>
+</html>

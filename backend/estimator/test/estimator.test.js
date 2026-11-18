@@ -76,3 +76,8 @@ test("models: PIN hashes are stable and PINs are 8 digits", () => {
   assert.notStrictEqual(DB.pinHash("12345678"), DB.pinHash("12345679"));
   for (let i = 0; i < 50; i++) assert.match(DB.newPin(), /^\d{8}$/);
 });
+
+test("models: his own emails are free and unlimited", () => {
+  const me = DB.summary({ _id: "9", email: "Hsw365media@gmail.com", packs: {} });
+  assert.strictEqual(me.unlimited, true); assert.strictEqual(me.badge, false); assert.strictEqual(me.maxSize, "major");
+});

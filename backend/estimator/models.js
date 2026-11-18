@@ -13,6 +13,10 @@ const SIZES = ["small", "mid", "large", "major"];
 const PLAN_SIZE = { solo: "small", crew: "mid", pro: "large", commercial: "major" }; // biggest job each plan covers
 const rank = (s) => SIZES.indexOf(s);
 
+// His own emails never pay: every feature, no limits (HSW365 rule for every app he builds).
+const COMP_EMAILS = ["hsw365media@gmail.com", "hoodstarent365@gmail.com"];
+const isComp = (a) => !!(a && (a.comp || COMP_EMAILS.includes(String(a.email || "").toLowerCase())));
+
 const secret = () => process.env.JWT_SECRET || process.env.CALLTWIN_ADMIN_KEY || "";
 const pinHash = (pin) => crypto.createHmac("sha256", secret() || "estimator").update(String(pin)).digest("hex");
 const newPin = () => String(crypto.randomInt(10000000, 100000000));
@@ -39,6 +43,7 @@ const AccountSchema = new mongoose.Schema({
   totalConversions: { type: Number, default: 0 },
   paidCents: { type: Number, default: 0 },
   source: { type: String, default: "" },
+  comp: { type: Boolean, default: false },
 }, { timestamps: true, minimize: false });
 
 const DocSchema = new mongoose.Schema({
@@ -57,12 +62,13 @@ const Account = mongoose.models.EstAccount || mongoose.model("EstAccount", Accou
 const Doc = mongoose.models.EstDoc || mongoose.model("EstDoc", DocSchema);
 const Usage = mongoose.models.EstUsage || mongoose.model("EstUsage", UsageSchema);
 
-const planLive = (a) => !!(a.plan && PLANS[a.plan] && (a.subStatus === "active"));
+const planLive = (a) => isComp(a) || !!(a.plan && PLANS[a.plan] && (a.subStatus === "active"));
 
 /** Take one conversion credit for a job of this size. Returns { source } or null when the account has nothing left. */
 async function reserve(acct, size) {
   size = SIZES.includes(size) ? size : "small";
   const id = acct._id;
+  if (isComp(acct)) { const r = await Account.findOneAndUpdate({ _id: id }, { $inc: { totalConversions: 1 } }, { new: true }); return { source: "comp", acct: r || acct }; }
   // 1. free trial (small and mid jobs)
   if (rank(size) <= rank("mid")) {
     const r = await Account.findOneAndUpdate({ _id: id, trialLeft: { $gt: 0 } }, { $inc: { trialLeft: -1, totalConversions: 1 } }, { new: true });
@@ -96,6 +102,7 @@ async function refund(acctId, source) {
 
 /** What the app shows: what is left and which plan the account is on. */
 function summary(a) {
+  if (isComp(a)) return { id: String(a._id), email: a.email, business: a.business, trade: a.trade, plan: "commercial", planName: "Owner (free)", subStatus: "active", trialLeft: 0, planIncluded: 0, planUsed: 0, planLeft: 0, topups: 0, packs: { small: 0, mid: 0, large: 0, major: 0 }, packTotal: 0, left: 99999, unlimited: true, badge: false, maxSize: "major" };
   const p = PLANS[a.plan];
   const live = planLive(a);
   const packs = {}; let packTotal = 0;
@@ -112,4 +119,4 @@ function summary(a) {
   };
 }
 
-module.exports = { Account, Doc, Usage, SIZES, PLAN_SIZE, rank, pinHash, newPin, reserve, refund, summary, planLive };
+module.exports = { isComp, Account, Doc, Usage, SIZES, PLAN_SIZE, rank, pinHash, newPin, reserve, refund, summary, planLive };

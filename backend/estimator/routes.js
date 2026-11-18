@@ -416,4 +416,20 @@ router.post("/admin/stats", wrap(async (req, res) => {
   res.json({ ok: true, accounts, subscribers: active.length, byPlan, mrrCents, conversions30d: used, successful30d: ok, collectedCents: (revenue[0] || {}).cents || 0 });
 }));
 
+// Fulfil a Shopify order (or a comp) by hand: { key, email, plan? | pack?, qty? }. Admin key only.
+router.post("/admin/grant", wrap(async (req, res) => {
+  if (!process.env.CALLTWIN_ADMIN_KEY || String(req.body.key || "") !== process.env.CALLTWIN_ADMIN_KEY) return bad(res, "No.", 401);
+  const a = await Account.findOne({ email: String(req.body.email || "").trim().toLowerCase() });
+  if (!a) return bad(res, "No account with that email. They need to sign up first.", 404);
+  if (req.body.plan) {
+    if (!P.PLANS[req.body.plan]) return bad(res, "Unknown plan.");
+    a.plan = req.body.plan; a.subStatus = "active"; a.usedPeriod = 0; a.periodStart = new Date();
+  } else if (req.body.pack) {
+    if (!P.PACKS[req.body.pack]) return bad(res, "Unknown pack.");
+    a.packs[req.body.pack] = (a.packs[req.body.pack] || 0) + (parseInt(req.body.qty, 10) || P.PACKS[req.body.pack].qty);
+  } else return bad(res, "Say plan or pack.");
+  await a.save();
+  res.json({ ok: true, me: DB.summary(a) });
+}));
+
 module.exports = { router, stripeEvent };

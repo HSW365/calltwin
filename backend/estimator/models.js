@@ -39,6 +39,7 @@ const AccountSchema = new mongoose.Schema({
   usedPeriod: { type: Number, default: 0 },
   topups: { type: Number, default: 0 },
   packs: { small: { type: Number, default: 0 }, mid: { type: Number, default: 0 }, large: { type: Number, default: 0 }, major: { type: Number, default: 0 } },
+  license: { tier: { type: String, default: "" }, term: { type: String, default: "" }, expiresAt: { type: Date, default: null }, boughtAt: { type: Date, default: null } }, // "" | nj1..state; term buyout | year
   sessions: { type: [String], default: [] },     // Stripe checkout sessions already credited (idempotency)
   totalConversions: { type: Number, default: 0 },
   paidCents: { type: Number, default: 0 },
@@ -62,6 +63,7 @@ const Account = mongoose.models.EstAccount || mongoose.model("EstAccount", Accou
 const Doc = mongoose.models.EstDoc || mongoose.model("EstDoc", DocSchema);
 const Usage = mongoose.models.EstUsage || mongoose.model("EstUsage", UsageSchema);
 
+const licenseLive = (a) => !!(a && a.license && a.license.tier && (a.license.term === "buyout" || (a.license.expiresAt && new Date(a.license.expiresAt) > new Date())));
 const planLive = (a) => isComp(a) || !!(a.plan && PLANS[a.plan] && (a.subStatus === "active"));
 
 /** Take one conversion credit for a job of this size. Returns { source } or null when the account has nothing left. */
@@ -69,6 +71,8 @@ async function reserve(acct, size) {
   size = SIZES.includes(size) ? size : "small";
   const id = acct._id;
   if (isComp(acct)) { const r = await Account.findOneAndUpdate({ _id: id }, { $inc: { totalConversions: 1 } }, { new: true }); return { source: "comp", acct: r || acct }; }
+  // 0. a license (buyout or unexpired year): unlimited, every job size
+  if (licenseLive(acct)) { const r = await Account.findOneAndUpdate({ _id: id }, { $inc: { totalConversions: 1 } }, { new: true }); return { source: "license", acct: r || acct }; }
   // 1. free trial (small and mid jobs)
   if (rank(size) <= rank("mid")) {
     const r = await Account.findOneAndUpdate({ _id: id, trialLeft: { $gt: 0 } }, { $inc: { trialLeft: -1, totalConversions: 1 } }, { new: true });
@@ -95,6 +99,7 @@ async function refund(acctId, source) {
   if (source === "trial") inc.trialLeft = 1;
   else if (source === "plan") inc.usedPeriod = -1;
   else if (source === "topup") inc.topups = 1;
+  else if (source === "license") { /* unlimited: nothing was taken */ }
   else if (/^pack:/.test(source)) inc[`packs.${source.slice(5)}`] = 1;
   else return;
   await Account.updateOne({ _id: acctId }, { $inc: inc });
@@ -103,6 +108,7 @@ async function refund(acctId, source) {
 /** What the app shows: what is left and which plan the account is on. */
 function summary(a) {
   if (isComp(a)) return { id: String(a._id), email: a.email, business: a.business, trade: a.trade, plan: "commercial", planName: "Owner (free)", subStatus: "active", trialLeft: 0, planIncluded: 0, planUsed: 0, planLeft: 0, topups: 0, packs: { small: 0, mid: 0, large: 0, major: 0 }, packTotal: 0, left: 99999, unlimited: true, badge: false, maxSize: "major" };
+  if (licenseLive(a)) return { id: String(a._id), email: a.email, business: a.business, trade: a.trade, plan: "commercial", planName: "License", license: a.license, subStatus: "active", trialLeft: 0, planIncluded: 0, planUsed: 0, planLeft: 0, topups: 0, packs: { small: 0, mid: 0, large: 0, major: 0 }, packTotal: 0, left: 99999, unlimited: true, badge: false, maxSize: "major" };
   const p = PLANS[a.plan];
   const live = planLive(a);
   const packs = {}; let packTotal = 0;
@@ -119,4 +125,4 @@ function summary(a) {
   };
 }
 
-module.exports = { isComp, Account, Doc, Usage, SIZES, PLAN_SIZE, rank, pinHash, newPin, reserve, refund, summary, planLive };
+module.exports = { isComp, Account, Doc, Usage, SIZES, PLAN_SIZE, rank, pinHash, newPin, reserve, refund, summary, planLive, licenseLive };

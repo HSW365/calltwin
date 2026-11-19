@@ -81,3 +81,24 @@ test("models: his own emails are free and unlimited", () => {
   const me = DB.summary({ _id: "9", email: "Hsw365media@gmail.com", packs: {} });
   assert.strictEqual(me.unlimited, true); assert.strictEqual(me.badge, false); assert.strictEqual(me.maxSize, "major");
 });
+
+test("licenses: NJ-size tiers run $2,500 to $6,000, state contractors pay the top, and a year is cheaper than a buyout", () => {
+  const b = Object.values(P.LICENSES).map((l) => l.buyoutCents);
+  assert.strictEqual(Math.min(...b), 250000);
+  assert.strictEqual(Math.max(...b), 600000);
+  assert.strictEqual(P.LICENSES.state.buyoutCents, 600000);
+  for (const l of Object.values(P.LICENSES)) assert.ok(l.yearCents < l.buyoutCents && Number.isInteger(l.yearCents));
+  assert.strictEqual(P.licenseCents("nj1", "year"), 100000);
+  assert.strictEqual(P.licenseCents("nope", "buyout"), null);
+});
+
+test("licenses: a buyout never expires, a year license lapses, and only a live license is unlimited", () => {
+  const now = Date.now();
+  assert.ok(DB.licenseLive({ license: { tier: "nj1", term: "buyout" } }));
+  assert.ok(DB.licenseLive({ license: { tier: "nj1", term: "year", expiresAt: new Date(now + 86400000) } }));
+  assert.ok(!DB.licenseLive({ license: { tier: "nj1", term: "year", expiresAt: new Date(now - 1000) } }));
+  assert.ok(!DB.licenseLive({ license: { tier: "", term: "" } }));
+  assert.ok(DB.summary({ _id: "x", email: "a@b.co", license: { tier: "state", term: "buyout" } }).unlimited);
+});
+
+test("free trial stays at 3 estimates", () => assert.strictEqual(P.FREE_TRIAL, 3));

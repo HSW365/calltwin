@@ -440,6 +440,8 @@ details.co[open] summary::before{content:"–"}
     <div class="pgrid" id="planGrid"></div>
     <div class="sub-h">No subscription? Pay per estimate</div>
     <div class="pgrid" id="packGrid"></div>
+    <div class="sub-h">Own it: license, unlimited estimates, sized to your company</div>
+    <div class="pgrid" id="licGrid"></div>
     <div id="topupBox" hidden><div class="sub-h">Need extra this month</div><div class="pgrid" id="topupGrid"></div></div>
     <div class="msg" id="planMsg" role="status"></div>
     <div class="row"><button class="btn btn-line" type="button" id="portalBtn" hidden>Manage billing</button><button class="btn btn-line" type="button" id="planClose">Close</button></div>
@@ -553,10 +555,13 @@ async function openPlans(why) {
   $("#packGrid").innerHTML = PLANS.packs.map((k) => `<div class="pc"><h4>${esc(k.name)}</h4><div class="for">${esc(k.jobs)}</div>
     <div class="pr">${usd(k.unitCents)}<small>/estimate</small></div><p>${k.qty} estimates for ${usd(k.priceCents)}. No subscription, no expiry.</p>
     <button class="btn btn-line" data-buy="pack:${k.key}">Buy ${k.qty} for ${usd(k.priceCents)}</button></div>`).join("");
+  $("#licGrid").innerHTML = (PLANS.licenses || []).map((l) => `<div class="pc"><h4>${esc(l.name)}</h4><div class="for">${esc(l.blurb)}</div><div class="pr">${usd(l.buyoutCents)}</div><p>Buyout: yours for good. Unlimited estimates and proposals.</p>
+    <button class="btn btn-go" data-buy="license:${l.key}:buyout">Buy it out</button>
+    <button class="btn btn-line" data-buy="license:${l.key}:year">12 months, ${usd(l.yearCents)}</button></div>`).join("");
   const live = ME && ME.plan && !ME.unlimited; $("#topupBox").hidden = !live;
   if (live) { const p = PLANS.plans.find((x) => x.key === ME.plan); $("#topupGrid").innerHTML = `<div class="pc"><h4>${PLANS.topupQty} extra</h4><div class="pr">${usd(p.overCents * PLANS.topupQty)}</div><p>${PLANS.topupQty} more estimates at your plan rate (${usd(p.overCents)} each).</p><button class="btn btn-line" data-buy="topup:${p.key}">Add ${PLANS.topupQty}</button></div>`; }
   $$("#planOv [data-buy]").forEach((b) => (b.onclick = async () => {
-    const [kind, key] = b.dataset.buy.split(":"); b.disabled = true; say($("#planMsg"), "Opening secure checkout…", true);
+    const [kind, ...kr] = b.dataset.buy.split(":"), key = kr.join(":"); b.disabled = true; say($("#planMsg"), "Opening secure checkout…", true);
     try { const j = await call("/checkout", { kind, key }); location.href = j.url; } catch (e) { say($("#planMsg"), e.message, false); b.disabled = false; }
   }));
   say($("#planMsg"), ""); $("#planOv").hidden = false;

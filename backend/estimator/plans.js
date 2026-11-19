@@ -21,6 +21,19 @@ const PACKS = {
 };
 for (const p of Object.values(PACKS)) p.priceCents = p.unitCents * p.qty;
 
+// Buy it outright. Tiers follow the State of New Jersey's own size standards (N.J.A.C. 17:13 Small Business Enterprise: no more than 100 full-time
+// employees and gross revenue up to $500K, $5M or $12M), plus a top tier for firms over those limits and for state / public-works contractors
+// (DPMC-classified or registered under the NJ Public Works Contractor Registration Act). Unlimited estimates, all job sizes, no badge.
+// "buyout" = the license is yours for good. "year" = 12 months, priced at 40% of the buyout.
+const LICENSES = {
+  nj1:   { name: "Small business",     blurb: "NJ small business, up to $500K a year in revenue",          buyoutCents: 250000 },
+  nj2:   { name: "Growing business",   blurb: "NJ small business, up to $5M a year in revenue",            buyoutCents: 350000 },
+  nj3:   { name: "Established firm",   blurb: "Up to 100 employees and $12M a year in revenue",            buyoutCents: 450000 },
+  state: { name: "State contractor",   blurb: "State / public-works contractors and firms over $12M or 100 employees", buyoutCents: 600000 },
+};
+for (const l of Object.values(LICENSES)) l.yearCents = Math.round(l.buyoutCents * 0.4 / 10000) * 10000;
+const licenseCents = (key, term) => { const l = LICENSES[key]; return l ? (term === "year" ? l.yearCents : l.buyoutCents) : null; };
+
 const TOPUP_QTY = 20; // extra conversions for subscribers, at their plan's overage rate
 const FREE_TRIAL = 3; // new accounts try it free
 
@@ -34,7 +47,8 @@ function publicPlans() {
     plans: Object.entries(PLANS).map(([key, p]) => ({ key, ...p, effectiveCents: Math.round(p.monthlyCents / p.included) })),
     packs: Object.entries(PACKS).map(([key, p]) => ({ key, ...p })),
     topupQty: TOPUP_QTY,
+    licenses: Object.entries(LICENSES).map(([key, l]) => ({ key, ...l })),
   };
 }
 
-module.exports = { PLANS, PACKS, TOPUP_QTY, FREE_TRIAL, planOf, topupCents, publicPlans };
+module.exports = { PLANS, PACKS, LICENSES, licenseCents, TOPUP_QTY, FREE_TRIAL, planOf, topupCents, publicPlans };

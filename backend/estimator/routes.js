@@ -349,6 +349,13 @@ router.post("/checkout", auth, wrap(async (req, res) => {
     if (!k) return bad(res, "Pick a pack.");
     session = await s.checkout.sessions.create({ mode: "payment", metadata: meta, ...common,
       line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: k.priceCents, product_data: { name: `${k.qty} AI estimates, ${k.jobs}`, description: `HSW365 AI Estimate pay-per-conversion pack` } } }] });
+  } else if (kind === "license") {
+    const [tier, term = "buyout"] = key.split(":");
+    const cents = P.licenseCents(tier, term);
+    if (!cents || !["buyout", "year"].includes(term)) return bad(res, "Pick a license.");
+    const l = P.LICENSES[tier];
+    session = await s.checkout.sessions.create({ mode: "payment", metadata: { ...meta, key: `${tier}:${term}` }, ...common,
+      line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: cents, product_data: { name: `HSW365 AI Estimate license: ${l.name}, ${term === "year" ? "12 months" : "buyout"}`, description: `Unlimited estimates and proposals. ${l.blurb}.` } } }] });
   } else if (kind === "topup") {
     if (!DB.planLive(a)) return bad(res, "Top-ups are for subscribers. Pick a plan or a pack.");
     const cents = P.topupCents(a.plan);
@@ -382,6 +389,11 @@ async function stripeEvent(type, obj) {
     if (obj.customer) set.$set = { stripeCustomerId: obj.customer };
     if (meta.kind === "plan" && P.PLANS[meta.key]) {
       set.$set = { ...(set.$set || {}), plan: meta.key, subStatus: "active", stripeSubscriptionId: obj.subscription || a.stripeSubscriptionId, periodStart: new Date(), usedPeriod: 0 };
+    } else if (obj.payment_status === "paid" && meta.kind === "license") {
+      const [tier, term] = String(meta.key || "").split(":");
+      if (!P.licenseCents(tier, term)) return true;
+      const expiresAt = term === "year" ? new Date(Date.now() + 365 * 86400000) : null;
+      set.$set = { ...(set.$set || {}), license: { tier, term, expiresAt, boughtAt: new Date() } };
     } else if (obj.payment_status === "paid" && meta.kind === "pack" && P.PACKS[meta.key]) {
       set.$inc[`packs.${meta.key}`] = P.PACKS[meta.key].qty;
     } else if (obj.payment_status === "paid" && meta.kind === "topup") {

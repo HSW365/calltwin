@@ -1,5 +1,110 @@
 {
   "calltwin_token_configured": true,
   "calltwin_campaign_configured": true,
-  "results": []
+  "results": [
+    {
+      "businessName": "Jordan & Company",
+      "pushed": true
+    },
+    {
+      "businessName": "Giovannis Dillicious Pickles",
+      "pushed": true
+    },
+    {
+      "businessName": "Rose's Pizzeria",
+      "pushed": true
+    },
+    {
+      "businessName": "Lau Kee Peking Duck",
+      "pushed": true
+    },
+    {
+      "businessName": "Chongqing Hot Pot",
+      "pushed": true
+    },
+    {
+      "businessName": "Sandpiper Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "Taqueria Jalisco",
+      "pushed": true
+    },
+    {
+      "businessName": "Cielito Lindo",
+      "pushed": true
+    },
+    {
+      "businessName": "Nanu's Hot Chicken",
+      "pushed": true
+    },
+    {
+      "businessName": "Pepper Mill",
+      "pushed": true
+    },
+    {
+      "businessName": "IHOP",
+      "pushed": true
+    },
+    {
+      "businessName": "DK Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Border Cafe",
+      "pushed": true
+    },
+    {
+      "businessName": "Gilchrist Atlantic City Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Ristorante A Ca Mia",
+      "pushed": true
+    },
+    {
+      "businessName": "Persian Grill",
+      "pushed": true
+    },
+    {
+      "businessName": "Accu Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Baltimore Crab & Seafood",
+      "pushed": true
+    },
+    {
+      "businessName": "Famous Georges Pizzaria",
+      "pushed": true
+    },
+    {
+      "businessName": "Pho Ga Thanh Thanh",
+      "pushed": true
+    },
+    {
+      "businessName": "Hippot Shabu Shabu",
+      "pushed": true
+    },
+    {
+      "businessName": "Panda Garden",
+      "pushed": true
+    },
+    {
+      "businessName": "Jin Wei Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Heng Feng Hand Drawn Noodles",
+      "pushed": true
+    },
+    {
+      "businessName": "Xiandu Thai",
+      "pushed": true
+    },
+    {
+      "businessName": "Taqueria La Prima",
+      "pushed": true
+    }
+  ]
 }

@@ -7,20 +7,22 @@
  *   POST /api/clients/voicemail       SignalWire <Record> callback for a client line
  *   GET  /api/clients/portal?k=       owner dashboard data
  *   POST /api/clients/portal          owner actions (update settings, lead status, test text)
- *   GET/POST /api/clients/admin       HSW365 admin (x-admin-key = CALLTWIN_ADMIN_KEY)
+ *   GET/POST /api/clients/admin       HSW365 admin (x-admin-key = CALLTWIN_ADMIN_KEY, or a verified owner PIN session in x-hsw-owner)
+ *   GET  /api/clients/owner           owner PIN session (x-hsw-owner): the owner's own free accounts + admin access
  */
 const express = require("express");
 const crypto = require("crypto");
 const Client = require("../models/Client");
 const ClientLead = require("../models/ClientLead");
 const { provision, updateAgent } = require("../services/provision");
+const ownerPin = require("../services/ownerPin");
 
 const router = express.Router();
 router.use(express.json({ limit: "200kb" }));
 router.use(express.urlencoded({ extended: false }));
 router.use((req, res, next) => {
   res.set("Access-Control-Allow-Origin", "*");
-  res.set("Access-Control-Allow-Headers", "content-type, x-admin-key, x-client-key");
+  res.set("Access-Control-Allow-Headers", "content-type, x-admin-key, x-client-key, x-hsw-owner");
   res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
@@ -40,6 +42,8 @@ const e164 = (n) => {
 };
 const token = (n = 24) => crypto.randomBytes(n).toString("base64url");
 const adminOk = (req) => !!process.env.CALLTWIN_ADMIN_KEY && (req.get("x-admin-key") || req.query.admin) === process.env.CALLTWIN_ADMIN_KEY;
+/** Admin key, or the HSW365 owner signed in with the PIN (token re-checked with the owner-pin service). */
+const adminAuth = async (req) => adminOk(req) || (await ownerPin.isOwner(req));
 
 function sms() { return require("./newark"); }
 const { promoFor, applyClientPromo } = require("../services/promos");
@@ -95,13 +99,16 @@ function publicClient(c) {
 function welcomeText(c) {
   return `${c.businessName}: your CallTwin AI receptionist is ready. Open this on your business phone and tap TURN ON: ${SITE}/on.html?k=${c.portalKey}`;
 }
-async function createClient(b, { byAdmin = false, byPhone = false } = {}) {
-  const email = clip(b.ownerEmail, 160).toLowerCase();
+async function createClient(b, { byAdmin = false, byPhone = false, byOwner = false } = {}) {
+  // A verified owner PIN session signs up the owner's own account: it is keyed to the owner's email, so it is always free.
+  const typed = clip(b.ownerEmail, 160).toLowerCase();
+  const email = byOwner && !COMP_EMAILS.includes(typed) ? ownerPin.ownerEmail() : typed;
   const cell = e164(b.ownerCell);
   if (!clip(b.businessName) || !clip(b.ownerName) || !cell || (!byAdmin && !byPhone && !email.includes("@")))
     throw Object.assign(new Error(byAdmin ? "Business name, owner name and a 10-digit cell are required." : "Business name, your name, email and a 10-digit cell are required."), { status: 400 });
   const payMethod = ["card", "zelle", "cashapp"].includes(b.payMethod) ? b.payMethod : (byAdmin ? "zelle" : "card");
-  const comp = COMP_EMAILS.includes(email) || b.comp === true;
+  // Free (comp) only for the owner's own emails, or when the admin makes it so. A public signup can't ask for it.
+  const comp = COMP_EMAILS.includes(email) || byOwner || (byAdmin && b.comp === true);
   const c = await Client.create({
     businessName: clip(b.businessName, 120), industry: clip(b.industry, 60), ownerName: clip(b.ownerName, 120), ownerEmail: email,
     ownerCell: cell, businessPhone: e164(b.businessPhone) || clip(b.businessPhone, 30), city: clip(b.city, 80),
@@ -140,7 +147,7 @@ router.post("/signup", async (req, res) => {
   try {
     const b = req.body || {};
     if (b.website) return res.json({ ok: true }); // honeypot
-    const c = await createClient(b);
+    const c = await createClient(b, { byOwner: await ownerPin.isOwner(req) });
     if (!c.setupDue) provisionAndWelcome(c); // background; the page polls for the number
     res.json({ ok: true, portal: `${SITE}/portal.html?k=${c.portalKey}`, on: `${SITE}/on.html?k=${c.portalKey}`, key: c.portalKey, id: c._id, trialEndsAt: c.trialEndsAt, payMethod: c.payMethod,
       setupDue: c.setupDue, setupCents: SETUP_CENTS, priceCents: PRICE_CENTS, trialDays: TRIAL_DAYS, stripe: !!process.env.STRIPE_SECRET_KEY });
@@ -292,7 +299,7 @@ router.post("/phone-signup/callback", async (req, res) => {
 router.get("/signup-line", async (req, res) => {
   const sl = require("../services/signupLine");
   const number = await sl.lineNumber().catch(() => "");
-  res.json({ ok: !!number, number, status: adminOk(req) ? sl.status() : undefined });
+  res.json({ ok: !!number, number, status: (await adminAuth(req)) ? sl.status() : undefined });
 });
 
 // ---------- AI agent tool: save a job ticket ----------
@@ -507,16 +514,25 @@ router.post("/portal", async (req, res) => {
   }
 });
 
+// ---------- HSW365 owner (PIN session) ----------
+// The owner's own CallTwin accounts (always free, every feature) and admin access, for portal.html / signup.html / admin.html.
+router.get("/owner", ownerPin.requireOwner, async (req, res) => {
+  const mine = await Client.find({ ownerEmail: { $in: COMP_EMAILS } }).sort({ createdAt: -1 }).limit(50);
+  res.json({ ok: true, owner: true, vip: { tier: "elite", unlimited: true }, email: ownerPin.ownerEmail(), admin: `${SITE}/admin.html`, signup: `${SITE}/signup.html`,
+    accounts: mine.map((c) => ({ id: c._id, businessName: c.businessName, status: c.status, aiNumber: c.aiNumber, ready: !!(c.agentId && c.aiNumber && c.elPhoneId),
+      portal: `${SITE}/portal.html?k=${c.portalKey}`, estimates: `${SITE}/estimate.html?k=${c.portalKey}`, key: c.portalKey })) });
+});
+
 // ---------- admin ----------
 router.get("/admin", async (req, res) => {
-  if (!adminOk(req)) return res.status(401).json({ ok: false, error: "Wrong admin key." });
+  if (!(await adminAuth(req))) return res.status(401).json({ ok: false, error: "Wrong admin key." });
   const clients = await Client.find().sort({ createdAt: -1 }).limit(500);
   const counts = await ClientLead.aggregate([{ $group: { _id: "$client", n: { $sum: 1 } } }]);
   const byId = Object.fromEntries(counts.map((x) => [String(x._id), x.n]));
   res.json({ ok: true, price: PRICE_CENTS / 100, setupFee: SETUP_CENTS / 100, clients: clients.map((c) => ({ ...publicClient(c), portalKey: c.portalKey, leads: byId[String(c._id)] || 0, log: c.provisionLog.slice(-6) })) });
 });
 router.post("/admin", async (req, res) => {
-  if (!adminOk(req)) return res.status(401).json({ ok: false, error: "Wrong admin key." });
+  if (!(await adminAuth(req))) return res.status(401).json({ ok: false, error: "Wrong admin key." });
   const b = req.body || {};
   if (b.a === "create") {
     try {
@@ -542,7 +558,7 @@ router.post("/admin", async (req, res) => {
 
 // SignalWire credential check (admin only)
 router.get("/admin/swtest", async (req, res) => {
-  if (!adminOk(req)) return res.status(401).json({ ok: false });
+  if (!(await adminAuth(req))) return res.status(401).json({ ok: false });
   const axios = require("axios");
   const { swConfig } = require("../services/provision");
   const sw = swConfig();

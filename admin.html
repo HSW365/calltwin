@@ -28,6 +28,7 @@ input{height:40px;border-radius:10px;border:1px solid var(--line);background:#00
 .add textarea{height:70px;padding:8px 10px}.add .full{grid-column:1/-1}
 @media(max-width:800px){.add .g{grid-template-columns:1fr}}
 a{color:var(--cyan)}
+.vip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:5px 10px;border-radius:999px;border:1px solid var(--ok);color:var(--ok)}
 @media(max-width:800px){.row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -35,7 +36,7 @@ a{color:var(--cyan)}
 <div class="wrap">
   <h1>CallTwin Admin</h1>
   <div class="muted">Every business that signed up through your link. Signup link to send: <a href="signup.html" id="link">signup.html</a></div>
-  <div class="bar"><input id="key" type="password" placeholder="Admin key"><button class="btn pri" id="go">Open</button><button class="btn" id="copy">Copy signup link</button><span class="muted" id="msg"></span></div>
+  <div class="bar"><span class="vip" id="vip" data-hsw-vip>VIP · Owner</span><input id="key" type="password" placeholder="Admin key" data-hsw-paywall><button class="btn pri" id="go" data-hsw-paywall>Open</button><button class="btn" id="copy">Copy signup link</button><span class="muted" id="msg"></span></div>
   <div id="app" hidden>
     <div class="kpis"><div class="kpi"><b id="kAll">0</b><span class="muted">Businesses</span></div><div class="kpi"><b id="kTrial">0</b><span class="muted">On trial</span></div><div class="kpi"><b id="kPaid">0</b><span class="muted">Paying</span></div><div class="kpi"><b id="kMrr">$0</b><span class="muted">Monthly revenue</span></div></div>
     <form class="add" id="addForm">
@@ -68,11 +69,14 @@ const signupUrl = new URL("signup.html", location.href).href;
 $("#link").textContent = signupUrl; $("#link").href = signupUrl;
 $("#copy").onclick = async () => { try { await navigator.clipboard.writeText(signupUrl); $("#msg").textContent = "Copied."; } catch { $("#msg").textContent = signupUrl; } };
 let KEY = ""; try { KEY = sessionStorage.getItem("ct_admin") || ""; } catch {}
+// HSW365 owner signed in with the PIN: the server re-checks this session token instead of asking for the admin key.
+let OWNER = null;
+const H = () => (OWNER ? { "x-hsw-owner": OWNER } : { "x-admin-key": KEY });
 $("#key").value = KEY;
 $("#go").onclick = () => { KEY = $("#key").value.trim(); try { sessionStorage.setItem("ct_admin", KEY); } catch {} load(); };
 async function load() {
   $("#msg").textContent = "Loading...";
-  const j = await (await fetch(API, { headers: { "x-admin-key": KEY } })).json().catch(() => ({ ok: false, error: "Server waking up. Try again in 30s." }));
+  const j = await (await fetch(API, { headers: H() })).json().catch(() => ({ ok: false, error: "Server waking up. Try again in 30s." }));
   if (!j.ok) { $("#msg").textContent = j.error; return; }
   $("#msg").textContent = ""; $("#app").hidden = false;
   const cs = j.clients;
@@ -94,7 +98,7 @@ async function load() {
     if (body.a === "set_number") { body.number = prompt("SignalWire number to assign (e.g. 856-555-0100). Point it at https://calltwin.onrender.com/api/inbound/voice in SignalWire."); if (!body.number) return; }
     if (body.a === "cancel" && !confirm("Cancel this business?")) return;
     b.disabled = true;
-    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": KEY }, body: JSON.stringify(body) })).json().catch(() => ({}));
+    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", ...H() }, body: JSON.stringify(body) })).json().catch(() => ({}));
     if (!r.ok) alert(r.error || "Failed");
     load();
   });
@@ -104,15 +108,24 @@ $("#addForm").addEventListener("submit", async (e) => {
   const d = Object.fromEntries(new FormData(e.target)); d.a = "create";
   const btn = $("#addBtn"); btn.disabled = true; $("#addMsg").textContent = "Setting up receptionist and number (about 20 seconds)...";
   try {
-    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": KEY }, body: JSON.stringify(d) })).json();
+    const r = await (await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", ...H() }, body: JSON.stringify(d) })).json();
     if (!r.ok) throw new Error(r.error);
     $("#addMsg").textContent = r.texted ? `Done. ${r.client.aiNumber} is live and ${d.ownerName} was texted the TURN ON link.` : "Added, still finishing setup. Hit Retry setup on it in a minute.";
     e.target.reset(); load();
   } catch (x) { $("#addMsg").textContent = x.message || "Failed."; }
   btn.disabled = false;
 });
-if (KEY) load();
+function owner(on, token) {
+  OWNER = on ? token : null;
+  if (OWNER || KEY) load();
+  else { $("#app").hidden = true; $("#msg").textContent = ""; }
+}
+window.addEventListener("hsw-owner", (e) => owner(!!(e.detail && e.detail.owner), e.detail && e.detail.token));
+document.addEventListener("DOMContentLoaded", () => {
+  const r = window.HSW_OWNER_READY;
+  if (r) r.then((ok) => { if (!ok && KEY) load(); }); else if (KEY) load();
+});
 </script>
-<script src="owner-login.js" defer></script>
+<script src="owner-login.js?v=3" defer></script>
 </body>
 </html>

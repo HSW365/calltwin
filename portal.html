@@ -45,13 +45,15 @@ label.l{display:block;font-size:13px;font-weight:750;margin-bottom:5px}
 .tog input{width:22px;height:22px;accent-color:var(--blue)}
 .empty{padding:34px;text-align:center;color:var(--muted);border:1px dashed #cfd8e8;border-radius:14px;background:#fff}
 .msg{font-size:14px;margin-top:8px}
+.vip{display:inline-flex;align-items:center;font-size:11px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#eafaf2;border:1px solid #b5e8cf;color:var(--ok);margin-left:8px}
+.acct{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px;border:1px solid var(--line);border-radius:14px;margin-top:10px}
 @media(max-width:760px){.grid4{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.lead{grid-template-columns:1fr}.acts{flex-direction:row;align-items:center;flex-wrap:wrap}}
 </style>
 <meta name="description" content="Your CallTwin customer dashboard.">
 </head>
 <body>
 <div class="wrap">
-  <nav class="nav"><a class="brand" href="./">CallTwin <b>AI</b></a><span class="muted" id="who"></span></nav>
+  <nav class="nav"><a class="brand" href="./">CallTwin <b>AI</b></a><span><span class="muted" id="who"></span><span class="vip" id="vipTag" hidden>VIP · Owner</span></span></nav>
   <div id="err" class="card" hidden></div>
   <div id="app" hidden>
     <h1 id="biz"></h1>
@@ -106,13 +108,16 @@ const digits = (s) => String(s || "").replace(/\D/g, "");
 const fmt = (s) => { const d = digits(s).slice(-10); return d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : (s || ""); };
 const q = new URLSearchParams(location.search);
 const K = q.get("k") || (() => { try { return new URL(localStorage.getItem("calltwin_portal")).searchParams.get("k"); } catch { return null; } })();
-let C = null, PRICE = 99, STRIPE = false, SETUP = 500;
+let C = null, PRICE = 99, STRIPE = false, SETUP = 500, OWNER = null, LEADS = [];
+// The HSW365 owner's own account (confirmed by the server for a verified owner PIN session): free, every feature, no billing.
+const isMine = () => !!(OWNER && C && (OWNER.accounts || []).some((a) => a.key === K));
 
 $$(".tabs button").forEach((b) => b.onclick = () => { $$(".tabs button").forEach((x) => x.classList.toggle("on", x === b)); $$(".pane").forEach((p) => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
 document.getElementById("estLink").href = "estimate.html?k=" + encodeURIComponent(K);
 const post = async (body) => (await fetch(API + "/portal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K, ...body }) })).json().catch(() => ({ ok: false, error: "Server error." }));
 
 async function load() {
+  if (!K && OWNER) return ownerPanel();
   if (!K) { $("#err").hidden = false; $("#err").innerHTML = "Open this page from the dashboard link we texted you, or <a style='color:#3d6cff' href='signup.html'>start a free trial</a>."; return; }
   const j = await (await fetch(API + "/portal?k=" + encodeURIComponent(K))).json().catch(() => ({ ok: false, error: "The server is waking up. Refresh in 30 seconds." }));
   if (!j.ok) { $("#err").hidden = false; $("#err").textContent = j.error; return; }
@@ -122,6 +127,9 @@ async function load() {
   if (!C.ready) setTimeout(load, 6000);
 }
 function render(leads) {
+  LEADS = leads;
+  const vip = isMine();
+  $("[data-t=billing]").hidden = vip; if (vip && $("[data-p=billing]").classList.contains("on")) $("[data-t=jobs]").click();
   $("#biz").textContent = C.businessName; $("#who").textContent = C.ownerName;
   $("#sub").textContent = [C.industry, C.city].filter(Boolean).join(" · ");
   $("#aiNum").textContent = C.aiNumber ? fmt(C.aiNumber) : "Setting up...";
@@ -129,7 +137,8 @@ function render(leads) {
   if (C.aiNumber) $("#fwd2").textContent = `**21*1${digits(C.aiNumber).slice(-10)}#`;
   const days = C.trialEndsAt ? Math.ceil((new Date(C.trialEndsAt) - Date.now()) / 864e5) : 0;
   let b = "";
-  if (C.setupDue && C.status !== "comp") b = `<div class="banner warn"><span><b>Pay your $${SETUP} setup to go live.</b> We build your AI receptionist and text you your number as soon as it's paid. Then 14 days free, then $${PRICE}/month.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Pay setup</button></div>`;
+  if (vip) b = `<div class="banner ok"><span><b>VIP · Owner.</b> This is your account: every CallTwin plan and feature is on, free. No setup fee, no monthly bill.</span><a class="btn gh" href="admin.html">Open admin</a></div>`;
+  else if (C.setupDue && C.status !== "comp") b = `<div class="banner warn"><span><b>Pay your $${SETUP} setup to go live.</b> We build your AI receptionist and text you your number as soon as it's paid. Then 14 days free, then $${PRICE}/month.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Pay setup</button></div>`;
   else if (C.status === "comp") b = `<div class="banner ok"><span><b>Free account.</b> All features included.</span></div>`;
   else if (C.status === "trial" && days > 0) b = `<div class="banner info"><span><b>Free trial:</b> ${days} day${days === 1 ? "" : "s"} left. Then $${PRICE}/month.</span><button class="btn" onclick="document.querySelector('[data-t=billing]').click()">Set up billing</button></div>`;
   else if (C.status === "active") b = `<div class="banner ok"><span><b>Active.</b> CallTwin Pro, $${PRICE}/month.</span></div>`;
@@ -144,7 +153,7 @@ function render(leads) {
       <div class="card" style="margin:0"><b>Zelle</b><p class="muted">Send $${amt}${due ? " setup" : ""} to <b>856-796-8081</b> or <b>elvintorressr@gmail.com</b> (Elvin Torres Sr.). Memo: ${esc(C.businessName)}</p><button class="btn gh" data-sent="zelle">I sent it</button></div>
       <div class="card" style="margin:0"><b>Cash App</b><p class="muted">Send $${amt}${due ? " setup" : ""} to <b>$hsw365</b>. Note: ${esc(C.businessName)}</p><a class="btn gh" href="https://cash.app/$hsw365/${amt}" target="_blank" rel="noopener">Open Cash App</a> <button class="btn gh" data-sent="cashapp" style="margin-top:6px">I sent it</button></div>
     </div><p class="msg" id="bMsg"></p><p class="muted">To cancel, text or email HSW365 Media: hsw365media@gmail.com</p>`;
-  if (location.hash === "#pay" && due && STRIPE && !window.__payGo) { // one-tap from the setup text: straight to secure checkout
+  if (location.hash === "#pay" && due && STRIPE && !vip && !window.__payGo) { // one-tap from the setup text: straight to secure checkout
     window.__payGo = true; history.replaceState(null, "", location.pathname + location.search);
     fetch(API + "/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K }) }).then((r) => r.json()).then((j) => { if (j.url) location.href = j.url; }).catch(() => {});
     $("#bill").innerHTML = `<div class="banner info"><span><b>Opening secure checkout...</b></span></div>`;
@@ -184,8 +193,26 @@ $("#testText").onclick = async () => { const j = await post({ a: "test_text" });
 $("#refresh").onclick = load;
 if (q.get("paid") && q.get("session_id")) fetch(API + "/confirm?session_id=" + encodeURIComponent(q.get("session_id"))).then(load);
 load();
+
+// ---- HSW365 owner: PIN session from the Owner login tab. The server re-checks it before it lists the owner's accounts. ----
+function ownerPanel() {
+  const a = OWNER.accounts || [];
+  $("#err").hidden = false;
+  $("#err").innerHTML = `<h2 style="margin:0 0 4px">Your CallTwin <span class="vip">VIP · Owner</span></h2>
+    <p class="muted" style="margin:0">Every plan and feature is free on your accounts. No setup fee, no monthly bill.</p>
+    ${a.length ? a.map((x) => `<div class="acct"><div><b>${esc(x.businessName)}</b><div class="muted">${x.aiNumber ? esc(fmt(x.aiNumber)) : "Number being set up"} · ${x.ready ? "live" : "setting up"}</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="portal.html?k=${encodeURIComponent(x.key)}">Open dashboard</a><a class="btn gh" href="estimate.html?k=${encodeURIComponent(x.key)}">Estimates</a></div></div>`).join("")
+      : `<div class="acct"><span class="muted">No CallTwin line of your own yet.</span><a class="btn" href="signup.html">Set one up free</a></div>`}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><a class="btn gh" href="admin.html">Open admin (all businesses)</a></div>`;
+}
+async function ownerOn(token) {
+  const j = token ? await fetch(API + "/owner", { headers: { "x-hsw-owner": token } }).then((r) => r.json()).catch(() => null) : null;
+  OWNER = j && j.ok ? j : null;
+  $("#vipTag").hidden = !OWNER;
+  if (C) render(LEADS); else if (!K) load();
+}
+window.addEventListener("hsw-owner", (e) => ownerOn(e.detail && e.detail.owner ? e.detail.token : null));
 </script>
-<script src="https://calltwin.onrender.com/owner-signin.js" defer></script>
-<script src="owner-login.js" defer></script>
+<script src="owner-login.js?v=3" defer></script>
 </body>
 </html>

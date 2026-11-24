@@ -6,13 +6,14 @@
  *   POST /signup  { business, email, trade?, phone? }   -> { token, pin }  (the account PIN is generated, shown once and emailed)
  *   POST /login   { pin }                               -> { token }       PIN only, no email
  *   POST /reset   { email }                             a new PIN is emailed (always answers ok)
+ *   POST /owner   x-hsw-owner: <owner PIN session>     -> { token }  HSW365 owner: free account, every plan, no limits
  *   --- signed in (Authorization: Bearer <token>) ---
  *   POST /me, /list, /get, /save, /delete, /letterhead, /pdf, /email, /writeup
  *   POST /analyze    multipart: size, type, notes, photos[], audio[]   one conversion: reserve -> AI -> refund on failure
  *   POST /transcribe multipart: audio                                  dictation fallback (free)
  *   POST /checkout   { kind: "plan"|"pack"|"topup", key }              Stripe Checkout URL
  *   POST /portal                                                       Stripe billing portal URL
- *   POST /admin/stats { key }                                          owner dashboard numbers (CALLTWIN_ADMIN_KEY)
+ *   POST /admin/stats { key }                                          owner dashboard numbers (CALLTWIN_ADMIN_KEY or owner PIN session)
  *   stripeEvent(type, obj) is called from routes/webhooks.js.
  */
 const express = require("express");
@@ -26,6 +27,7 @@ const { renderProposalPdf } = require("./pdf");
 const { analyzeJob, transcribe, noMoney } = require("./analyze");
 const DB = require("./models");
 const { Account, Doc, Usage } = DB;
+const ownerPin = require("../services/ownerPin");
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024, files: 16, fieldSize: 64 * 1024 } });
@@ -43,7 +45,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 router.use((req, res, next) => {
   const o = req.get("origin");
   if (o) { res.set("Access-Control-Allow-Origin", o); res.set("Vary", "Origin"); }
-  res.set("Access-Control-Allow-Headers", "content-type, authorization");
+  res.set("Access-Control-Allow-Headers", "content-type, authorization, x-hsw-owner");
   res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.set("Access-Control-Expose-Headers", "content-disposition");
   res.set("Cache-Control", "no-store");
@@ -146,6 +148,23 @@ router.post("/reset", wrap(async (req, res) => {
     }
   }
   res.json({ ok: true, message: "If that email has an account, a new PIN is on its way." });
+}));
+
+// HSW365 owner: the PIN session from the Owner login tab, re-checked with the owner-pin service. Signs in to the owner's own
+// account (OWNER_EMAILS, created on first use). It is a comp account: every plan and job size, unlimited, no checkout.
+router.post("/owner", wrap(async (req, res) => {
+  const ip = ipOf(req);
+  if (limited(`ow:${ip}`, 20, 15 * 60e3)) return bad(res, "Too many tries. Wait 15 minutes and try again.", 429);
+  if (!(await ownerPin.isOwner(req))) { note(`ow:${ip}`); return bad(res, "Owner sign in needed. Use the Owner login tab.", 401); }
+  const email = ownerPin.ownerEmail();
+  let a = await Account.findOne({ email });
+  for (let i = 0; i < 5 && !a; i++) {
+    try { a = await Account.create({ email, business: "HSW365 Media", pinHash: DB.pinHash(DB.newPin() + ":" + Date.now()), comp: true, company: { name: "HSW365 Media" }, source: "owner-pin" }); }
+    catch (e) { if (e.code !== 11000) throw e; a = await Account.findOne({ email }); }
+  }
+  if (!a) return bad(res, "Couldn't open the owner account. Try again.", 500);
+  if (!a.comp) { a.comp = true; await a.save(); }
+  res.json({ ok: true, owner: true, token: sign(a), me: DB.summary(a) });
 }));
 
 // ---------- signed in ----------
@@ -414,9 +433,9 @@ async function stripeEvent(type, obj) {
 }
 
 // ---------- owner dashboard ----------
+const adminKeyOk = (req) => !!process.env.CALLTWIN_ADMIN_KEY && String(req.body.key || "") === process.env.CALLTWIN_ADMIN_KEY;
 router.post("/admin/stats", wrap(async (req, res) => {
-  const key = String(req.body.key || "");
-  if (!process.env.CALLTWIN_ADMIN_KEY || key !== process.env.CALLTWIN_ADMIN_KEY) return bad(res, "No.", 401);
+  if (!adminKeyOk(req) && !(await ownerPin.isOwner(req))) return bad(res, "No.", 401);
   const since = new Date(Date.now() - 30 * 864e5);
   const [accounts, active, used, ok] = await Promise.all([
     Account.countDocuments(), Account.find({ subStatus: "active" }, { plan: 1 }).lean(),
@@ -430,7 +449,7 @@ router.post("/admin/stats", wrap(async (req, res) => {
 
 // Fulfil a Shopify order (or a comp) by hand: { key, email, plan? | pack?, qty? }. Admin key only.
 router.post("/admin/grant", wrap(async (req, res) => {
-  if (!process.env.CALLTWIN_ADMIN_KEY || String(req.body.key || "") !== process.env.CALLTWIN_ADMIN_KEY) return bad(res, "No.", 401);
+  if (!adminKeyOk(req) && !(await ownerPin.isOwner(req))) return bad(res, "No.", 401);
   const a = await Account.findOne({ email: String(req.body.email || "").trim().toLowerCase() });
   if (!a) return bad(res, "No account with that email. They need to sign up first.", 404);
   if (req.body.plan) {

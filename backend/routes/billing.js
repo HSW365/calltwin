@@ -12,6 +12,8 @@ const PRICE_ENV = {
 
 router.post("/checkout", requireAuth, async (req, res) => {
   try {
+    // The HSW365 owner account already has every plan, free. Never send it to checkout.
+    if (req.user.isFounderAccount) return res.json({ ok: true, owner: true, url: null, message: "Owner account: every plan is already on, free." });
     const plan = ["starter", "growth", "scale"].includes(req.body?.plan) ? req.body.plan : (req.body?.plan === "lifetime" ? "lifetime" : "starter");
     if (!process.env.PUBLIC_BASE_URL) return res.status(500).json({ error: "PUBLIC_BASE_URL is not configured in Render." });
     if (!process.env.STRIPE_SECRET_KEY) return res.status(500).json({ error: "STRIPE_SECRET_KEY is not configured in Render." });
@@ -46,5 +48,5 @@ router.post("/checkout", requireAuth, async (req, res) => {
   } catch (err) { console.error("[billing/checkout]", err); res.status(500).json({ error: err.message }); }
 });
 
-router.get("/status", requireAuth, async (req, res) => res.json({ subscriptionStatus: req.user.subscriptionStatus || "inactive", isLifetime: !!req.user.isLifetime }));
+router.get("/status", requireAuth, async (req, res) => res.json({ subscriptionStatus: req.user.subscriptionStatus || "inactive", isLifetime: !!req.user.isLifetime, owner: !!req.user.isFounderAccount }));
 module.exports = router;

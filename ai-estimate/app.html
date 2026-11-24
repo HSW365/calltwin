@@ -47,6 +47,10 @@ a{color:var(--cyan)}
 .bar .out{background:none;border:1px solid var(--line2);color:var(--text2);border-radius:8px;height:40px;padding:0 14px;font-size:14px;font-weight:600;cursor:pointer}
 .bar .out:hover{border-color:var(--text2);color:var(--text)}
 @media (max-width:640px){.logo small,.credit span{display:none}.bar .out{padding:0 10px}}
+.bar .own{display:inline-flex;align-items:center;gap:7px}.bar .own svg{width:14px;height:14px}
+html.hsw-owner .bar .own{border-color:var(--cyan);color:var(--cyan)}
+.credit.vip i{display:none}.credit.vip span{color:var(--cyan);font-weight:700}
+@media (max-width:420px){.bar .own span{display:none}}
 
 /* buttons + fields */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;border-radius:10px;font-weight:700;font-size:16px;border:1px solid transparent;cursor:pointer;transition:transform .12s,background .15s,border-color .15s,color .15s;white-space:nowrap;text-decoration:none}
@@ -228,6 +232,7 @@ details.co[open] summary::before{content:"–"}
   <a class="logo" href="./" aria-label="HSW365 AI Estimate home"><span class="mark" aria-hidden="true">E</span><span><b>AI Estimate</b><small>by HSW365</small></span></a>
   <span class="sp"></span>
   <button class="credit" id="creditBtn" type="button" hidden aria-label="Estimates left. Open plans and billing"><span>Estimates left</span><b id="creditN">0</b><i>Get more</i></button>
+  <button class="out own owner-login" id="ownBtn" type="button" aria-label="Owner login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Owner login</span></button>
   <button class="out" id="outBtn" type="button" hidden>Sign out</button>
 </div></header>
 
@@ -522,8 +527,12 @@ function drawMe() {
   if (!ME) return;
   $("#creditBtn").hidden = false; $("#outBtn").hidden = false;
   $("#creditN").textContent = ME.unlimited ? "∞" : ME.left;
+  $("#creditBtn").classList.toggle("vip", !!ME.owner);
+  $("#creditBtn span").textContent = ME.owner ? "VIP · Owner" : "Estimates left";
+  $("#billBtn").hidden = !!ME.owner;
   const bits = [];
-  if (ME.unlimited) bits.push("<b>Owner account</b>, every feature, no limits.");
+  if (ME.owner) bits.push("<b>VIP · Owner</b>: every plan, pack and license is on, free. Unlimited estimates, every job size, no HSW365 line on your PDFs.");
+  else if (ME.unlimited) bits.push("<b>Owner account</b>, every feature, no limits.");
   else {
     if (ME.planName) bits.push(`<b>${esc(ME.planName)}</b> plan: ${ME.planLeft} of ${ME.planIncluded} left this month${ME.topups ? `, +${ME.topups} top-up` : ""}`);
     if (ME.trialLeft) bits.push(`${ME.trialLeft} free trial estimate${ME.trialLeft > 1 ? "s" : ""} left`);
@@ -566,7 +575,7 @@ async function openPlans(why) {
   }));
   say($("#planMsg"), ""); $("#planOv").hidden = false;
 }
-$("#creditBtn").onclick = () => openPlans(); $("#billBtn").onclick = () => openPlans();
+$("#creditBtn").onclick = () => (ME && ME.owner && window.hswOwner ? window.hswOwner.open() : openPlans()); $("#billBtn").onclick = () => openPlans();
 $("#planClose").onclick = () => ($("#planOv").hidden = true);
 $("#planOv").addEventListener("click", (e) => { if (e.target.id === "planOv") $("#planOv").hidden = true; });
 $("#portalBtn").onclick = async () => { try { const j = await call("/portal", {}); location.href = j.url; } catch (e) { say($("#planMsg"), e.message, false); } };
@@ -870,7 +879,38 @@ $("#showPhotos").addEventListener("change", recalc);
 // ---- start ----
 if (new URLSearchParams(location.search).get("signup")) showTab(true);
 if (TOKEN) load().catch((e) => { if (e.message !== "signed out") showGate(e.message); }); else { showGate(); if (new URLSearchParams(location.search).get("signup")) showTab(true); }
+
+// ---- HSW365 owner: the PIN session from the Owner login tab opens the owner's own free account. ----
+// The server re-checks the session with the owner-pin service before it hands back an account token; nothing here is trusted.
+let OWNER_BUSY = false;
+async function ownerIn(token) {
+  if (!token || OWNER_BUSY || (ME && ME.owner)) return;
+  OWNER_BUSY = true;
+  try {
+    const r = await fetch(API + "/owner", { method: "POST", headers: { "Content-Type": "application/json", "x-hsw-owner": token }, body: "{}" });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok || !j.token) return;
+    TOKEN = j.token; ls.set("est_token", TOKEN); ls.set("est_owner", "1");
+    await load();
+  } catch (e) { if (e.message !== "signed out") console.warn("[owner]", e.message); }
+  finally { OWNER_BUSY = false; }
+}
+function ownerBtn(on) {
+  const b = $("#ownBtn"); if (!b) return;
+  b.querySelector("span").textContent = on ? "VIP · Owner" : "Owner login";
+  b.setAttribute("aria-label", on ? "Owner VIP access on" : "Owner login");
+}
+window.addEventListener("hsw-owner", (e) => {
+  const on = !!(e.detail && e.detail.owner);
+  ownerBtn(on);
+  if (on) ownerIn(e.detail.token);
+  else if (ls.get("est_owner")) { ls.del("est_owner"); signOut(""); }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.HSW_OWNER_READY) window.HSW_OWNER_READY.then((ok) => { ownerBtn(ok); if (ok) ownerIn(window.HSW_OWNER_TOKEN); else if (ls.get("est_owner") && TOKEN) { ls.del("est_owner"); signOut(""); } });
+});
 </script>
+<script src="owner-login.js?v=3" defer></script>
 <script src="dictate.js" defer></script>
 </body>
 </html>

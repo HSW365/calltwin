@@ -43,8 +43,10 @@ async function runTick() {
     if (!isWithinCallWindow(campaign)) continue;
 
     const owner = await User.findById(campaign.owner);
-    if (!owner || owner.subscriptionStatus !== "active") continue; // unpaid/founder-only accounts can call
-    if (owner.minutesUsed >= owner.minutesIncluded) continue; // out of minutes this cycle
+    if (!owner) continue;
+    // The HSW365 owner (founder) account: every plan, no minute cap. Everyone else: paid and within their minutes.
+    if (!owner.isFounderAccount && owner.subscriptionStatus !== "active") continue; // unpaid accounts can't call
+    if (!owner.isFounderAccount && owner.minutesUsed >= owner.minutesIncluded) continue; // out of minutes this cycle
 
     const queuedLeads = await Lead.find({
       campaign: campaign._id,

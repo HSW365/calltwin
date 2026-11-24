@@ -104,7 +104,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
       <div id="formView">
         <h3>Get CallTwin</h3>
         <p class="sub"><b>Rather do it by phone?</b> Call <a href="tel:+18562043643" style="color:inherit;text-decoration:underline">(856) 204-3643</a> and we'll sign you up on the call.</p>
-        <p class="sub">$500 one-time setup today. Your 14 free days start as soon as it's paid.</p>
+        <p class="sub" id="setupSub">$500 one-time setup today. Your 14 free days start as soon as it's paid.</p>
+        <div class="box" id="vipBox" hidden><b>VIP · Owner.</b> You're signed in as the owner, so this sets up <b>your own</b> CallTwin line, free: no setup fee, no monthly bill, every feature on. To add a client's business, use <a href="admin.html" style="color:inherit;text-decoration:underline">Admin</a>.</div>
         <form id="f" novalidate>
           <div class="sec">Your business</div>
           <div class="form">
@@ -126,15 +127,15 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
             <p class="full consent">By giving your cell number, you agree to receive job-alert and account texts from CallTwin by HSW365 Media at that number. Message frequency varies with your call volume. Message and data rates may apply. Reply STOP to opt out or HELP for help. Your number is never sold or shared for marketing. <a href="https://calltwin.onrender.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> · <a href="https://calltwin.onrender.com/terms" target="_blank" rel="noopener">Terms</a></p>
           </div>
 
-          <div class="sec">Pay the $500 setup (and $99/month after 14 days) with</div>
-          <div class="pay">
+          <div class="sec" id="paySec">Pay the $500 setup (and $99/month after 14 days) with</div>
+          <div class="pay" id="payBox">
             <div class="opt"><input type="radio" name="payMethod" id="pCard" value="card" checked><label for="pCard"><b>Card</b><small>$500 today, $99/mo auto-billed after 14 days</small></label></div>
             <div class="opt"><input type="radio" name="payMethod" id="pZelle" value="zelle"><label for="pZelle"><b>Zelle</b><small>Send $500 now, then monthly, to 856-796-8081</small></label></div>
             <div class="opt"><input type="radio" name="payMethod" id="pCash" value="cashapp"><label for="pCash"><b>Cash App</b><small>Send $500 now, then monthly, to $hsw365</small></label></div>
           </div>
           <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
           <div class="form" style="margin-top:16px">
-            <label class="full agree"><input type="checkbox" id="agree"><span>I agree to a $500 one-time setup fee, paid today, then 14 days of service free, then $99 per month until I cancel. I can cancel the monthly anytime by text or email.</span></label>
+            <label class="full agree" id="agreeRow"><input type="checkbox" id="agree"><span>I agree to a $500 one-time setup fee, paid today, then 14 days of service free, then $99 per month until I cancel. I can cancel the monthly anytime by text or email.</span></label>
             <div class="full msg err" id="msg" role="status"></div>
             <div class="full"><button class="btn" type="submit" id="go">Continue to payment</button></div>
           </div>
@@ -167,10 +168,10 @@ $("#f").addEventListener("submit", async (e) => {
   $("#msg").classList.remove("show");
   const d = Object.fromEntries(new FormData(e.target));
   if (!d.businessName.trim() || !d.ownerName.trim() || !d.ownerEmail.includes("@") || digits(d.ownerCell).length < 10) return err("Add your business name, your name, email and a 10-digit cell.");
-  if (!$("#agree").checked) return err("Check the box to agree to the setup fee and monthly plan.");
+  if (!OWNER && !$("#agree").checked) return err("Check the box to agree to the setup fee and monthly plan.");
   const btn = $("#go"); btn.disabled = true; btn.textContent = "Saving...";
   try {
-    const r = await fetch(API + "/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) });
+    const r = await fetch(API + "/signup", { method: "POST", headers: { "Content-Type": "application/json", ...(OWNER ? { "x-hsw-owner": OWNER.token } : {}) }, body: JSON.stringify(d) });
     const j = await r.json().catch(() => ({}));
     if (!j.ok) throw new Error(j.error || "Signup failed. Try again.");
     try { localStorage.setItem("calltwin_portal", j.portal); } catch {}
@@ -195,7 +196,7 @@ $("#f").addEventListener("submit", async (e) => {
     if (j.payMethod === "card") { $("#cardBox").hidden = false; $("#cardBox").innerHTML = "Add your card so service continues after your free days.<br><br><button class='btn' id='cardBtn' type='button'>Add card</button>"; $("#cardBtn").onclick = () => addCard(j.key); }
     poll(j.key, 0);
   } catch (x) {
-    err(x.message); btn.disabled = false; btn.textContent = "Continue to payment";
+    err(x.message); btn.disabled = false; btn.textContent = OWNER ? "Set up my free CallTwin" : "Continue to payment";
   }
 });
 
@@ -219,7 +220,20 @@ async function addCard(k) {
   if (j.url) location.href = j.url;
   else { b.disabled = false; b.textContent = "Pay $500 setup"; alert(j.error || "Card checkout isn't available right now. Pick Zelle or Cash App from your dashboard."); }
 }
+
+// ---- HSW365 owner: PIN session from the Owner login tab. The server re-checks it; owner signups are the owner's own, free. ----
+let OWNER = null;
+async function ownerOn(token) {
+  const j = token ? await fetch(API + "/owner", { headers: { "x-hsw-owner": token } }).then((r) => r.json()).catch(() => null) : null;
+  OWNER = j && j.ok ? { token, email: j.email } : null;
+  const on = !!OWNER, em = $("#ownerEmail");
+  $("#vipBox").hidden = !on; $("#setupSub").hidden = on; $("#paySec").hidden = on; $("#payBox").hidden = on; $("#agreeRow").hidden = on;
+  if (on) { em.dataset.typed = em.value; em.value = OWNER.email; em.readOnly = true; }
+  else if (em.readOnly) { em.readOnly = false; em.value = em.dataset.typed || ""; }
+  if (!$("#go").disabled) $("#go").textContent = on ? "Set up my free CallTwin" : "Continue to payment";
+}
+window.addEventListener("hsw-owner", (e) => ownerOn(e.detail && e.detail.owner ? e.detail.token : null));
 </script>
-<script src="https://calltwin.onrender.com/owner-signin.js" defer></script>
+<script src="owner-login.js?v=3" defer></script>
 </body>
 </html>

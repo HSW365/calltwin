@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { requireAuth } = require("../middleware/authMiddleware");
+const ownerPin = require("../services/ownerPin");
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get("/me", requireAuth, async (req, res) => {
     twilioPhoneNumber: req.user.twilioPhoneNumber,
     subscriptionStatus: req.user.subscriptionStatus || "inactive",
     isLifetime: !!req.user.isLifetime,
+    owner: !!req.user.isFounderAccount,
     voiceId: req.user.voiceId || "",
     pitchScript: req.user.pitchScript || ""
   }});
@@ -39,6 +41,22 @@ router.post("/login", async (req, res) => {
     if (!user || !user.passwordHash) return res.status(401).json({ error: "Invalid credentials." });
     if (!(await bcrypt.compare(password, user.passwordHash))) return res.status(401).json({ error: "Invalid credentials." });
     res.json({ token: signToken(user), user: { email: user.email, businessName: user.businessName, subscriptionStatus: user.subscriptionStatus, isLifetime: !!user.isLifetime } });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// HSW365 owner: the PIN session from the Owner login tab (body.ownerToken or x-hsw-owner), re-checked with the owner-pin
+// service. Signs in to the owner's own account (OWNER_EMAILS), created on first use, with every plan feature and no limits.
+router.post("/owner", async (req, res) => {
+  try {
+    if (!(await ownerPin.isOwner(req))) return res.status(401).json({ error: "Owner sign in needed. Use the Owner login tab." });
+    const email = ownerPin.ownerEmail();
+    let user = await User.findOne({ email });
+    if (!user) user = new User({ email, passwordHash: null });
+    user.subscriptionStatus = "active";
+    user.isFounderAccount = true;
+    if ((user.minutesIncluded || 0) < 999999) user.minutesIncluded = 999999;
+    await user.save();
+    res.json({ token: signToken(user), user: { email: user.email, businessName: user.businessName, subscriptionStatus: "active", isLifetime: !!user.isLifetime, owner: true } });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

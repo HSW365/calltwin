@@ -107,7 +107,7 @@ async function refund(acctId, source) {
 
 /** What the app shows: what is left and which plan the account is on. */
 function summary(a) {
-  if (isComp(a)) return { id: String(a._id), email: a.email, business: a.business, trade: a.trade, plan: "commercial", planName: "Owner (free)", subStatus: "active", trialLeft: 0, planIncluded: 0, planUsed: 0, planLeft: 0, topups: 0, packs: { small: 0, mid: 0, large: 0, major: 0 }, packTotal: 0, left: 99999, unlimited: true, badge: false, maxSize: "major" };
+  if (isComp(a)) return { id: String(a._id), email: a.email, business: a.business, trade: a.trade, plan: "commercial", planName: "VIP · Owner", owner: true, subStatus: "active", trialLeft: 0, planIncluded: 0, planUsed: 0, planLeft: 0, topups: 0, packs: { small: 0, mid: 0, large: 0, major: 0 }, packTotal: 0, left: 99999, unlimited: true, badge: false, maxSize: "major" };
   if (licenseLive(a)) return { id: String(a._id), email: a.email, business: a.business, trade: a.trade, plan: "commercial", planName: "License", license: a.license, subStatus: "active", trialLeft: 0, planIncluded: 0, planUsed: 0, planLeft: 0, topups: 0, packs: { small: 0, mid: 0, large: 0, major: 0 }, packTotal: 0, left: 99999, unlimited: true, badge: false, maxSize: "major" };
   const p = PLANS[a.plan];
   const live = planLive(a);

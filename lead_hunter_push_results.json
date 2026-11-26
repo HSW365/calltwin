@@ -1,5 +1,106 @@
 {
   "calltwin_token_configured": true,
   "calltwin_campaign_configured": true,
-  "results": []
+  "results": [
+    {
+      "businessName": "Pho 20",
+      "pushed": true
+    },
+    {
+      "businessName": "Rock Hill Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Scoops",
+      "pushed": true
+    },
+    {
+      "businessName": "New China",
+      "pushed": true
+    },
+    {
+      "businessName": "Ambler Feed Store",
+      "pushed": true
+    },
+    {
+      "businessName": "Pete & John's Pizza Parlor",
+      "pushed": true
+    },
+    {
+      "businessName": "The Tasty",
+      "pushed": true
+    },
+    {
+      "businessName": "Fronterizo Restaurant",
+      "pushed": true
+    },
+    {
+      "businessName": "Mui Chung",
+      "pushed": true
+    },
+    {
+      "businessName": "Mr. Martino's Trattoria",
+      "pushed": true
+    },
+    {
+      "businessName": "King Wong",
+      "pushed": true
+    },
+    {
+      "businessName": "Miss Rachel's Pantry",
+      "pushed": true
+    },
+    {
+      "businessName": "Asian Palace",
+      "pushed": true
+    },
+    {
+      "businessName": "Sal's Pizzaworks",
+      "pushed": true
+    },
+    {
+      "businessName": "Restaurante Morelos",
+      "pushed": true
+    },
+    {
+      "businessName": "AMICI",
+      "pushed": true
+    },
+    {
+      "businessName": "Stratford Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Millville Queen Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Cocco's Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "Great Wall",
+      "pushed": true
+    },
+    {
+      "businessName": "Marzano Ristorante",
+      "pushed": true
+    },
+    {
+      "businessName": "CousCous",
+      "pushed": true
+    },
+    {
+      "businessName": "The Village Diner",
+      "pushed": true
+    },
+    {
+      "businessName": "Angelo's Pizza",
+      "pushed": true
+    },
+    {
+      "businessName": "SNAP Custom Pizza and Salads",
+      "pushed": true
+    }
+  ]
 }

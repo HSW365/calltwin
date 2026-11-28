@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Local SEO pages for New Ark Plumbing, Heating & Air Conditioning (Phillipsburg, NJ).
-Builds newark/*.html, newark/blog/index.html and newark/sitemap.xml. Every page drives one action: call 908-454-4043.
+Builds newark/*.html, newark/blog/index.html and newark/sitemap.xml. Every page drives one action: call 201-349-8663.
 Run from repo root: python marketing/newark_pages.py
 Facts used only from New Ark's own sites (arkhvac.com and the New Ark site on this repo); nothing invented.
 """
@@ -8,7 +8,7 @@ import html, json, os, re, datetime
 e = html.escape
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://hsw365.github.io/calltwin/newark"
-PHONE, TEL = "908-454-4043", "+19084544043"
+PHONE, TEL = "201-349-8663", "+12013498663"
 NAME = "New Ark Plumbing, Heating & Air Conditioning"
 ADDR = {"street": "412 Firth St", "city": "Phillipsburg", "state": "NJ", "zip": "08865"}
 ESTIMATE = "https://hsw365.github.io/calltwin/newark-preview.html#estimate"

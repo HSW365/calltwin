@@ -205,7 +205,7 @@ function draw(pdf, d) {
     const fy = H - 44;
     pdf.moveTo(M, fy - 6).lineTo(W - M, fy - 6).lineWidth(0.4).strokeColor(RULE).stroke();
     pdf.fillColor(MUT).font("Helvetica").fontSize(7.5)
-      .text(`${co.name}  ·  ${co.address}, ${co.city}  ·  Office ${co.office}${co.fax ? `  ·  Fax ${co.fax}` : ""}`, M, fy, { width: CW - 90, lineBreak: false });
+      .text(`${co.name}  ·  ${co.address}, ${co.city}  ·  ${co.office ? `Office ${co.office}` : `Phone ${co.cell}`}${co.fax ? `  ·  Fax ${co.fax}` : ""}`, M, fy, { width: CW - 90, lineBreak: false });
     pdf.text(`${TYPES[d.type]} ${d.number}  ·  Page ${i - range.start + 1} of ${range.count}`, W - M - 160, fy, { width: 160, align: "right", lineBreak: false });
   }
 }

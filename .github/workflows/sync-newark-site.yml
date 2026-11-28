@@ -1,7 +1,7 @@
 # Keeps the live New Ark site (ark-hvac.com, served from the newark-site branch) in step with newark/ on main.
 # New articles land in newark/blog on main; this restyles them and publishes them to the live site.
 # Phone number and SEO data are already applied on main by tools/newark_seo.py, so no chat-only pass here
-# (it stripped 908-454-4043 and broke page titles).
+# (it stripped the business number and broke page titles).
 name: Sync New Ark site
 on:
   push:

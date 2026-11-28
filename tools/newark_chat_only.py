@@ -11,7 +11,7 @@ Usage: python3 tools/newark_chat_only.py [site_dir]   (default: newark/)
 import os, re, sys
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "newark")
-PH = r"(?:\(?908\)?[-. ]?454[-. ]?4043|\+?1?9084544043)"
+PH = r"(?:\(?201\)?[-. ]?349[-. ]?8663|\+?1?2013498663)"
 CHAT_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
 
 

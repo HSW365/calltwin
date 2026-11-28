@@ -3,7 +3,7 @@
 
 Edits the hand-built pages in place. Safe to run again: every change checks whether it is already there.
   - clean, keyword-first <title>, og:title and meta description on every service, town and home page
-  - New Ark's phone (908-454-4043) back in text, buttons, footer and structured data, so the name,
+  - New Ark's phone (201-349-8663) back in text, buttons, footer and structured data, so the name,
     address and phone match the Google Business Profile. Chat stays the main button.
   - Service, BreadcrumbList and FAQPage structured data
   - extra town pages for towns New Ark already lists under "Areas served" on its home page
@@ -16,7 +16,7 @@ import html, json, os, re, datetime
 
 ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "newark")
 SITE = "https://ark-hvac.com"
-PHONE, TEL = "908-454-4043", "+19084544043"
+PHONE, TEL = "201-349-8663", "+12013498663"
 NAME = "New Ark Plumbing, Heating & Air Conditioning"
 LIC = "NJ Master Plumber License #36BI00464600, HVAC Contractor License #19HC00178300 and Fire Sprinkler Contractor License #P01631"
 e = html.escape

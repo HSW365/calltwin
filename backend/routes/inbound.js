@@ -271,7 +271,7 @@ async function ensureInboundRouting() {
     const rec = owned.find((n) => last10(n.phone_number) === raw);
     if (!rec) {
       const rr = relay.find((n) => last10(n.number) === raw);
-      // Not a SignalWire number: it's the client's own carrier line (e.g. New Ark's 908-454-4043),
+      // Not a SignalWire number: it's the client's own carrier line (e.g. a client's office line),
       // call-forwarded at their carrier to a CallTwin number. Nothing to point here — not an error.
       if (!rr) { results.push({ number: e164, ok: true, forwarded: true, note: "external carrier line; forward it to a CallTwin number" }); continue; }
       try {

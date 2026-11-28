@@ -155,7 +155,7 @@ function baseUrl() {
 function fallbackXml(ownerCell, callerId) {
   const vm =
     `<Say voice="Polly.Matthew">Thanks for calling New Ark. Please leave your name, your number, the address, and what you need after the tone. We will call you right back.</Say>` +
-    `<Record maxLength="180" playBeep="true" action="${xml(baseUrl() + "/api/newark/voicemail")}" method="POST" />` +
+    `<Record maxLength="180" timeout="60" finishOnKey="#" trim="do-not-trim" playBeep="true" action="${xml(baseUrl() + "/api/newark/voicemail")}" method="POST" />` +
     `<Say voice="Polly.Matthew">Thank you. Goodbye.</Say><Hangup/>`;
   const dial = ownerCell
     ? `<Dial timeout="20" answerOnBridge="true"${callerId ? ` callerId="${xml(callerId)}"` : ""}>${xml(ownerCell)}</Dial>`
@@ -270,7 +270,16 @@ router.post("/email-test", async (req, res) => {
 router.post("/voicemail", async (req, res) => {
   const p = { ...req.query, ...req.body };
   res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Matthew">Got it. We will call you back shortly. Goodbye.</Say><Hangup/></Response>`);
-  if (!p.RecordingUrl || !hookKey()) return;
+  console.log(`[newark] voicemail received: ${p.RecordingDuration || "?"}s`);
+  if (!p.RecordingUrl) return;
+  // Email Joe the recording first, so the message reaches him even if the portal save fails.
+  try {
+    const owner = await ownerContact().catch(() => null);
+    const email = String((owner && owner.owner_email) || process.env.NEWARK_OWNER_EMAIL || "joehernandez5556@gmail.com").trim();
+    await require("../services/mailer").alertEmail(email, "New Ark",
+      `New Ark voicemail from ${p.From || "unknown number"} (${p.RecordingDuration || "?"} seconds).\nListen: ${p.RecordingUrl}.mp3`);
+  } catch (e) { console.error("[newark] voicemail email:", e.message); }
+  if (!hookKey()) return;
   try {
     await axios.post(NEWARK_API, {
       name: "Voicemail caller",

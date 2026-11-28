@@ -42,7 +42,7 @@ const BASE = () => (process.env.PUBLIC_BASE_URL || "https://calltwin.onrender.co
 // Ring the client's owner, then take a voicemail that lands in their dashboard.
 function clientFallbackXml(c, callerId) {
   const vm = `<Say voice="Polly.Matthew">Thanks for calling ${xml(c.businessName)}. Please leave your name, number, and what you need after the tone, and we will call you right back.</Say>` +
-    `<Record maxLength="180" playBeep="true" action="${xml(BASE() + "/api/clients/voicemail?c=" + c._id)}" method="POST" /><Hangup/>`;
+    `<Record maxLength="180" timeout="60" finishOnKey="#" trim="do-not-trim" playBeep="true" action="${xml(BASE() + "/api/clients/voicemail?c=" + c._id)}" method="POST" /><Hangup/>`;
   // If the owner's cell IS the forwarded business line, dialing it would loop back here, so go straight to voicemail.
   const d10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
   const lines = [c.businessPhone, ...(c.forwardedLines || [])].map(d10);
@@ -170,7 +170,7 @@ router.post("/after-dial", async (req, res) => {
   if (!dropped && (st === "completed" || st === "answered")) return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>`);
   if (p.s) { // sign-up line: AI couldn't connect -> ring HSW365, then take a voicemail
     const admin = "+1" + String(process.env.CALLTWIN_ADMIN_CELL || "8567968081").replace(/\D/g, "").slice(-10);
-    return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="25" callerId="${xml(p.To || "")}">${xml(admin)}</Dial><Say voice="Polly.Matthew">Thanks for calling CallTwin. Leave your name, business and number after the tone and we will call you right back.</Say><Record maxLength="120" playBeep="true" action="${xml(BASE() + "/api/inbound/signup-voicemail")}" method="POST" /><Hangup/></Response>`);
+    return res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="25" callerId="${xml(p.To || "")}">${xml(admin)}</Dial><Say voice="Polly.Matthew">Thanks for calling CallTwin. Leave your name, business and number after the tone and we will call you right back.</Say><Record maxLength="120" timeout="60" finishOnKey="#" trim="do-not-trim" playBeep="true" action="${xml(BASE() + "/api/inbound/signup-voicemail")}" method="POST" /><Hangup/></Response>`);
   }
   if (p.c) {
     const c = await require("../models/Client").findById(p.c).catch(() => null);

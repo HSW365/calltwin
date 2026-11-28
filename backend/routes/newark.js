@@ -351,22 +351,49 @@ router.post("/missed-call", async (req, res) => {
 });
 
 // ---------- Joe's cover line (888) ----------
-// Joe's cell forwards unanswered / busy / off calls here (carrier setting). This line must never dial his cell
-// back (that would loop): it takes a message and emails him the caller's number right away.
+// The website number. 7 AM - 5 PM it rings Joe's cell, then takes a message; 5 PM - 7 AM it takes the message
+// right away without ringing him. Every missed call is emailed to him.
+const easternHour = (d = new Date()) => Number(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", hourCycle: "h23" }).format(d));
+const dayShift = (d) => { const h = easternHour(d); return h >= 7 && h < 17; }; // 7 AM to 5 PM Eastern, every day
+const last10 = (n) => String(n || "").replace(/\D/g, "").slice(-10);
+const ringing = new Map(); // caller -> when we last rang Joe for them
+
+async function coverAlert(owner, from) {
+  try {
+    const email = String((owner && owner.owner_email) || process.env.NEWARK_OWNER_EMAIL || "joehernandez5556@gmail.com").trim();
+    const d = last10(from);
+    const caller = d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : (from || "unknown number");
+    const when = new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" });
+    const sent = await require("../services/mailer").alertEmail(email, "New Ark", `New Ark missed call: ${caller} at ${when}. Call them back${d.length === 10 ? `: tel:${d}` : "."}`);
+    console.log(`[newark] cover line missed call: emailed=${!!sent}`);
+  } catch (e) { console.error("[newark] cover line alert:", e.message); }
+}
+
 router.all("/cover", async (req, res) => {
   const p = { ...req.query, ...req.body };
   res.type("text/xml");
   if (/^(completed|busy|failed|no-answer|canceled)$/i.test(String(p.CallStatus || ""))) return res.send("<Response/>");
+  const owner = await ownerContact().catch(() => null);
+  const cell = last10((owner && owner.owner_cell) || process.env.NEWARK_OWNER_CELL || "2013498663");
+  const caller = last10(p.From);
+  // A repeat within a minute means his cell forwarded our own ring back here: take the message, never loop.
+  const looped = Date.now() - (ringing.get(caller) || 0) < 60000;
+  if (dayShift() && cell && caller !== cell && !looped) {
+    for (const [k, t] of ringing) if (Date.now() - t > 60000) ringing.delete(k);
+    ringing.set(caller, Date.now());
+    return res.send(`<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="18" answerOnBridge="true" callerId="${xml(p.To || "+18882067491")}" action="${xml(baseUrl() + "/api/newark/cover-after")}" method="POST">+1${cell}</Dial></Response>`);
+  }
   res.send(fallbackXml(null));
-  try {
-    const owner = await ownerContact();
-    const email = String((owner && owner.owner_email) || process.env.NEWARK_OWNER_EMAIL || "joehernandez5556@gmail.com").trim();
-    const d = String(p.From || "").replace(/\D/g, "").slice(-10);
-    const caller = d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : (p.From || "unknown number");
-    const when = new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" });
-    const sent = await require("../services/mailer").alertEmail(email, "New Ark", `New Ark missed call: ${caller} at ${when}. Call them back${d.length === 10 ? `: tel:${d}` : "."}`);
-    console.log(`[newark] cover line call: emailed=${!!sent}`);
-  } catch (e) { console.error("[newark] cover line alert:", e.message); }
+  coverAlert(owner, p.From);
+});
+
+// Daytime: Joe's phone rang. Answered = done; otherwise take a message and email him.
+router.all("/cover-after", async (req, res) => {
+  const p = { ...req.query, ...req.body };
+  res.type("text/xml");
+  if (/^(completed|answered)$/i.test(String(p.DialCallStatus || ""))) return res.send("<Response><Hangup/></Response>");
+  res.send(fallbackXml(null));
+  coverAlert(await ownerContact().catch(() => null), p.From);
 });
 
 // On boot, point the 888 number's voice calls at /cover. Idempotent; never crashes the server.
@@ -437,4 +464,4 @@ router.get("/status", async (req, res) => {
   });
 });
 
-module.exports = { router, ensureCoverRouting, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady, callAlert, sayDigits };
+module.exports = { router, ensureCoverRouting, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady, callAlert, sayDigits, dayShift };

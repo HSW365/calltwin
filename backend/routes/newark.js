@@ -350,6 +350,55 @@ router.post("/missed-call", async (req, res) => {
   } catch (e) { console.error("[newark] missed-call alert:", e.message); }
 });
 
+// ---------- Joe's cover line (888) ----------
+// Joe's cell forwards unanswered / busy / off calls here (carrier setting). This line must never dial his cell
+// back (that would loop): it takes a message and emails him the caller's number right away.
+router.all("/cover", async (req, res) => {
+  const p = { ...req.query, ...req.body };
+  res.type("text/xml");
+  if (/^(completed|busy|failed|no-answer|canceled)$/i.test(String(p.CallStatus || ""))) return res.send("<Response/>");
+  res.send(fallbackXml(null));
+  try {
+    const owner = await ownerContact();
+    const email = String((owner && owner.owner_email) || process.env.NEWARK_OWNER_EMAIL || "joehernandez5556@gmail.com").trim();
+    const d = String(p.From || "").replace(/\D/g, "").slice(-10);
+    const caller = d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : (p.From || "unknown number");
+    const when = new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" });
+    const sent = await require("../services/mailer").alertEmail(email, "New Ark", `New Ark missed call: ${caller} at ${when}. Call them back${d.length === 10 ? `: tel:${d}` : "."}`);
+    console.log(`[newark] cover line call: emailed=${!!sent}`);
+  } catch (e) { console.error("[newark] cover line alert:", e.message); }
+});
+
+// On boot, point the 888 number's voice calls at /cover. Idempotent; never crashes the server.
+let coverState = { done: false };
+async function ensureCoverRouting() {
+  const id = process.env.SIGNALWIRE_PROJECT_ID, token = process.env.SIGNALWIRE_API_TOKEN;
+  const space = String(process.env.SIGNALWIRE_SPACE || process.env.SIGNALWIRE_SPACE_URL || "").trim().replace(/^https?:\/\//, "").replace(/\/$/, "");
+  if (!id || !token || !space) { coverState = { done: false, error: "SignalWire env vars missing" }; return; }
+  const want = `${baseUrl()}/api/newark/cover`;
+  const auth = { username: id, password: token };
+  const isCover = (n) => String(n || "").replace(/\D/g, "").endsWith("8882067491");
+  try {
+    const api = `https://${space}/api/laml/2010-04-01/Accounts/${id}/IncomingPhoneNumbers`;
+    const list = await axios.get(`${api}.json?PageSize=100`, { auth, timeout: 10000 }).catch(() => null);
+    const rec = list && (list.data.incoming_phone_numbers || []).find((n) => isCover(n.phone_number));
+    if (rec) {
+      await axios.post(`${api}/${rec.sid}.json`, new URLSearchParams({ VoiceUrl: want, VoiceMethod: "POST" }).toString(),
+        { auth, headers: { "Content-Type": "application/x-www-form-urlencoded" }, timeout: 10000 });
+    } else {
+      const r = await axios.get(`https://${space}/api/relay/rest/phone_numbers?page_size=100`, { auth, timeout: 10000 });
+      const rr = (r.data.data || []).find((n) => isCover(n.number));
+      if (!rr) throw new Error("888 number not found in this SignalWire project");
+      await axios.put(`https://${space}/api/relay/rest/phone_numbers/${rr.id}`,
+        { call_handler: "laml_webhooks", call_request_url: want, call_request_method: "POST" }, { auth, timeout: 10000 });
+    }
+    coverState = { done: true, at: new Date().toISOString() };
+  } catch (e) {
+    coverState = { done: false, error: e.response ? `${e.response.status} ${JSON.stringify(e.response.data).slice(0, 200)}` : e.message };
+  }
+  console.log("[newark] cover routing:", JSON.stringify(coverState));
+}
+
 router.post("/estimates-access", ownerPin, async (req, res) => {
   try {
     const hit = await require("../estimate/routes").settingsBySite("newark");
@@ -381,10 +430,11 @@ router.get("/status", async (req, res) => {
     chat_ai: process.env.CHAT_BASE_URL && process.env.CHAT_MODEL ? "own" : process.env.ANTHROPIC_API_KEY ? "anthropic" : process.env.OPENAI_API_KEY ? "openai" : "built-in",
     owner_on_file: !!(oc && oc.owner_cell),
     ai_enabled: oc ? oc.ai_enabled : null,
+    cover_line: coverState,
     stripe_key: !!process.env.STRIPE_SECRET_KEY,
     // names only, never values: helps spot a secret saved under an unexpected name
     env_names: Object.keys(process.env).filter((k) => /SIGNAL|^SW_|STRIPE|ELEVEN|GMAIL|SMTP|SENDGRID|ALERT_FROM|ESTIMATE_FROM/i.test(k)).sort(),
   });
 });
 
-module.exports = { router, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady, callAlert, sayDigits };
+module.exports = { router, ensureCoverRouting, ownerContact, fallbackXml, billingUpdate, sendSms, smsReady, callAlert, sayDigits };

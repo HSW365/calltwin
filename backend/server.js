@@ -24,7 +24,7 @@ const billingRoutes = require("./routes/billing");
 const webhooksRoutes = require("./routes/webhooks");
 const legalRoutes = require("./routes/legal");
 const { router: inboundRoutes, ensureInboundRouting } = require("./routes/inbound");
-const { router: newarkRoutes } = require("./routes/newark");
+const { router: newarkRoutes, ensureCoverRouting } = require("./routes/newark");
 const { router: clientRoutes } = require("./routes/clients");
 const { router: relayRoutes } = require("./routes/relay");
 const { router: demoCallRoutes } = require("./routes/demoCall");
@@ -88,7 +88,7 @@ async function start() {
   startEstimateScheduler();
   app.listen(PORT, () => {
     console.log(`[server] CallTwin listening on ${PORT}`);
-    ensureInboundRouting().catch((e) => console.error("[inbound] routing error:", e.message));
+    ensureInboundRouting().catch((e) => console.error("[inbound] routing error:", e.message)).then(ensureCoverRouting).catch((e) => console.error("[newark] cover routing error:", e.message));
     require("./services/signupLine").ensureSignupLine().catch((e) => console.error("[signup-line]", e.message));
   });
 }
